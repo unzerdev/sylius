@@ -1,5 +1,6 @@
 {
     "name": "unzer/sylius-plugin",
+    "description": "Unzer payment gateway integration for Sylius",
     "type": "sylius-plugin",
     "keywords": [
         "sylius",
