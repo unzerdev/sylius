@@ -21,7 +21,18 @@
             <argument type="service" id="Unzer\Core\Infrastructure\Logger\Interfaces\ShopLoggerAdapter"/>
         </service>
 
+        <service id="app.unzer_payment" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
+            <argument>SyliusUnzerPlugin\Factory\UnzerFactory</argument>
+            <tag name="payum.gateway_factory_builder" factory="unzer_payment"/>
+        </service>
 
+        <service id="SyliusUnzerPlugin\Controller\UnzerMethodsController"  autowire="true" autoconfigure="true" public="true" >
+            <argument type="service" id="twig" />
+            <argument type="service" id="router" />
+            <argument type="service" id="sylius.context.channel" />
+            <argument type="service" id="sylius.context.locale" />
+            <argument type="service" id="sylius.repository.order" />
+        </service>
 
     </services>
 </container>

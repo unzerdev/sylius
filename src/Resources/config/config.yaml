@@ -1,0 +1,22 @@
+sylius_grid:
+    templates:
+        action:
+            enable_unzer: "@SyliusUnzerPlugin/PaymentMethod/Grid/Action/create.html.twig"
+    grids:
+        sylius_admin_payment_method:
+            actions:
+                main:
+                    enable_unzer:
+                        type: enable_unzer
+sylius_payment:
+    resources:
+        payment_method:
+            classes:
+                controller: SyliusUnzerPlugin\Controller\PaymentMethodController
+
+sylius_ui:
+    events:
+        sylius.admin.order.show.content:
+            blocks:
+                aaa:
+                    template: '@SyliusUnzerPlugin/Order/Show/_order.html.twig'
