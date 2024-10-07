@@ -10,7 +10,6 @@
         <defaults autoconfigure="false" />
 
         <service id="SyliusUnzerPlugin\Controller\GreetingController" autowire="true" autoconfigure="true" public="true" >
-            <argument type="service" id="logger" on-invalid="ignore" />
         </service>
 
 

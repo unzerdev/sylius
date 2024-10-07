@@ -22,12 +22,10 @@ class UnzerCompilerPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      *
      * @return void
+     * @throws \Exception
      */
     public function process(ContainerBuilder $container)
     {
-        $ref = $container->findDefinition(ShopLoggerAdapter::class);
-
-      //  Bootstrap::init();
 
         $bootstrapDefinition = new Definition(
             Bootstrap::class,
@@ -36,10 +34,8 @@ class UnzerCompilerPass implements CompilerPassInterface
             ]
         );
         $bootstrapDefinition->setPublic(true);
-        $bootstrapDefinition->setAutowired(true);
 
+        $container->setDefinition(Bootstrap::class, $bootstrapDefinition);
 
-
-        Bootstrap::init();
     }
 }

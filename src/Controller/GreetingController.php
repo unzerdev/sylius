@@ -12,18 +12,6 @@ use Unzer\Core\Infrastructure\Logger\Logger;
 
 final class GreetingController extends AbstractController
 {
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
-
-    private LoggerService $service;
-
-    public function __construct(LoggerInterface $logger)
-    {
-
-        $this->logger = $logger;
-    }
 
 
     public function staticallyGreetAction(?string $name): Response

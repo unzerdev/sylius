@@ -33,4 +33,12 @@ final class SyliusUnzerPlugin extends Bundle
 
         $container->addCompilerPass(new UnzerCompilerPass());
     }
+
+    public function boot(): void
+    {
+        parent::boot();
+        /** @var Bootstrap $bootstrap */
+        $bootstrap = $this->container->get(Bootstrap::class);
+        $bootstrap::init();
+    }
 }

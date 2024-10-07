@@ -42,8 +42,6 @@ class LoggerService implements ShopLoggerAdapter
     public function logMessage(LogData $data): void
     {
 
-
-
         $this->logger->error('Test error Unzer log');
     }
 }
