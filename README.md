@@ -120,3 +120,18 @@ To be able to set up a plugin's database, remember to configure you database cre
     (cd tests/Application && APP_ENV=dev bin/console sylius:fixtures:load)
     (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
     ```
+
+## Plugin Development
+----
+### Instalation
+
+- Run migrations in Sylius root directory:
+    ```bash
+  bin/console doctrine:migrations:migrate
+    ```
+
+- Import the routing in your config/routes.yaml file in Sylius root directory:
+    ```bash
+  unzer_routes:
+    resource: "@SyliusUnzerPlugin/src/Resources/config/routing.yaml"
+    ```

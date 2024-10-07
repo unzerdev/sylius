@@ -4,11 +4,28 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
+use Psr\Log\LoggerInterface;
+use SyliusUnzerPlugin\Services\LoggerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Unzer\Core\Infrastructure\Logger\Logger;
 
 final class GreetingController extends AbstractController
 {
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
+
+    private LoggerService $service;
+
+    public function __construct(LoggerInterface $logger)
+    {
+
+        $this->logger = $logger;
+    }
+
+
     public function staticallyGreetAction(?string $name): Response
     {
         return $this->render('@SyliusUnzerPlugin/static_greeting.html.twig', ['greeting' => $this->getGreeting($name)]);
@@ -16,7 +33,11 @@ final class GreetingController extends AbstractController
 
     public function dynamicallyGreetAction(?string $name): Response
     {
-        return $this->render('@SyliusUnzerPlugin/dynamic_greeting.html.twig', ['greeting' => $this->getGreeting($name)]);
+
+
+        Logger::logError('Test error');
+        return $this->render('@SyliusUnzerPlugin/dynamic_greeting.html.twig',
+            ['greeting' => $this->getGreeting($name)]);
     }
 
     private function getGreeting(?string $name): string
