@@ -13,8 +13,15 @@
         </service>
 
 
-<!--        <service id="SyliusUnzerPlugin\Services\LoggerService"  autowire="true" autoconfigure="true" public="true" class="SyliusUnzerPlugin\Services\LoggerService">-->
-<!--            <argument type="service" id="logger" on-invalid="ignore" />-->
-<!--        </service>-->
+        <service id="SyliusUnzerPlugin\Services\LoggerService" class="SyliusUnzerPlugin\Services\LoggerService">
+            <argument type="service" id="logger" />
+        </service>
+
+        <service id="SyliusUnzerPlugin\Bootstrap\Bootstrap"  autowire="true" autoconfigure="true" public="true" class="SyliusUnzerPlugin\Bootstrap\Bootstrap">
+            <argument type="service" id="Unzer\Core\Infrastructure\Logger\Interfaces\ShopLoggerAdapter"/>
+        </service>
+
+
+
     </services>
 </container>

@@ -27,13 +27,6 @@ final class SyliusUnzerPlugin extends Bundle
         return \dirname(__DIR__);
     }
 
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new UnzerCompilerPass());
-    }
-
     public function boot(): void
     {
         parent::boot();
