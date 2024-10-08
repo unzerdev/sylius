@@ -30,6 +30,7 @@ Encore.reset();
 Encore
   .setOutputPath('public/build/admin/')
   .setPublicPath('/build/admin')
+  .addEntry('unzer-entry', '../../vendor/unzer/unzer-core/Resources/admin-ui/src/entry.js')
   .addEntry('admin-entry', '../../vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/Resources/private/entry.js')
   .disableSingleRuntimeChunk()
   .cleanupOutputBeforeBuild()
