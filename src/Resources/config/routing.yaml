@@ -1,5 +1,4 @@
 unzer_test:
     path: /dynamic-welcome/{name}
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\GreetingController::dynamicallyGreetAction
-        name: ~    
+        _controller: SyliusUnzerPlugin\Controller\GreetingController::dynamicallyGreetAction  

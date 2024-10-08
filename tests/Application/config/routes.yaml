@@ -4,6 +4,6 @@ acme_sylius_example_shop:
     requirements:
         _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
 
-#acme_sylius_example_admin:
-#    resource: "@SyliusUnzerPlugin/config/admin_routing.yml"
-#    prefix: /admin
+unzer_admin_config:
+    resource: "@SyliusUnzerPlugin/src/Resources/config/admin_routing.yaml"
+    prefix: /admin

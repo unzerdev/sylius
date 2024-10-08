@@ -5,30 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="56515911-a512-442f-8add-c5bac09691b4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Bootstrap/Bootstrap.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DependencyInjection/Compiler/UnzerCompilerPass.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Migrations/Version20241004144751.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Resources/config/routing.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Resources/config/services.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Resources/config/services/configuration.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Resources/config/services/logger.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Services/ConfigurationService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Services/LoggerService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Unzer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Unzer.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php-test-framework.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php-test-framework.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/ConfigurationController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Resources/config/admin_routing.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/config.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/phpspec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.xml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/GreetingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/GreetingController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DependencyInjection/Configuration.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DependencyInjection/Configuration.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DependencyInjection/SyliusUnzerExtension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DependencyInjection/SyliusUnzerExtension.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SyliusUnzerPlugin.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/SyliusUnzerPlugin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/supervisord.log" beforeDir="false" afterPath="$PROJECT_DIR$/supervisord.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Application/php.ini" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Application/php.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/PaymentMethodController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PaymentMethodController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/config/routing.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/config/routing.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/config/services.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/config/services.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Resources/views/PaymentMethod/Grid/Action/create.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/src/Resources/views/PaymentMethod/Grid/Action/create.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Application/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Application/config/routes.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +48,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PhpDebugGeneral" listening_started="true" max_simultaneous_connections="2" />
+  <component name="PhpDebugGeneral" max_simultaneous_connections="2" />
   <component name="PhpServers">
     <servers>
       <server host="127.0.0.1" id="a6ece580-94f1-49bb-b385-e2843eda918b" name="localhost" port="8000" use_path_mappings="true">
@@ -70,17 +56,10 @@
           <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/workspace/UNZER/Unzer" />
         </path_mappings>
       </server>
-      <server host="1-13-4.sylius.sale.ngrok.app" id="2413934a-2689-4fc6-a39b-03b9a8b75e51" name="1-13-4.sylius.sale.ngrok.app" port="443" use_path_mappings="true">
-        <path_mappings>
-          <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/workspace/unzer/UnzerSylius" />
-          <mapping local-root="$PROJECT_DIR$/../../../systems/sylius/1-13-4" remote-root="/var/www/html/public/sylius/1-13-4" />
-        </path_mappings>
-      </server>
     </servers>
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 8.1">
     <include_path>
-      <path value="$PROJECT_DIR$/../../../systems/sylius/1-13-4" />
       <path value="$PROJECT_DIR$/vendor/robertfausk/behat-panther-extension" />
       <path value="$PROJECT_DIR$/vendor/babdev/pagerfanta-bundle" />
       <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
@@ -329,18 +308,15 @@
       <path value="$PROJECT_DIR$/vendor/knplabs/knp-menu-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
       <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/tests/Application/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/unzerdev/php-sdk" />
       <path value="$PROJECT_DIR$/vendor/unzer/unzer-core" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;00000000&quot;,
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2mvimv9iKT4sEJ2oYYDVDgFcJVA" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -351,19 +327,19 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/logeecom/Documents/asb/e-integrations/systems/shopware5/5-7-15",
+    "last_opened_file_path": "/home/branko/Desktop/INTEGRATIONS/integrations/UNZER/Unzer/src/Resources/config",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "php.override.implement.member.chooser.php.doc": "NONE",
-    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php.debug",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/Resources/config" />
+      <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$/tests/Application" />
     </key>
   </component>
@@ -388,16 +364,7 @@
       <item itemvalue="PHP Remote Debug.1-13-4.sylius.sale.ngrok.app" />
       <item itemvalue="PHPSpec.Main" />
       <item itemvalue="PHPUnit.Main" />
-      <item itemvalue="PHPUnit.phpunit" />
     </list>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PS-242.23339.16" />
-        <option value="bundled-php-predefined-a98d8de5180a-90914f2295cb-com.jetbrains.php.sharedIndexes-PS-242.23339.16" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -408,33 +375,62 @@
       <option name="presentableId" value="Default" />
       <updated>1727963613687</updated>
       <workItem from="1727963614759" duration="3649000" />
+      <workItem from="1728022832502" duration="6626000" />
+      <workItem from="1728304750035" duration="662000" />
       <workItem from="1728022832502" duration="5992000" />
       <workItem from="1728035292933" duration="86000" />
       <workItem from="1728035384613" duration="363000" />
       <workItem from="1728048815622" duration="1522000" />
       <workItem from="1728288133910" duration="22955000" />
+      <workItem from="1728331980338" duration="801000" />
+      <workItem from="1728375059917" duration="2222000" />
     </task>
+    <task id="LOCAL-00001" summary="DI">
+      <option name="closed" value="true" />
+      <created>1728323020363</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1728323020363</updated>
+    </task>
+    <task id="LOCAL-00002" summary="DI">
+      <option name="closed" value="true" />
+      <created>1728323544110</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1728323544110</updated>
+    </task>
+    <task id="LOCAL-00003" summary="DI">
+      <option name="closed" value="true" />
+      <created>1728332752036</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1728332752036</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="DI" />
+    <option name="LAST_COMMIT_MESSAGE" value="DI" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/src/DependencyInjection/Compiler/UnzerCompilerPass.php</url>
-          <line>27</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/src/Controller/GreetingController.php</url>
-          <line>37</line>
+          <line>25</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/src/Services/LoggerService.php</url>
-          <line>46</line>
+          <line>44</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">

@@ -18,7 +18,7 @@ class PaymentMethodController extends BasePaymentMethodController
         $product = $this->findOr404($configuration);
 
         if (true) {
-            return $this->redirectToRoute('unzer_test');
+            return $this->redirectToRoute('unzer_admin_config');
         }
 
         // some custom provider service to retrieve recommended products
