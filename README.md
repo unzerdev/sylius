@@ -135,3 +135,8 @@ To be able to set up a plugin's database, remember to configure you database cre
   unzer_routes:
     resource: "@SyliusUnzerPlugin/src/Resources/config/routing.yaml"
     ```
+
+- Copy next line in Sylius config/packages/_sylius.yaml directory:
+    ```bash 
+  { resource: "@SyliusUnzerPlugin/src/Resources/config/config.yaml" }
+    ```

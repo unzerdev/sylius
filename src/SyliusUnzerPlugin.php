@@ -6,8 +6,6 @@ namespace SyliusUnzerPlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use SyliusUnzerPlugin\Bootstrap\Bootstrap;
-use SyliusUnzerPlugin\DependencyInjection\Compiler\UnzerCompilerPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
