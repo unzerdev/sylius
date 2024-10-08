@@ -2,3 +2,8 @@ unzer_admin_config:
     path: /unzer/configuration
     defaults:
         _controller: SyliusUnzerPlugin\Controller\ConfigurationController::configAction
+
+unzer_admin_enable:
+    path: /unzer/enable-payment-method
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\ConfigurationController::enableAction
