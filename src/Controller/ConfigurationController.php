@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
+use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
+
 final class ConfigurationController extends AbstractController
 {
 
