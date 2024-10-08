@@ -4,5 +4,36 @@
 
 
 {% block content %}
-    Unzer content
+
+    <div class="adl-page" id="adl-page">
+        <main>
+            <header id="adl-main-header">
+                <div class="adl-page-header"></div>
+                <div class="adl-header-holder" id="adl-header-section"></div>
+            </header>
+            <div class="unzer-page-wrapper">
+                <div class="unzer-content-holder">
+                    <main id="unzer-main-page"></main>
+                </div>
+                <footer id="unzer-footer"></footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        Unzer = {
+            config: {
+                apiUrl: "/api",
+                appPath: "/",
+                isConnected: false,
+                stores: [],
+                store: {}
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Unzer.version = 'v1.0.0'
+
+            Unzer.stateController.start();
+        });
+    </script>
 {% endblock %}
