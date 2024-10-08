@@ -2,9 +2,20 @@
 
 namespace SyliusUnzerPlugin\Bootstrap;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use SyliusUnzerPlugin\Repositories\BaseRepository;
+use SyliusUnzerPlugin\Services\Integration\EncryptorService;
+use SyliusUnzerPlugin\Services\Integration\WebhookUrlService;
 use Unzer\Core\BusinessLogic\BootstrapComponent;
+use Unzer\Core\BusinessLogic\DataAccess\Connection\Entities\ConnectionSettings;
+use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
+use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
+use Unzer\Core\BusinessLogic\Domain\Integration\Utility\EncryptorInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Webhook\WebhookUrlServiceInterface;
+use Unzer\Core\Infrastructure\Configuration\ConfigEntity;
 use Unzer\Core\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
+use Unzer\Core\Infrastructure\ORM\Exceptions\RepositoryClassException;
+use Unzer\Core\Infrastructure\ORM\RepositoryRegistry;
 use Unzer\Core\Infrastructure\ServiceRegister;
 
 /**
@@ -20,28 +31,18 @@ class Bootstrap extends BootstrapComponent
     private static ShopLoggerAdapter $loggerAdapter;
 
     /**
-     * @var ?ContainerInterface
+     * @var EntityManagerInterface
      */
-    private static ?ContainerInterface $container = null;
+    private static EntityManagerInterface $entityManager;
+
     /**
-     * @var bool
+     * @param ShopLoggerAdapter $loggerAdapter
+     * @param EntityManagerInterface $entityManager
      */
-    private static bool $isInitialized = false;
-
-
-    public function __construct(ShopLoggerAdapter $loggerAdapter)
+    public function __construct(ShopLoggerAdapter $loggerAdapter, EntityManagerInterface $entityManager)
     {
         self::$loggerAdapter = $loggerAdapter;
-    }
-
-    public static function boot(?ContainerInterface $container): void
-    {
-        self::$container = $container;
-
-        if (!self::$isInitialized) {
-            parent::init();
-            self::$isInitialized = true;
-        }
+        self::$entityManager = $entityManager;
     }
 
     /**
@@ -59,13 +60,36 @@ class Bootstrap extends BootstrapComponent
                 return self::$loggerAdapter;
             }
         );
+
+        ServiceRegister::registerService(
+            EncryptorInterface::class,
+            function () {
+                return new EncryptorService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            WebhookUrlServiceInterface::class,
+            function () {
+                return new WebhookUrlService();
+            }
+        );
     }
 
     /**
      * @return void
+     *
+     * @throws RepositoryClassException
      */
     protected static function initRepositories(): void
     {
         parent::initRepositories();
+
+        BaseRepository::setEntityManager(self::$entityManager);
+
+        RepositoryRegistry::registerRepository(ConfigEntity::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(ConnectionSettings::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
     }
 }

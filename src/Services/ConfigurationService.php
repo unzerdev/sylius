@@ -3,6 +3,7 @@
 namespace SyliusUnzerPlugin\Services;
 
 use Unzer\Core\Infrastructure\Configuration\Configuration;
+use Unzer\Core\Infrastructure\Singleton;
 
 /**
  * Class ConfigurationService.
@@ -11,6 +12,20 @@ use Unzer\Core\Infrastructure\Configuration\Configuration;
  */
 class ConfigurationService extends Configuration
 {
+    /**
+     * Singleton instance of this class.
+     *
+     * @var ?static
+     */
+    protected static ?Singleton $instance = null;
+
+    /**
+     * @return ConfigurationService
+     */
+    public static function create(): ConfigurationService
+    {
+       return static::getInstance();
+    }
 
     /**
      * @inheritDoc

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\DependencyInjection;
 
-use Exception;
 use Sylius\Bundle\CoreBundle\DependencyInjection\PrependDoctrineMigrationsTrait;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Unzer\Core\Infrastructure\Logger\Logger;
 
+/**
+ * Class SyliusUnzerExtension.
+ *
+ * @package SyliusUnzerPlugin\DependencyInjection
+ */
 final class SyliusUnzerExtension extends AbstractResourceExtension implements PrependExtensionInterface
 {
     use PrependDoctrineMigrationsTrait;
 
-    /** @psalm-suppress UnusedVariable
-     *
-     * @throws Exception
-     */
+    /** @psalm-suppress UnusedVariable */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

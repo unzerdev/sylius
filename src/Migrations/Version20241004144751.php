@@ -32,6 +32,7 @@ final class Version20241004144751 extends AbstractMigration
             'Migration can only be executed safely on \'mysql\'.');
         $this->addSql("CREATE TABLE unzer_entity (
                             id INT AUTO_INCREMENT NOT NULL,
+                            type VARCHAR(255),
                             index_1 VARCHAR(255),
                             index_2 VARCHAR(255),
                             index_3 VARCHAR(255),
