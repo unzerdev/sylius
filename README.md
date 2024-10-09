@@ -144,6 +144,10 @@ To be able to set up a plugin's database, remember to configure you database cre
     ```bash 
   { resource: "@SyliusUnzerPlugin/src/Resources/config/config.yaml" }
     ```
+- If you wish to build new admin assets from core library, run following command from `vendor/unzer/unzer-core/Resources/admin-ui`:
+    ```bash 
+    OUTPUT_PATH='../../../../../public/admin-ui' yarn build
+    ```
 
 - Installing assets without webpack: Run following command in Sylius root directory:
     ```bash 
