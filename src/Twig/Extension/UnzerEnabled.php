@@ -1,29 +1,27 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Twig\Extension;
 
-use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
 use SyliusMolliePlugin\Checker\ApplePay\ApplePayEnabledCheckerInterface;
+use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodChecker;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class UnzerEnabled extends AbstractExtension
 {
     /**
-     * @var PaymentMethodRepositoryInterface<PaymentMethodInterface>
+     * @var UnzerPaymentMethodChecker $paymentMethodChecker
      */
-    private PaymentMethodRepositoryInterface $paymentMethodRepository;
+    private UnzerPaymentMethodChecker $paymentMethodChecker;
 
     /**
-     * @param PaymentMethodRepositoryInterface<PaymentMethodInterface> $paymentMethodRepository
+     * @param UnzerPaymentMethodChecker $paymentMethodChecker
      */
-    public function __construct(PaymentMethodRepositoryInterface $paymentMethodRepository)
+    public function __construct(UnzerPaymentMethodChecker $paymentMethodChecker)
     {
-        $this->paymentMethodRepository = $paymentMethodRepository;
+        $this->paymentMethodChecker = $paymentMethodChecker;
     }
 
     public function getFunctions(): array
@@ -31,19 +29,9 @@ final class UnzerEnabled extends AbstractExtension
         return [
             new TwigFunction(
                 'is_unzer_enabled',
-                [$this, 'isEnabled'],
+                [$this->paymentMethodChecker, 'exists'],
                 ['is_safe' => ['html']]
             ),
         ];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled(): bool
-    {
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => 'unzer_payment']);
-
-        return $paymentMethod !== null;
     }
 }

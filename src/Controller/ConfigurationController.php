@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
-use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
-use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
-use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 
 final class ConfigurationController extends AbstractController
 {
 
+    /**
+     * @var UnzerPaymentMethodCreator
+     */
+    private UnzerPaymentMethodCreator $paymentMethodCreator;
+
 
     /**
-     * @param PaymentMethodFactoryInterface $paymentMethodFactory
-     * @param PaymentMethodRepositoryInterface $paymentMethodRepository
-     * @param ChannelRepositoryInterface $channelRepository
+     * @param UnzerPaymentMethodCreator $paymentMethodCreator
      */
-    public function __construct(  private PaymentMethodFactoryInterface $paymentMethodFactory,
-        private PaymentMethodRepositoryInterface $paymentMethodRepository,
-        private ChannelRepositoryInterface $channelRepository)
+    public function __construct(UnzerPaymentMethodCreator $paymentMethodCreator)
     {
+        $this->paymentMethodCreator = $paymentMethodCreator;
     }
 
     /**
@@ -35,18 +34,12 @@ final class ConfigurationController extends AbstractController
         return $this->render('@SyliusUnzerPlugin/config.html.twig');
     }
 
+    /**
+     * @return Response
+     */
     public function enableAction(): Response
     {
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => 'unzer_payment']);
-
-        if ($paymentMethod == null) {
-            // add payment method in database.
-            $paymentMethod = $this->paymentMethodFactory->createWithGateway('unzer_payment');
-            $paymentMethod->getGatewayConfig()?->setGatewayName('unzer_payment');
-            $paymentMethod->setCode('unzer_payment');
-            $paymentMethod->setName('UNZER');
-            $this->paymentMethodRepository->add($paymentMethod);
-        }
+        $this->paymentMethodCreator->createIfNotExists();
         return $this->redirectToRoute('unzer_admin_config');
     }
 }
