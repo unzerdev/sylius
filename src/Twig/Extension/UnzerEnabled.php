@@ -7,7 +7,6 @@ namespace SyliusUnzerPlugin\Twig\Extension;
 
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
-use SyliusMolliePlugin\Checker\ApplePay\ApplePayEnabledCheckerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

@@ -169,3 +169,8 @@ To be able to set up a plugin's database, remember to configure you database cre
   //in __styles.html.twig file
    {{ encore_entry_link_tags('unzer-entry', null, 'admin') }}
     ```
+
+- Installing assets without webpack: Run following command in Sylius root directory:
+    ```bash 
+    bin/console assets:install
+    ```
