@@ -4,12 +4,20 @@ namespace SyliusUnzerPlugin\Bootstrap;
 
 use Doctrine\ORM\EntityManagerInterface;
 use SyliusUnzerPlugin\Repositories\BaseRepository;
+use SyliusUnzerPlugin\Services\Integration\CountryService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
+use SyliusUnzerPlugin\Services\Integration\LanguageService;
+use SyliusUnzerPlugin\Services\Integration\StoreService;
+use SyliusUnzerPlugin\Services\Integration\VersionService;
 use SyliusUnzerPlugin\Services\Integration\WebhookUrlService;
 use Unzer\Core\BusinessLogic\BootstrapComponent;
 use Unzer\Core\BusinessLogic\DataAccess\Connection\Entities\ConnectionSettings;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
 use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
+use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Versions\VersionService as VersionServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Utility\EncryptorInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Webhook\WebhookUrlServiceInterface;
 use Unzer\Core\Infrastructure\Configuration\ConfigEntity;
@@ -36,13 +44,55 @@ class Bootstrap extends BootstrapComponent
     private static EntityManagerInterface $entityManager;
 
     /**
+     * @var LanguageService
+     */
+    private static LanguageService $languageService;
+
+    /**
+     * @var CountryService
+     */
+    private static CountryService $countryService;
+
+    /**
+     * @var StoreService
+     */
+    private static StoreService $storeService;
+
+    /**
+     * @var WebhookUrlService
+     */
+    private static WebhookUrlService $webhookUrlService;
+
+    /**
+     * @var EncryptorService
+     */
+    private static EncryptorService $encryptorService;
+
+    /**
      * @param ShopLoggerAdapter $loggerAdapter
      * @param EntityManagerInterface $entityManager
+     * @param LanguageService $languageService
+     * @param CountryService $countryService
+     * @param StoreService $storeService
+     * @param WebhookUrlService $webhookUrlService
+     * @param EncryptorService $encryptorService
      */
-    public function __construct(ShopLoggerAdapter $loggerAdapter, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        ShopLoggerAdapter $loggerAdapter,
+        EntityManagerInterface $entityManager,
+        LanguageService $languageService,
+        CountryService $countryService,
+        StoreService $storeService,
+        WebhookUrlService $webhookUrlService,
+        EncryptorService $encryptorService
+    ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
+        self::$languageService = $languageService;
+        self::$countryService = $countryService;
+        self::$storeService = $storeService;
+        self::$webhookUrlService = $webhookUrlService;
+        self::$encryptorService = $encryptorService;
     }
 
     /**
@@ -64,14 +114,42 @@ class Bootstrap extends BootstrapComponent
         ServiceRegister::registerService(
             EncryptorInterface::class,
             function () {
-                return new EncryptorService();
+                return self::$encryptorService;
             }
         );
 
         ServiceRegister::registerService(
             WebhookUrlServiceInterface::class,
             function () {
-                return new WebhookUrlService();
+                return self::$webhookUrlService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            LanguageServiceInterface::class,
+            function () {
+                return self::$languageService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            CountryServiceInterface::class,
+            function () {
+                return self::$countryService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            VersionServiceInterface::class,
+            function () {
+                return new VersionService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            StoreServiceInterface::class,
+            function () {
+                return self::$storeService;
             }
         );
     }

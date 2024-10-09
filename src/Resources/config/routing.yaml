@@ -2,3 +2,8 @@ unzer_test:
     path: /dynamic-welcome/{name}
     defaults:
         _controller: SyliusUnzerPlugin\Controller\GreetingController::dynamicallyGreetAction  
+
+unzer_webhook:
+    path: /webhook
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\WebhookController::webhookAction  

@@ -22,13 +22,14 @@ final class ConfigurationController extends AbstractController
      */
     private UnzerPaymentMethodChecker $unzerPaymentMethodChecker;
 
-
     /**
      * @param UnzerPaymentMethodCreator $paymentMethodCreator
      * @param UnzerPaymentMethodChecker $unzerPaymentMethodChecker
      */
-    public function __construct(UnzerPaymentMethodCreator $paymentMethodCreator, UnzerPaymentMethodChecker $unzerPaymentMethodChecker)
-    {
+    public function __construct(
+        UnzerPaymentMethodCreator $paymentMethodCreator,
+        UnzerPaymentMethodChecker $unzerPaymentMethodChecker
+    ) {
         $this->paymentMethodCreator = $paymentMethodCreator;
         $this->unzerPaymentMethodChecker = $unzerPaymentMethodChecker;
     }

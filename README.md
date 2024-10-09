@@ -153,3 +153,11 @@ To be able to set up a plugin's database, remember to configure you database cre
     ```bash 
     bin/console assets:install
     ```
+
+- Setting up encryption key:
+    - Run in plugin root directory:
+      - php generate_key.php
+      - This will output encryption key
+    - Add environment variable in Sylius .env file and fill it with generated key:
+      - UNZER_ENCRYPTION_KEY='*generatedKey*'
+    
