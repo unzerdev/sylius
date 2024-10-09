@@ -52,6 +52,6 @@ class PaymentMethodController extends BasePaymentMethodController
            //TODO: DELETE ALL DATA
         }
 
-        return parent::updateAction($request);
+        return parent::deleteAction($request);
     }
 }
