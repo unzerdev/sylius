@@ -2,23 +2,13 @@
 
 {% block title %}Unzer{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/syliusunzerplugin/admin-ui/css/index.css') }}"/>
+{% endblock %}
 
-{% block content %}
-
-    <div class="adl-page" id="adl-page">
-        <main>
-            <header id="adl-main-header">
-                <div class="adl-page-header"></div>
-                <div class="adl-header-holder" id="adl-header-section"></div>
-            </header>
-            <div class="unzer-page-wrapper">
-                <div class="unzer-content-holder">
-                    <main id="unzer-main-page"></main>
-                </div>
-                <footer id="unzer-footer"></footer>
-            </div>
-        </main>
-    </div>
+{% block javascripts %}
+    {{ parent() }}
     <script>
         Unzer = {
             config: {
@@ -36,4 +26,23 @@
             Unzer.stateController.start();
         });
     </script>
+    <script type="application/javascript" src="{{ asset('bundles/syliusunzerplugin/admin-ui/js/index.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="adl-page" id="adl-page">
+        <main>
+            <header id="adl-main-header">
+                <div class="adl-page-header"></div>
+                <div class="adl-header-holder" id="adl-header-section"></div>
+            </header>
+            <div class="unzer-page-wrapper">
+                <div class="unzer-content-holder">
+                    <main id="unzer-main-page"></main>
+                </div>
+                <footer id="unzer-footer"></footer>
+            </div>
+        </main>
+    </div>
 {% endblock %}
