@@ -41,6 +41,8 @@
 
         <service id="SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator" class="SyliusUnzerPlugin\Services\PaymentMethodCreator" public="false" autoconfigure="true" autowire="true">
         </service>
-
+        <service id="SyliusUnzerPlugin\Command\CreateKeyCommand">
+            <tag name="console.command" />
+        </service>
     </services>
 </container>

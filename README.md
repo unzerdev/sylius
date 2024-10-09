@@ -154,10 +154,12 @@ To be able to set up a plugin's database, remember to configure you database cre
     bin/console assets:install
     ```
 
-- Setting up encryption key:
-    - Run in plugin root directory:
-      - php generate_key.php
-      - This will output encryption key
-    - Add environment variable in Sylius .env file and fill it with generated key:
-      - UNZER_ENCRYPTION_KEY='*generatedKey*'
+## UNZER Encryption Key
+
+The `UNZER_ENCRYPTION_KEY` exists with a default value. It is **not recommended** to use this in production systems. Instead, you should run the following command:
+
+```bash
+php bin/console sylius:unzer-key:create
+```
+After generating the key, set the value as an environment variable (UNZER_ENCRYPTION_KEY) for your environment.
     
