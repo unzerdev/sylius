@@ -144,3 +144,28 @@ To be able to set up a plugin's database, remember to configure you database cre
     ```bash 
   { resource: "@SyliusUnzerPlugin/src/Resources/config/config.yaml" }
     ```
+
+- Edit Admin config encore configuration and add following line in webpack.config.js:
+    ```bash
+  Encore
+  .setOutputPath('public/build/admin/')
+  .setPublicPath('/build/admin')
+  // Add following line 
+  .addEntry('unzer-entry', './vendor/unzer/unzer-core/Resources/admin-ui/src/entry.js')
+    ```
+  
+- Build unzer admin assets with Encore.
+    ```bash
+   npm run build
+    ```
+  
+- Add unzer admin assets in templates/bundles/SyliusAdminBundle/_scripts.html.twig and templates/bundles/SyliusAdminBundle/_styles.html.twig.
+  ```bash
+  //in __scripts.html.twig file
+   {{ encore_entry_script_tags('unzer-entry', null, 'admin') }}
+    ```
+    
+  ```bash
+  //in __styles.html.twig file
+   {{ encore_entry_link_tags('unzer-entry', null, 'admin') }}
+    ```
