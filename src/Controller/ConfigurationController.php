@@ -9,12 +9,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
-use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 
+/**
+ * Class ConfigurationController.
+ *
+ * @package SyliusUnzerPlugin\Controller
+ */
 final class ConfigurationController extends AbstractController
 {
-
-
     /**
      * @param PaymentMethodFactoryInterface $paymentMethodFactory
      * @param PaymentMethodRepositoryInterface $paymentMethodRepository
@@ -44,9 +46,10 @@ final class ConfigurationController extends AbstractController
             $paymentMethod = $this->paymentMethodFactory->createWithGateway('unzer_payment');
             $paymentMethod->getGatewayConfig()?->setGatewayName('unzer_payment');
             $paymentMethod->setCode('unzer_payment');
-            $paymentMethod->setName('UNZER');
+            $paymentMethod->setName('Unzer');
             $this->paymentMethodRepository->add($paymentMethod);
         }
+
         return $this->redirectToRoute('unzer_admin_config');
     }
 }

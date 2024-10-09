@@ -1,9 +1,13 @@
 {% import '@SyliusUi/Macro/buttons.html.twig' as buttons %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('public/bundles/syliusunzerplugin/admin/css/unzer_admin.scss') }}">
+{% endblock %}
 
 {% if not is_unzer_enabled() %}
-<a class="ui labeled buttons icon top floating button yellow" href="{{ path('unzer_admin_enable') }}">
-    <i class="configure icon"></i>
-    {{ 'sylius_unzer_plugin.ui.configuration.button.enable'|trans }}
-</a>
+    <a class="ui labeled buttons icon top floating button unzer-button" href="{{ path('unzer_admin_enable') }}">
+        <img src="{{ asset('public/bundles/syliusunzerplugin/admin/images/unzer_icon.png') }}" alt="Custom Icon" class="unzer-icon"/>
+
+        {{ 'sylius_unzer_plugin.ui.configuration.button.enable'|trans }}
+    </a>
 {% endif %}

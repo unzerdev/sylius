@@ -4,40 +4,54 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
+use App\Entity\Payment\PaymentMethod;
 use Sylius\Bundle\CoreBundle\Controller\PaymentMethodController as BasePaymentMethodController;
 use Sylius\Component\Resource\ResourceActions;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class PaymentMethodController.
+ *
+ * @package SyliusUnzerPlugin\Controller
+ */
 class PaymentMethodController extends BasePaymentMethodController
 {
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function updateAction(Request $request): Response
     {
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
         $this->isGrantedOr403($configuration, ResourceActions::SHOW);
-        $product = $this->findOr404($configuration);
+        /** @var PaymentMethod $paymentMethod */
+        $paymentMethod = $this->findOr404($configuration);
 
-        if (true) {
+        if ($paymentMethod->getCode() !== null && $paymentMethod->getCode() === 'unzer_payment') {
             return $this->redirectToRoute('unzer_admin_config');
         }
 
-        // some custom provider service to retrieve recommended products
-        $recommendationService = $this->get('app.provider.product');
+        return parent::updateAction($request);
+    }
 
-        $recommendedProducts = $recommendationService->getRecommendedProducts($product);
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function deleteAction(Request $request): Response
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+        $this->isGrantedOr403($configuration, ResourceActions::SHOW);
+        /** @var PaymentMethod $paymentMethod */
+        $paymentMethod = $this->findOr404($configuration);
 
-        $this->eventDispatcher->dispatch(ResourceActions::SHOW, $configuration, $product);
-
-        if ($configuration->isHtmlRequest()) {
-            return $this->render($configuration->getTemplate(ResourceActions::SHOW . '.html'), [
-                'configuration' => $configuration,
-                'metadata' => $this->metadata,
-                'resource' => $product,
-                'recommendedProducts' => $recommendedProducts,
-                $this->metadata->getName() => $product,
-            ]);
+        if ($paymentMethod->getCode() !== null && $paymentMethod->getCode() === 'unzer_payment') {
+           //TODO: DELETE ALL DATA
         }
 
-        return $this->createRestView($configuration, $product);
+        return parent::deleteAction($request);
     }
 }

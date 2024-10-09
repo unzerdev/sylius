@@ -2,4 +2,4 @@ sylius_unzer_plugin:
     ui:
         configuration:
             button:
-                enable: 'Enable Unzer'
+                enable: 'Enable Unzer Payments'

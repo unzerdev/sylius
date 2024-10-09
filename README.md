@@ -144,3 +144,8 @@ To be able to set up a plugin's database, remember to configure you database cre
     ```bash 
   { resource: "@SyliusUnzerPlugin/src/Resources/config/config.yaml" }
     ```
+
+- Installing assets without webpack: Run following command in Sylius root directory:
+    ```bash 
+    bin/console assets:install
+    ```
