@@ -148,6 +148,10 @@ To be able to set up a plugin's database, remember to configure you database cre
     ```bash 
     OUTPUT_PATH='../../../../../public/admin-ui' yarn build
     ```
+- For UI development, run following command from `vendor/unzer/unzer-core/Resources/admin-ui`:
+    ```bash 
+      OUTPUT_PATH='../../../../../tests/Application/public/bundles/syliusunzerplugin/admin-ui' yarn watch
+    ```
 
 - Installing assets without webpack: Run following command in Sylius root directory:
     ```bash 
