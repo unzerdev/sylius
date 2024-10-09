@@ -31,9 +31,15 @@
 
         <service id="SyliusUnzerPlugin\Controller\ConfigurationController" autowire="true" autoconfigure="true" public="true" />
 
-        <service id="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" class="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" public="false">
-            <argument type="service" id="sylius.repository.payment_method" />
+        <service id="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" class="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" public="false" autoconfigure="true" autowire="true">
             <tag name="twig.extension" />
+        </service>
+
+
+        <service id="SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodChecker" class="SyliusUnzerPlugin\Services\PaymentMethodCheckerService" public="false" autoconfigure="true" autowire="true">
+        </service>
+
+        <service id="SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator" class="SyliusUnzerPlugin\Services\PaymentMethodCreator" public="false" autoconfigure="true" autowire="true">
         </service>
 
     </services>
