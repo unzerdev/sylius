@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% if not is_unzer_enabled() %}
-    <a class="ui labeled buttons icon top floating button unzer-button" href="{{ path('unzer_admin_enable') }}"  data-confirm-pay-pal-consent>
+    <a class="ui labeled buttons icon top floating button unzer-button" href="{{ path('unzer_admin_enable') }}"  data-confirm>
         <img src="{{ asset('bundles/syliusunzerplugin/admin/images/unzer_icon.png') }}" alt="Custom Icon" class="unzer-icon"/>
 
         {{ 'sylius_unzer_plugin.ui.configuration.button.enable'|trans }}
