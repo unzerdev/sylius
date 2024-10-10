@@ -2,7 +2,7 @@
 
 namespace SyliusUnzerPlugin\Services\Integration;
 
-use App\Entity\Channel\Channel;
+use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Unzer\Core\BusinessLogic\Domain\Stores\Models\Store;
 use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
