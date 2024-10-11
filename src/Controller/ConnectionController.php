@@ -33,7 +33,6 @@ final class ConnectionController extends AbstractController
      */
     public function connectAction(Request $request): Response
     {
-
         $response = AdminAPI::get()->connection(
             $request->get('storeId')
         )->connect(

@@ -16,15 +16,14 @@
                 apiUrl: "/admin/unzer/api",
                 connectionUrl: "/admin/unzer/api/connection",
                 appPath: "{{ path('unzer_admin_config') }}/",
-                isConnected: false,
                 stores: {{ stores|json_encode|raw }},
                 store: {{ store|json_encode|raw }},
+                version: {{ version|json_encode|raw }},
+                imagesUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images') }}"
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            Unzer.version = 'v1.0.0'
-
             Unzer.stateController.start();
         });
     </script>

@@ -11,5 +11,8 @@
                  public="true">
         </service>
 
+        <service id="SyliusUnzerPlugin\Controller\Admin\PaymentMethodController" autowire="true" autoconfigure="true"
+                 public="true">
+        </service>
     </services>
 </container>

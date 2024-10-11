@@ -9,9 +9,7 @@ use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodChecker;
 use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\VarDumper\VarDumper;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
-use Unzer\Core\BusinessLogic\AdminAPI\State\Request\StateRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 
 final class ConfigurationController extends AbstractController
@@ -52,8 +50,15 @@ final class ConfigurationController extends AbstractController
         }
         $stores = AdminAPI::get()->stores('')->getStores();
         $store = AdminAPI::get()->stores('')->getCurrentStore();
+        $version = AdminAPI::get()->version()->getVersion();
 
-        return $this->render('@SyliusUnzerPlugin/config.html.twig', ['stores' => $stores->toArray(), 'store' => $store->toArray()]);
+        return $this->render('@SyliusUnzerPlugin/config.html.twig',
+            [
+                'stores' => $stores->toArray(),
+                'store' => $store->toArray(),
+                'version' => $version->toArray(),
+            ]
+        );
     }
 
     /**
