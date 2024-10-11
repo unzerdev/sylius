@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
+use Exception;
 use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodChecker;
 use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +43,7 @@ final class ConfigurationController extends AbstractController
     /**
      *
      * @return Response
-     * @throws InvalidModeException
+     * @throws InvalidModeException|Exception
      */
     public function configAction(): Response
     {

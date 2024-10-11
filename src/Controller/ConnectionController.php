@@ -37,10 +37,13 @@ final class ConnectionController extends AbstractController
         $response = AdminAPI::get()->connection(
             $request->get('storeId')
         )->connect(
-            new ConnectionRequest($request->get('environment') ?? '', $request->get('publicKey') ?? '', $request->get('privateKey') ?? ''
+            new ConnectionRequest(
+                $request->get('environment') ?? '',
+                $request->get('publicKey') ?? '',
+                $request->get('privateKey') ?? ''
             )
         );
 
-        return $this->json($response->toArray());
+        return $this->json($response->toArray(), $response->isSuccessful() ? 200 : 400);
     }
 }
