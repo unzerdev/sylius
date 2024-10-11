@@ -15,8 +15,19 @@ unzer_admin_connection:
     path: /unzer/api/connection
     defaults:
         _controller: SyliusUnzerPlugin\Controller\ConnectionController::connectAction
+        
+unzer_admin_disconnect:
+    path: /unzer/api/credential/disconnect
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::disconnectAction
+        
+unzer_admin_reregister:
+    path: /unzer/api/credential/reregister
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::reRegisterWebhookAction
 
 unzer_admin_payment_methods:
     path: /unzer/api/paymentMethod
     defaults:
         _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::getPaymentMethodsAction
+
