@@ -11,5 +11,9 @@
                  public="true">
         </service>
 
+        <service id="SyliusUnzerPlugin\Controller\CredentialsController" autowire="true" autoconfigure="true"
+                 public="true">
+        </service>
+
     </services>
 </container>

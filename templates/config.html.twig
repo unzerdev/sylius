@@ -15,6 +15,7 @@
             config: {
                 apiUrl: "/admin/unzer/api",
                 connectionUrl: "/admin/unzer/api/connection",
+                credentialUrl: "/admin/unzer/api/credential",
                 appPath: "{{ path('unzer_admin_config') }}/",
                 isConnected: false,
                 stores: {{ stores|json_encode|raw }},
