@@ -16,11 +16,22 @@
                 apiUrl: "/admin/unzer/api",
                 connectionUrl: "/admin/unzer/api/connection",
                 credentialUrl: "/admin/unzer/api/credential",
+                webhookData: {{ webhookdata|json_encode|raw }},
                 appPath: "{{ path('unzer_admin_config') }}/",
                 stores: {{ stores|json_encode|raw }},
                 store: {{ store|json_encode|raw }},
                 version: {{ version|json_encode|raw }},
                 imagesUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images') }}"
+            },
+            webhookData : {
+                'registrationDate': "{{ webhookdata.registrationDate is defined ? webhookdata.registrationDate : '' }}",
+                'webhookID': "{{ webhookdata.webhookID is defined ? webhookdata.webhookID : '' }}",
+                'events': "{{ webhookdata.events is defined ? webhookdata.events : '' }}",
+                'webhookUrl': "{{ webhookdata.webhookUrl is defined ? webhookdata.webhookUrl : '' }}"
+            },
+            connectionData : {
+                'privateKey': "{{ connectionData.privateKey is defined ? connectionData.privateKey : '' }}",
+                'publicKey': "{{ connectionData.publicKey is defined ? connectionData.publicKey : '' }}"
             }
         }
 

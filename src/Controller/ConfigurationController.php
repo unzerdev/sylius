@@ -10,6 +10,7 @@ use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
+use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 
 final class ConfigurationController extends AbstractController
@@ -32,8 +33,7 @@ final class ConfigurationController extends AbstractController
     public function __construct(
         UnzerPaymentMethodCreator $paymentMethodCreator,
         UnzerPaymentMethodChecker $unzerPaymentMethodChecker
-    )
-    {
+    ) {
         $this->paymentMethodCreator = $paymentMethodCreator;
         $this->unzerPaymentMethodChecker = $unzerPaymentMethodChecker;
     }
@@ -48,15 +48,26 @@ final class ConfigurationController extends AbstractController
         if (!$this->unzerPaymentMethodChecker->exists()) {
             return $this->redirectToRoute('sylius_admin_payment_method_index');
         }
-        $stores = AdminAPI::get()->stores('')->getStores();
-        $store = AdminAPI::get()->stores('')->getCurrentStore();
+        $stores = AdminAPI::get()->stores()->getStores();
+        $store = AdminAPI::get()->stores()->getCurrentStore();
         $version = AdminAPI::get()->version()->getVersion();
+        $mode = $store->toArray()['mode'];
+        $credentials = AdminAPI::get()->connection($store->toArray()['storeId'])->getCredentials(
+            new GetCredentialsRequest($mode)
+        )->toArray();
 
-        return $this->render('@SyliusUnzerPlugin/config.html.twig',
+        $webhookdata = $credentials['webhookData'] ?? [];
+        $connectionData = $credentials['connectionData'] ?? [];
+
+
+        return $this->render(
+            '@SyliusUnzerPlugin/config.html.twig',
             [
                 'stores' => $stores->toArray(),
                 'store' => $store->toArray(),
                 'version' => $version->toArray(),
+                'webhookdata' => $webhookdata,
+                'connectionData' => $connectionData,
             ]
         );
     }
