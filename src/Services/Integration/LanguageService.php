@@ -43,7 +43,28 @@ class LanguageService implements CoreLanguageService
         }
 
         return $channel->getLocales()->map(function (Locale $locale) {
-            return new Language($locale->getCode());
+            $localeCode = $locale->getCode();
+            $flag = is_string($localeCode) ? $this->getFlagFromCode($localeCode) : 'default';
+
+            return new Language($localeCode ?? 'unknown', $flag);
         })->toArray();
+    }
+
+    /**
+     * Extracts the country code from the locale code (e.g. 'en_US' -> 'us').
+     *
+     * @param string $localeCode
+     *
+     * @return string
+     */
+    private function getFlagFromCode(string $localeCode): string
+    {
+        $parts = explode('_', $localeCode);
+        if (!isset($parts[1])) {
+            return 'default';
+        }
+
+        $countryCode = strtolower($parts[1]);
+        return 'country-' . $countryCode;
     }
 }

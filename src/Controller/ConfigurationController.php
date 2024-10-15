@@ -55,6 +55,7 @@ final class ConfigurationController extends AbstractController
         $credentials = AdminAPI::get()->connection($store->toArray()['storeId'])->getCredentials(
             new GetCredentialsRequest($mode)
         )->toArray();
+        $locales = AdminAPI::get()->languages($store->toArray()['storeId'])->getLanguages()->toArray();
 
         $webhookdata = $credentials['webhookData'] ?? [];
         $connectionData = $credentials['connectionData'] ?? [];
@@ -68,6 +69,7 @@ final class ConfigurationController extends AbstractController
                 'version' => $version->toArray(),
                 'webhookdata' => $webhookdata,
                 'connectionData' => $connectionData,
+                'locales' => $locales,
             ]
         );
     }
