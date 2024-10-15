@@ -30,4 +30,9 @@ unzer_admin_payment_methods:
     path: /unzer/api/paymentMethod
     defaults:
         _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::getPaymentMethodsAction
+        
+unzer_admin_save_design:
+    path: /unzer/api/saveDesign
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\DesignController::saveDesignAction
 

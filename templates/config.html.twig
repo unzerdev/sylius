@@ -21,7 +21,9 @@
                 stores: {{ stores|json_encode|raw }},
                 store: {{ store|json_encode|raw }},
                 version: {{ version|json_encode|raw }},
-                imagesUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images') }}"
+                imagesUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images') }}",
+                flagsUrl:  "{{ asset('bundles/syliusunzerplugin/admin-ui/images/flags') }}",
+                locales: {{ locales|json_encode|raw }}
             },
             webhookData : {
                 'registrationDate': "{{ webhookdata.registrationDate is defined ? webhookdata.registrationDate : '' }}",
