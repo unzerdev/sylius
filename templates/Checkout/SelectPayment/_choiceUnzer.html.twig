@@ -1,0 +1,33 @@
+<div class="hidden" hidden {{ sylius_test_html_attribute('payment-method-checkbox') }}>
+    {{ form_widget(form, {
+        'label': false,
+        'attr': {
+            'hidden': '',
+            'class': 'hidden',
+            'data-test-payment-method-select': ''
+        }
+    }) }}
+</div>
+
+{{ render(controller('SyliusUnzerPlugin\\Controller\\CheckoutPaymentController::renderPaymentTypes', {'orderId': order.id})) }}
+
+<script type="text/javascript">
+    //# sourceURL=_choicesUnzer.js
+    document.addEventListener('DOMContentLoaded', () => {
+        let unzerMainPaymentInput = document.getElementById('{{ form.vars.id }}');
+        let unzerDefaultPaymentMethodType = document.getElementById('unzer_payment_method_type_none');
+        let nativePaymentMethods = document.querySelectorAll("[name='{{ form.vars.full_name }}']");
+        let unzerPaymentMethodTypes = document.querySelectorAll("[name=unzer_payment_method_type]");
+
+        for (let i = 0; i < unzerPaymentMethodTypes.length; i++) {
+            unzerPaymentMethodTypes[i].addEventListener('change', function() {
+                unzerMainPaymentInput.checked = true;
+            });
+        }
+        for (let i = 0; i < nativePaymentMethods.length; i++) {
+            nativePaymentMethods[i].addEventListener('change', function() {
+                unzerDefaultPaymentMethodType.checked = true;
+            });
+        }
+    });
+</script>

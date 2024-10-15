@@ -1,0 +1,45 @@
+{% if (unzer_payment_page.id is defined) %}
+    <div id="unzer-payment-dialog-placeholder"></div>
+    <script type="text/javascript">
+        //# sourceURL=payment_page_dialog.js
+        document.addEventListener('DOMContentLoaded', () => {
+            let unzerDialogPlaceholder = document.getElementById('unzer-payment-dialog-placeholder');
+            let checkoutCompleteForm = unzerDialogPlaceholder.closest('form');
+            if (!checkoutCompleteForm) {
+                return;
+            }
+
+            checkoutCompleteForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                checkoutCompleteForm.classList.add('loading');
+
+                let checkout = new window.checkout('{{ unzer_payment_page.id }}');
+
+                checkout.abort(function() {
+                    // handle abort event.
+                    checkout._hideIframe();
+                    checkoutCompleteForm.classList.remove('loading');
+                });
+
+                checkout.success(function(data) {
+                    // TODO: handle success event.
+                    window.location.href = 'ReturnController.php';
+                });
+
+                checkout.error(function(error) {
+                    console.log(error);
+
+                    checkout._hideIframe();
+                    checkoutCompleteForm.classList.remove('loading');
+                });
+
+                checkout.init().then(function() {
+                    checkout.open();
+                    checkoutCompleteForm.classList.remove('loading');
+                });
+
+            }, true);
+        });
+    </script>
+{% endif %}
