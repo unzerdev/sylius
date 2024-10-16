@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 final class PaymentMethodController extends AbstractController
 {
@@ -17,9 +18,13 @@ final class PaymentMethodController extends AbstractController
      *
      * @return Response
      *
+     * @throws UnzerApiException
      */
     public function getPaymentMethodsAction(Request $request): Response
     {
-        return $this->json(AdminAPI::get()->paymentMethods($request->get("storeId"))->getPaymentMethods()->toArray());
+
+        $methods = AdminAPI::get()->paymentMethods('1')->getPaymentMethods();
+
+        return $this->json($methods->toArray());
     }
 }

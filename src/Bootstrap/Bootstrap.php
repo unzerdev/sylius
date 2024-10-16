@@ -12,6 +12,7 @@ use SyliusUnzerPlugin\Services\Integration\VersionService;
 use SyliusUnzerPlugin\Services\Integration\WebhookUrlService;
 use Unzer\Core\BusinessLogic\BootstrapComponent;
 use Unzer\Core\BusinessLogic\DataAccess\Connection\Entities\ConnectionSettings;
+use Unzer\Core\BusinessLogic\DataAccess\PaymentMethodConfig\Entities\PaymentMethodConfig;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
 use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
@@ -169,5 +170,5 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(ConnectionSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
-    }
+        RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());    }
 }
