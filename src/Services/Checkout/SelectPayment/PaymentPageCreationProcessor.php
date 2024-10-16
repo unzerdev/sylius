@@ -31,12 +31,19 @@ final class PaymentPageCreationProcessor implements OrderProcessorInterface
             return;
         }
 
-        if (!array_key_exists('unzer_payment_method_type', $payment->getDetails())) {
+        $paymentDetails = $payment->getDetails();
+        if (
+            !array_key_exists('unzer', $paymentDetails) ||
+            !array_key_exists('payment_type', $paymentDetails['unzer'])
+        ) {
             return;
         }
 
         // TODO: Call core library to create payment page request
-        $paymentPageId = 's-ppg-bf1d82a8c3ed53ae81c689a6fd747b8f2910400d7998868dba3590a32d92ba64';
-        $payment->setDetails(array_merge($payment->getDetails(), ['unzer_payment_page' => ['id' => $paymentPageId]]));
+        $paymentDetails['unzer']['payment_page'] = [
+            'id' => 's-ppg-bf1d82a8c3ed53ae81c689a6fd747b8f2910400d7998868dba3590a32d92ba64'
+        ];
+
+        $payment->setDetails($paymentDetails);
     }
 }

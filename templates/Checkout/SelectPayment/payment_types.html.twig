@@ -1,22 +1,39 @@
-<input hidden type="radio" id="unzer_payment_method_type_none" name="unzer_payment_method_type" required="required" class="unzer-payments hidden" data-test-payment-method-select="" value="">
+{% import '@SyliusShop/Common/Macro/money.html.twig' as money %}
 
-<div class="item">
-    <div class="field">
-        <div class="ui radio checkbox">
-            <input type="radio" id="unzer_payment_method_type_0_type_1" name="unzer_payment_method_type" required="required" class="unzer-payments" data-test-payment-method-select="" value="unzer_payment_type_1" {% if (unzer_payment_method_type is same as('unzer_payment_type_1')) %}checked{% endif %}><label></label>
+<input hidden type="radio" id="unzer_payment_method_type_none" name="unzer_payment_method_type" required="required"
+       class="unzer-payments hidden" data-test-payment-method-select="" value="">><label for="unzer_payment_method_type_none"></label>
+
+{% for payment_type in payment_types %}
+    <div class="item">
+        <div class="field">
+            <div class="ui radio checkbox">
+                <input type="radio" id="unzer_payment_method_type_{{ payment_type.type }}"
+                       name="unzer_payment_method_type" required="required" class="unzer-payments"
+                       data-test-payment-method-select="" value="{{ payment_type.type }}"
+                       {% if (selected_payment_type == payment_type.type) %}checked{% endif %}><label></label>
+            </div>
+        </div>
+        <div class="content">
+            <a class="header">
+                <label data-test-payment-method-label=""
+                       for="unzer_payment_method_type_{{ payment_type.type }}"
+                       class="required">
+                    {{ payment_type.name }}
+                </label>
+            </a>
+            <div class="description">
+                <p>{{ payment_type.description }}</p>
+            </div>
+        </div>
+        <div class="extra">
+            <div class="ui large right floated" {{ sylius_test_html_attribute('unzer-method-logo') }}>
+                <i class="huge icon"><img class="ui fluid image" alt="{{ payment_type.name }}" src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}"></i>
+            </div>
+            {% if (payment_type.surcharge is defined) %}
+                <div class="ui large right floated label fee" {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
+                    {{ money.convertAndFormat(payment_type.surcharge.value) }}
+                </div>
+            {% endif %}
         </div>
     </div>
-    <div class="content">
-        <a class="header"><label data-test-payment-method-label="" for="unzer_payment_method_type_0_type_1" class="required">Unzer Type 1</label></a>
-    </div>
-</div>
-<div class="item">
-    <div class="field">
-        <div class="ui radio checkbox">
-            <input type="radio" id="unzer_payment_method_type_0_type_2" name="unzer_payment_method_type" required="required" class="unzer-payments" data-test-payment-method-select="" value="unzer_payment_type_2" {% if (unzer_payment_method_type is same as('unzer_payment_type_2')) %}checked{% endif %}><label></label>
-        </div>
-    </div>
-    <div class="content">
-        <a class="header"><label data-test-payment-method-label="" for="unzer_payment_method_type_0_type_2" class="required">Unzer Type 1</label></a>
-    </div>
-</div>
+{% endfor %}

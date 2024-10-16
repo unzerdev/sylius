@@ -33,5 +33,4 @@ sylius_ui:
         sylius.shop.checkout.complete.before_navigation:
             blocks:
                 unzer_payment_page_dialog:
-                    # TODO: Add template provider that will return payment page id for payment dialog initialization
                     template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"

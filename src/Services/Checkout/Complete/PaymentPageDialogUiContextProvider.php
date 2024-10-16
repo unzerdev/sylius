@@ -30,11 +30,15 @@ class PaymentPageDialogUiContextProvider implements ContextProviderInterface
             return $templateContext;
         }
 
-        if (!array_key_exists('unzer_payment_page', $payment->getDetails())) {
+        $paymentDetails = $payment->getDetails();
+        if (
+            !array_key_exists('unzer', $paymentDetails) ||
+            !array_key_exists('payment_page', $paymentDetails['unzer'])
+        ) {
             return $templateContext;
         }
 
-        $templateContext['unzer_payment_page'] = $payment->getDetails()['unzer_payment_page'];
+        $templateContext['unzer_payment_page'] = $payment->getDetails()['unzer']['payment_page'];
 
         return $templateContext;
     }

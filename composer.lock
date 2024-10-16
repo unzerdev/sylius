@@ -13338,12 +13338,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:logeecom/unzer-core.git",
-                "reference": "6f710696c6be46d4b8f384fca6549e3bd340dfaa"
+                "reference": "d10e7aab7612f1ba1e4d0587138ef264464631dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/logeecom/unzer-core/zipball/6f710696c6be46d4b8f384fca6549e3bd340dfaa",
-                "reference": "6f710696c6be46d4b8f384fca6549e3bd340dfaa",
+                "url": "https://api.github.com/repos/logeecom/unzer-core/zipball/d10e7aab7612f1ba1e4d0587138ef264464631dd",
+                "reference": "d10e7aab7612f1ba1e4d0587138ef264464631dd",
                 "shasum": ""
             },
             "require": {
@@ -13373,7 +13373,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2024-10-15T14:28:45+00:00"
+            "time": "2024-10-16T13:47:16+00:00"
         },
         {
             "name": "unzerdev/php-sdk",

@@ -170,5 +170,6 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(ConnectionSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
-        RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());    }
+        RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
+    }
 }

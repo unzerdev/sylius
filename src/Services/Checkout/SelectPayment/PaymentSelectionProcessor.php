@@ -32,17 +32,20 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
         }
 
         $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
-        if (null === $payment || $payment->getMethod()?->getCode() !== 'unzer_payment' ) {
+        if (null === $payment) {
             return;
         }
 
-        $unzerPaymentType = $this->requestStack->getCurrentRequest()?->get('unzer_payment_method_type');
-        if (null === $unzerPaymentType) {
-            return;
+        $paymentDetails = $payment->getDetails();
+        if ($payment->getMethod()?->getCode() !== 'unzer_payment') {
+            unset($paymentDetails['unzer']);
         }
 
-        $payment->setDetails(array_merge($payment->getDetails(), ['unzer_payment_method_type' => $unzerPaymentType]));
+        $unzerPaymentType = $this->requestStack->getCurrentRequest()?->get('unzer_payment_method_type', '');
+        if ('' !== $unzerPaymentType) {
+            $paymentDetails['unzer'] = ['payment_type' => $unzerPaymentType];
+        }
 
-        // TODO: Call core library to create payment page request
+        $payment->setDetails($paymentDetails);
     }
 }
