@@ -5,6 +5,7 @@ namespace SyliusUnzerPlugin\Bootstrap;
 use Doctrine\ORM\EntityManagerInterface;
 use SyliusUnzerPlugin\Repositories\BaseRepository;
 use SyliusUnzerPlugin\Services\Integration\CountryService;
+use SyliusUnzerPlugin\Services\Integration\CurrencyService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
 use SyliusUnzerPlugin\Services\Integration\LanguageService;
 use SyliusUnzerPlugin\Services\Integration\StoreService;
@@ -19,6 +20,7 @@ use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as Lang
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Versions\VersionService as VersionServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Currency\CurrencyServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Utility\EncryptorInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Webhook\WebhookUrlServiceInterface;
 use Unzer\Core\Infrastructure\Configuration\ConfigEntity;
@@ -70,6 +72,11 @@ class Bootstrap extends BootstrapComponent
     private static EncryptorService $encryptorService;
 
     /**
+     * @var CurrencyService
+     */
+    private static CurrencyService $currencyService;
+
+    /**
      * @param ShopLoggerAdapter $loggerAdapter
      * @param EntityManagerInterface $entityManager
      * @param LanguageService $languageService
@@ -77,6 +84,7 @@ class Bootstrap extends BootstrapComponent
      * @param StoreService $storeService
      * @param WebhookUrlService $webhookUrlService
      * @param EncryptorService $encryptorService
+     * @param CurrencyService $currencyService
      */
     public function __construct(
         ShopLoggerAdapter $loggerAdapter,
@@ -85,7 +93,8 @@ class Bootstrap extends BootstrapComponent
         CountryService $countryService,
         StoreService $storeService,
         WebhookUrlService $webhookUrlService,
-        EncryptorService $encryptorService
+        EncryptorService $encryptorService,
+        CurrencyService $currencyService
     ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
@@ -94,6 +103,7 @@ class Bootstrap extends BootstrapComponent
         self::$storeService = $storeService;
         self::$webhookUrlService = $webhookUrlService;
         self::$encryptorService = $encryptorService;
+        self::$currencyService = $currencyService;
     }
 
     /**
@@ -151,6 +161,13 @@ class Bootstrap extends BootstrapComponent
             StoreServiceInterface::class,
             function () {
                 return self::$storeService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            CurrencyServiceInterface::class,
+            function () {
+                return self::$currencyService;
             }
         );
     }
