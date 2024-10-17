@@ -25,6 +25,11 @@ unzer_admin_reregister:
     path: /unzer/api/credential/reregister
     defaults:
         _controller: SyliusUnzerPlugin\Controller\CredentialsController::reRegisterWebhookAction
+        
+unzer_admin_credentialsData:
+    path: /unzer/api/credential/getData
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::getCredentialsData
 
 unzer_admin_payment_methods:
     path: /unzer/api/paymentMethod

@@ -6,7 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
+use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
 class CredentialsController extends AbstractController
@@ -47,6 +49,24 @@ class CredentialsController extends AbstractController
     /**
      * @param Request $request
      *
+     * @return Response
+     * @throws InvalidModeException
+     * @throws \Exception
+     */
+    public function getCredentialsData(Request $request): Response
+    {
+        $storeId = $this->getStoreIdString($request);
+        $store = AdminAPI::get()->stores()->getCurrentStore();
+        $mode = $store->toArray()['mode'];
+
+        $response = AdminAPI::get()->connection($storeId)->getCredentials(new GetCredentialsRequest($mode));
+
+        return $this->json($response->toArray());
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return string
      */
     private function getStoreIdString(Request $request): string
@@ -54,5 +74,4 @@ class CredentialsController extends AbstractController
         $storeId = $request->get('storeId');
         return is_string($storeId) ? $storeId : '';
     }
-
 }
