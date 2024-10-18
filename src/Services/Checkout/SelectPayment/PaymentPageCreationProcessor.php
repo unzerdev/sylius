@@ -8,6 +8,10 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Order\Model\OrderInterface as BaseOrderInterface;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Sylius\Component\Payment\Model\PaymentInterface;
+use Unzer\Core\BusinessLogic\CheckoutAPI\CheckoutAPI;
+use Unzer\Core\BusinessLogic\CheckoutAPI\PaymentPage\Request\PaymentPageCreateRequest;
+use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
+use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
 use Webmozart\Assert\Assert;
 
 /**
@@ -22,7 +26,7 @@ final class PaymentPageCreationProcessor implements OrderProcessorInterface
         Assert::isInstanceOf($order, OrderInterface::class);
 
         /** @var OrderInterface $order */
-        if (!$order->canBeProcessed()) {
+        if (!$order->canBeProcessed() || null === $order->getChannel()) {
             return;
         }
 
@@ -39,10 +43,17 @@ final class PaymentPageCreationProcessor implements OrderProcessorInterface
             return;
         }
 
-        // TODO: Call core library to create payment page request
-        $paymentDetails['unzer']['payment_page'] = [
-            'id' => 's-ppg-bf1d82a8c3ed53ae81c689a6fd747b8f2910400d7998868dba3590a32d92ba64'
-        ];
+        $response = CheckoutAPI::get()->paymentPage($order->getChannel()->getId())->create(new PaymentPageCreateRequest(
+            $paymentDetails['unzer']['payment_type'],
+            Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
+            'http://1-13-4.sylius.localhost/en_US/checkout/select-payment'
+        ));
+
+        if ($response->isSuccessful()) {
+            $paymentDetails['unzer']['payment_page'] = [
+                'id' => $response->toArray()['id']
+            ];
+        }
 
         $payment->setDetails($paymentDetails);
     }
