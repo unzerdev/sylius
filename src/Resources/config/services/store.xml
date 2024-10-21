@@ -5,6 +5,7 @@
     <services>
         <service id="unzer.store.service" class="SyliusUnzerPlugin\Services\Integration\StoreService">
             <argument type="service" id="sylius.repository.channel"/>
+            <argument type="service" id="translator"/>
         </service>
     </services>
 </container>

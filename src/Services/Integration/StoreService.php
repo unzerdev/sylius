@@ -1,8 +1,11 @@
 <?php
 
 namespace SyliusUnzerPlugin\Services\Integration;
+use ReflectionClass;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\OrderPaymentStates;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Unzer\Core\BusinessLogic\Domain\Stores\Models\Store;
 use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Stores\Models\StoreOrderStatus;
@@ -18,13 +21,16 @@ class StoreService implements StoreServiceInterface
      * @var ChannelRepositoryInterface
      */
     private ChannelRepositoryInterface $channelRepository;
+    private TranslatorInterface $translator;
 
     /**
      * @param ChannelRepositoryInterface $channelRepository
+     * @param TranslatorInterface $translator
      */
-    public function __construct(ChannelRepositoryInterface $channelRepository)
+    public function __construct(ChannelRepositoryInterface $channelRepository, TranslatorInterface $translator)
     {
         $this->channelRepository = $channelRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -64,7 +70,15 @@ class StoreService implements StoreServiceInterface
      */
     public function getStoreOrderStatuses(): array
     {
-        return [];
+        $reflection = new ReflectionClass(OrderPaymentStates::class);
+        $values = array_values($reflection->getConstants());
+
+        $orderStatuses = [];
+        foreach ($values as $value) {
+            $orderStatuses[] = new StoreOrderStatus($value, $this->translator->trans("sylius.ui.$value"));
+        }
+
+        return $orderStatuses;
     }
 
     /**

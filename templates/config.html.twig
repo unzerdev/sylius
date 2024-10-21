@@ -15,6 +15,9 @@
             config: {
                 apiUrl: "/admin/unzer/api",
                 connectionUrl: "/admin/unzer/api/connection",
+                paymentMethodsUrl: "/admin/unzer/api/paymentMethod",
+                storeUrl: "/admin/unzer/api/store",
+                countryUrl: "/admin/unzer/api/country",
                 credentialUrl: "/admin/unzer/api/credential",
                 webhookData: {{ webhookdata|json_encode|raw }},
                 appPath: "{{ path('unzer_admin_config') }}/",

@@ -19,6 +19,14 @@
                  public="true">
         </service>
 
+        <service id="SyliusUnzerPlugin\Controller\Admin\CountryController" autowire="true" autoconfigure="true"
+                 public="true">
+        </service>
+
+        <service id="SyliusUnzerPlugin\Controller\Admin\StoreController" autowire="true" autoconfigure="true"
+                 public="true">
+        </service>
+
         <service id="SyliusUnzerPlugin\Controller\DesignController" autowire="true" autoconfigure="true"
                  public="true">
         </service>
