@@ -11,10 +11,9 @@ use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\EnablePaymentMethodRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\GetPaymentMethodConfigRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\SavePaymentMethodConfigRequest;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Country\Exceptions\InvalidCountryArrayException;
 use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidBookingMethodException;
-use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidPaymentTypeException;
-use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\PaymentConfigNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Translations\Exceptions\InvalidTranslatableArrayException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
@@ -27,6 +26,7 @@ final class PaymentMethodController extends AbstractController
      * @return Response
      *
      * @throws UnzerApiException
+     * @throws ConnectionSettingsNotFoundException
      */
     public function getPaymentMethodsAction(Request $request): Response
     {
@@ -41,7 +41,6 @@ final class PaymentMethodController extends AbstractController
      *
      * @return Response
      *
-     * @throws InvalidPaymentTypeException
      */
     public function enablePaymentMethodAction(string $type, Request $request): Response
     {
@@ -57,9 +56,6 @@ final class PaymentMethodController extends AbstractController
      * @param Request $request
      *
      * @return Response
-     *
-     * @throws InvalidPaymentTypeException
-     * @throws PaymentConfigNotFoundException
      */
     public function getPaymentMethodConfiguration(string $type, Request $request): Response
     {
@@ -89,9 +85,9 @@ final class PaymentMethodController extends AbstractController
         $response = AdminAPI::get()->paymentMethods($request->get('storeId'))->savePaymentConfig(
             new SavePaymentMethodConfigRequest(
                 $type,
+                $request->get('bookingMethod'),
                 $request->get('name'),
                 $request->get('description'),
-                $request->get('bookingMethod'),
                 $request->get('statusIdToCharge'),
                 $minAmount ? (double)$minAmount : null,
                 $maxAmount ? (double)$maxAmount : null,
