@@ -57,7 +57,6 @@ final class ConfigurationController extends AbstractController
         )->toArray();
         $locales = AdminAPI::get()->languages($store->toArray()['storeId'])->getLanguages()->toArray();
 
-        $webhookdata = $credentials['webhookData'] ?? [];
         $connectionData = $credentials['connectionData'] ?? [];
 
 
@@ -67,7 +66,6 @@ final class ConfigurationController extends AbstractController
                 'stores' => $stores->toArray(),
                 'store' => $store->toArray(),
                 'version' => $version->toArray(),
-                'webhookdata' => $webhookdata,
                 'connectionData' => $connectionData,
                 'locales' => $locales,
             ]

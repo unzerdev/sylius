@@ -61,7 +61,10 @@ final class CheckoutPaymentController extends AbstractController
                     Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
                     (string)$order->getLocaleCode()
                 ));
-            $templateData['payment_types'] = $response->toArray();
+
+            if ($response->isSuccessful()) {
+                $templateData['payment_types'] = $response->toArray();
+            }
         } catch (\Exception $e) {
             Logger::logWarning(
                 'Exception while fetching available payment methods.',

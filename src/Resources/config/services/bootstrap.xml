@@ -12,6 +12,7 @@
             <argument type="service" id="unzer.store.service"/>
             <argument type="service" id="unzer.webhook.url.service"/>
             <argument type="service" id="unzer.encryptor.service"/>
+            <argument type="service" id="unzer.currency.service"/>
         </service>
     </services>
 </container>
