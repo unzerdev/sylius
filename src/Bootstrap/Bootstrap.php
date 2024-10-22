@@ -7,6 +7,7 @@ use SyliusUnzerPlugin\Repositories\BaseRepository;
 use SyliusUnzerPlugin\Services\Integration\CountryService;
 use SyliusUnzerPlugin\Services\Integration\CurrencyService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
+use SyliusUnzerPlugin\Services\Integration\ImageHandlerService;
 use SyliusUnzerPlugin\Services\Integration\LanguageService;
 use SyliusUnzerPlugin\Services\Integration\StoreService;
 use SyliusUnzerPlugin\Services\Integration\VersionService;
@@ -18,6 +19,7 @@ use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPage
 use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Uploader\UploaderService;
 use Unzer\Core\BusinessLogic\Domain\Integration\Versions\VersionService as VersionServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Currency\CurrencyServiceInterface;
@@ -77,6 +79,11 @@ class Bootstrap extends BootstrapComponent
     private static CurrencyService $currencyService;
 
     /**
+     * @var ImageHandlerService
+     */
+    private static ImageHandlerService $imageHandlerService;
+
+    /**
      * @param ShopLoggerAdapter $loggerAdapter
      * @param EntityManagerInterface $entityManager
      * @param LanguageService $languageService
@@ -85,6 +92,7 @@ class Bootstrap extends BootstrapComponent
      * @param WebhookUrlService $webhookUrlService
      * @param EncryptorService $encryptorService
      * @param CurrencyService $currencyService
+     * @param ImageHandlerService $imageHandlerService
      */
     public function __construct(
         ShopLoggerAdapter $loggerAdapter,
@@ -94,7 +102,8 @@ class Bootstrap extends BootstrapComponent
         StoreService $storeService,
         WebhookUrlService $webhookUrlService,
         EncryptorService $encryptorService,
-        CurrencyService $currencyService
+        CurrencyService $currencyService,
+        ImageHandlerService $imageHandlerService
     ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
@@ -104,6 +113,7 @@ class Bootstrap extends BootstrapComponent
         self::$webhookUrlService = $webhookUrlService;
         self::$encryptorService = $encryptorService;
         self::$currencyService = $currencyService;
+        self::$imageHandlerService = $imageHandlerService;
     }
 
     /**
@@ -168,6 +178,13 @@ class Bootstrap extends BootstrapComponent
             CurrencyServiceInterface::class,
             function () {
                 return self::$currencyService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            UploaderService::class,
+            function () {
+                return self::$imageHandlerService;
             }
         );
     }

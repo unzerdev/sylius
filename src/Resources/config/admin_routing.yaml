@@ -65,7 +65,12 @@ unzer_admin_payment_methods_enable:
         _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::enablePaymentMethodAction
         
 unzer_admin_save_design:
-    path: /unzer/api/saveDesign
+    path: /unzer/api/design/saveDesign
     defaults:
         _controller: SyliusUnzerPlugin\Controller\DesignController::saveDesignAction
+
+unzer_admin_get_design:
+    path: /unzer/api/design/getDesign
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\DesignController::getDesignAction
 
