@@ -8,14 +8,14 @@
 
 <p align="center">Skeleton for starting Sylius plugins.</p>
 
-## Documentation
-
+Documentation
+----
 For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
 there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
 
-## Quickstart Installation
-
-### Traditional
+Quickstart Installation
+----
+## Traditional
 
 1. Run `composer create-project sylius/plugin-skeleton ProjectName`.
 
@@ -32,7 +32,7 @@ there you will find the <a href="https://docs.sylius.com/en/latest/plugin-develo
 
 To be able to set up a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
 
-### Docker
+## Docker
 
 1. Execute `docker compose up -d`
 
@@ -40,9 +40,9 @@ To be able to set up a plugin's database, remember to configure you database cre
 
 3. See your browser `open localhost`
 
-## Usage
+# Usage
 
-### Running plugin tests
+## Running plugin tests
 
   - PHPUnit
 
@@ -105,7 +105,7 @@ To be able to set up a plugin's database, remember to configure you database cre
     vendor/bin/ecs check
     ```
 
-### Opening Sylius with your plugin
+## Opening Sylius with your plugin
 
 - Using `test` environment:
 
@@ -121,9 +121,9 @@ To be able to set up a plugin's database, remember to configure you database cre
     (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
     ```
 
-## Plugin Development
+Plugin Development
 ----
-### Instalation
+## Instalation
 
 - Run migrations in Sylius root directory:
     ```bash
@@ -156,6 +156,15 @@ To be able to set up a plugin's database, remember to configure you database cre
 - Installing assets without webpack: Run following command in Sylius root directory:
     ```bash 
     bin/console assets:install
+    ```
+### Checkout setup
+- Override how Unzer payment method is rendered on the checkout buy wrapping original content of `templates/bundles/SyliusShopBundle/Checkout/SelectPayment/_choice.html.twig` file with following condition
+    ```html 
+    {% if method.gatewayConfig.factoryName == 'unzer_payment' %}                                                                
+        {% include '@SyliusUnzerPlugin/Checkout/SelectPayment/_choiceUnzer.html.twig'%}
+    {% else %}
+        <!--    Original file content goes here    -->
+    {% endif %}
     ```
 
 ## UNZER Encryption Key

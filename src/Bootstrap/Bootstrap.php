@@ -5,19 +5,24 @@ namespace SyliusUnzerPlugin\Bootstrap;
 use Doctrine\ORM\EntityManagerInterface;
 use SyliusUnzerPlugin\Repositories\BaseRepository;
 use SyliusUnzerPlugin\Services\Integration\CountryService;
+use SyliusUnzerPlugin\Services\Integration\CurrencyService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
+use SyliusUnzerPlugin\Services\Integration\ImageHandlerService;
 use SyliusUnzerPlugin\Services\Integration\LanguageService;
 use SyliusUnzerPlugin\Services\Integration\StoreService;
 use SyliusUnzerPlugin\Services\Integration\VersionService;
 use SyliusUnzerPlugin\Services\Integration\WebhookUrlService;
 use Unzer\Core\BusinessLogic\BootstrapComponent;
 use Unzer\Core\BusinessLogic\DataAccess\Connection\Entities\ConnectionSettings;
+use Unzer\Core\BusinessLogic\DataAccess\PaymentMethodConfig\Entities\PaymentMethodConfig;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
 use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Uploader\UploaderService;
 use Unzer\Core\BusinessLogic\Domain\Integration\Versions\VersionService as VersionServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Currency\CurrencyServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Utility\EncryptorInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Webhook\WebhookUrlServiceInterface;
 use Unzer\Core\Infrastructure\Configuration\ConfigEntity;
@@ -69,6 +74,16 @@ class Bootstrap extends BootstrapComponent
     private static EncryptorService $encryptorService;
 
     /**
+     * @var CurrencyService
+     */
+    private static CurrencyService $currencyService;
+
+    /**
+     * @var ImageHandlerService
+     */
+    private static ImageHandlerService $imageHandlerService;
+
+    /**
      * @param ShopLoggerAdapter $loggerAdapter
      * @param EntityManagerInterface $entityManager
      * @param LanguageService $languageService
@@ -76,6 +91,8 @@ class Bootstrap extends BootstrapComponent
      * @param StoreService $storeService
      * @param WebhookUrlService $webhookUrlService
      * @param EncryptorService $encryptorService
+     * @param CurrencyService $currencyService
+     * @param ImageHandlerService $imageHandlerService
      */
     public function __construct(
         ShopLoggerAdapter $loggerAdapter,
@@ -84,7 +101,9 @@ class Bootstrap extends BootstrapComponent
         CountryService $countryService,
         StoreService $storeService,
         WebhookUrlService $webhookUrlService,
-        EncryptorService $encryptorService
+        EncryptorService $encryptorService,
+        CurrencyService $currencyService,
+        ImageHandlerService $imageHandlerService
     ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
@@ -93,6 +112,8 @@ class Bootstrap extends BootstrapComponent
         self::$storeService = $storeService;
         self::$webhookUrlService = $webhookUrlService;
         self::$encryptorService = $encryptorService;
+        self::$currencyService = $currencyService;
+        self::$imageHandlerService = $imageHandlerService;
     }
 
     /**
@@ -152,6 +173,20 @@ class Bootstrap extends BootstrapComponent
                 return self::$storeService;
             }
         );
+
+        ServiceRegister::registerService(
+            CurrencyServiceInterface::class,
+            function () {
+                return self::$currencyService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            UploaderService::class,
+            function () {
+                return self::$imageHandlerService;
+            }
+        );
     }
 
     /**
@@ -169,5 +204,6 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(ConnectionSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
     }
 }

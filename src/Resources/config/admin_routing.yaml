@@ -10,3 +10,67 @@ unzer_admin_enable:
     path: /unzer/enable-payment-method
     defaults:
         _controller: SyliusUnzerPlugin\Controller\ConfigurationController::enableAction
+
+unzer_admin_connection:
+    path: /unzer/api/connection
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\ConnectionController::connectAction
+        
+unzer_admin_disconnect:
+    path: /unzer/api/credential/disconnect
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::disconnectAction
+        
+unzer_admin_reregister:
+    path: /unzer/api/credential/reregister
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::reRegisterWebhookAction
+        
+unzer_admin_credentialsData:
+    path: /unzer/api/credential/getData
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::getCredentialsData
+
+unzer_admin_payment_methods:
+    path: /unzer/api/paymentMethod
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::getPaymentMethodsAction
+
+unzer_admin_countries:
+    path: /unzer/api/country
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\CountryController::getCountriesAction
+    
+unzer_admin_payment_methods_upsert_configuration:
+    path: /unzer/api/paymentMethod/{type}
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::upsertPaymentMethodConfiguration
+    methods: [POST]
+
+unzer_admin_payment_methods_configuration:
+    path: /unzer/api/paymentMethod/{type}
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::getPaymentMethodConfiguration
+    methods: [GET]
+
+unzer_admin_stores_order_statuses:
+    path: /unzer/api/store
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\StoreController::getOrderStatusesAction
+    methods: [ GET ]
+
+unzer_admin_payment_methods_enable:
+    path: /unzer/api/paymentMethod/{type}/enable
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\PaymentMethodController::enablePaymentMethodAction
+        
+unzer_admin_save_design:
+    path: /unzer/api/design/saveDesign
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\DesignController::saveDesignAction
+
+unzer_admin_get_design:
+    path: /unzer/api/design/getDesign
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\DesignController::getDesignAction
+

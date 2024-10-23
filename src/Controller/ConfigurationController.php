@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
+use Exception;
 use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodChecker;
 use SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
+use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 
 final class ConfigurationController extends AbstractController
 {
@@ -37,13 +41,35 @@ final class ConfigurationController extends AbstractController
     /**
      *
      * @return Response
+     * @throws InvalidModeException|Exception
      */
     public function configAction(): Response
     {
         if (!$this->unzerPaymentMethodChecker->exists()) {
             return $this->redirectToRoute('sylius_admin_payment_method_index');
         }
-        return $this->render('@SyliusUnzerPlugin/config.html.twig');
+        $stores = AdminAPI::get()->stores()->getStores();
+        $store = AdminAPI::get()->stores()->getCurrentStore();
+        $version = AdminAPI::get()->version()->getVersion();
+        $mode = $store->toArray()['mode'];
+        $credentials = AdminAPI::get()->connection($store->toArray()['storeId'])->getCredentials(
+            new GetCredentialsRequest($mode)
+        )->toArray();
+        $locales = AdminAPI::get()->languages($store->toArray()['storeId'])->getLanguages()->toArray();
+
+        $connectionData = $credentials['connectionData'] ?? [];
+
+
+        return $this->render(
+            '@SyliusUnzerPlugin/config.html.twig',
+            [
+                'stores' => $stores->toArray(),
+                'store' => $store->toArray(),
+                'version' => $version->toArray(),
+                'connectionData' => $connectionData,
+                'locales' => $locales,
+            ]
+        );
     }
 
     /**

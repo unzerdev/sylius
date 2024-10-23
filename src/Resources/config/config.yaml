@@ -25,3 +25,15 @@ sylius_ui:
             blocks:
                 aaa:
                     template: '@SyliusUnzerPlugin/Order/Show/_order.html.twig'
+        sylius.shop.layout.stylesheets:
+            blocks:
+                unzer_styles:
+                    template: "@SyliusUnzerPlugin/Checkout/unzer_styles.html.twig"
+        sylius.shop.layout.javascripts:
+            blocks:
+                unzer_sripts:
+                    template: "@SyliusUnzerPlugin/Checkout/unzer_scripts.html.twig"
+        sylius.shop.checkout.complete.before_navigation:
+            blocks:
+                unzer_payment_page_dialog:
+                    template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
