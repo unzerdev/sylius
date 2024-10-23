@@ -21,7 +21,7 @@ final class GreetingController extends AbstractController
     public function dynamicallyGreetAction(PaymentRefundInterface $paymentRefund, string $name): Response
     {
 
-        $paymentRefund->refund('17', 19000);
+        $paymentRefund->refund('14', 2000);
         Logger::logError('Test error');
         return $this->render('@SyliusUnzerPlugin/dynamic_greeting.html.twig',
             ['greeting' => $this->getGreeting($name)]);

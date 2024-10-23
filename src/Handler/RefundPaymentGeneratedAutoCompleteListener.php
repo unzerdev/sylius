@@ -29,6 +29,11 @@ final class RefundPaymentGeneratedAutoCompleteListener
      */
     private EntityRepository $refundPaymentRepository;
 
+    /**
+     * @param EntityRepository $refundPaymentInterface
+     * @param RefundPaymentCompletedStateApplierInterface $refundPaymentCompletedStateApplier
+     * @param PaymentMethodRepositoryInterface<PaymentMethodInterface> $paymentMethodRepository
+     */
     public function __construct(
         EntityRepository $refundPaymentInterface,
         RefundPaymentCompletedStateApplierInterface $refundPaymentCompletedStateApplier,
