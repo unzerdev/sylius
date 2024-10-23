@@ -8,7 +8,6 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetStatusInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Payment\Model\PaymentInterface as BasePaymentInterface;
 
 /**
