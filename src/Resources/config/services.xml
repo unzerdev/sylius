@@ -45,6 +45,7 @@
 
         <service id="SyliusUnzerPlugin\Controller\CheckoutPaymentController"  autowire="true" autoconfigure="true" public="true" />
         <service id="SyliusUnzerPlugin\Controller\Front\PaymentCompleteController"  autowire="true" autoconfigure="true" public="true" />
+        <service id="SyliusUnzerPlugin\Controller\Front\PaypageCreateController"  autowire="true" autoconfigure="true" public="true" />
 
         <service id="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" class="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" public="false" autoconfigure="true" autowire="true">
             <tag name="twig.extension" />
@@ -53,10 +54,6 @@
         <service id="SyliusUnzerPlugin\Services\Checkout\SelectPayment\PaymentSelectionProcessor" class="SyliusUnzerPlugin\Services\Checkout\SelectPayment\PaymentSelectionProcessor" autowire="true">
             <!-- Priority set to -1 so that service is executed after Sylius core payment processor (see:sylius.order_processing.order_payment_processor.checkout for details) -->
             <tag name="sylius.order_processor" priority="-1"/>
-        </service>
-        <service id="SyliusUnzerPlugin\Services\Checkout\SelectPayment\PaymentPageCreationProcessor" class="SyliusUnzerPlugin\Services\Checkout\SelectPayment\PaymentPageCreationProcessor" autowire="true">
-            <!-- Priority set to -10 so that service is executed after PaymentSelectionProcessor -->
-            <tag name="sylius.order_processor" priority="-10"/>
         </service>
 
         <service id="SyliusUnzerPlugin\Services\Checkout\Complete\PaymentPageDialogUiContextProvider" class="SyliusUnzerPlugin\Services\Checkout\Complete\PaymentPageDialogUiContextProvider" autowire="true">

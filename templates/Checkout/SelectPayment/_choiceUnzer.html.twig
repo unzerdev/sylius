@@ -31,3 +31,7 @@
         }
     });
 </script>
+
+{% if (sylius_order_can_be_paid(order)) %}
+    {{ sylius_template_event('unzer.shop.order.show.before_navigation', {'order': order}) }}
+{% endif %}

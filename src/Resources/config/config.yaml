@@ -37,3 +37,8 @@ sylius_ui:
             blocks:
                 unzer_payment_page_dialog:
                     template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
+        unzer.shop.order.show.before_navigation:
+            blocks:
+                unzer_payment_page_dialog:
+                    template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
+

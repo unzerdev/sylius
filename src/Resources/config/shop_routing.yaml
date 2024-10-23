@@ -1,4 +1,10 @@
-#unzer_payment_complete:
-#    path: /unzer_payment_complete
-#    defaults:
-#        _controller: SyliusUnzerPlugin\Controller\Front\PaymentCompleteController::process
+unzer_payment_complete:
+    path: /unzer_payment_complete
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\PaymentCompleteController::process
+
+unzer_paypage_create:
+    path: /unzer_paypage_create
+    methods: [ POST, GET ]
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\PaypageCreateController::create

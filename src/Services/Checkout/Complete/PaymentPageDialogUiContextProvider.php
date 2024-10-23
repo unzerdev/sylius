@@ -7,7 +7,7 @@ namespace SyliusUnzerPlugin\Services\Checkout\Complete;
 use Sylius\Bundle\UiBundle\ContextProvider\ContextProviderInterface;
 use Sylius\Bundle\UiBundle\Registry\TemplateBlock;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class PaymentPageDialogUiContextProvider
@@ -16,36 +16,36 @@ use Sylius\Component\Payment\Model\PaymentInterface;
  */
 class PaymentPageDialogUiContextProvider implements ContextProviderInterface
 {
+    public function __construct(private readonly UrlGeneratorInterface $router)
+    {
+    }
 
     public function provide(array $templateContext, TemplateBlock $templateBlock): array
     {
         /** @var OrderInterface $order */
         $order = $templateContext['order'];
-        if (!$order->canBeProcessed()) {
-            return $templateContext;
+
+        $paymentDetails = [];
+        $unzerPaymentType = '';
+
+        $payment = $order->getLastPayment();
+        if (null !== $payment && $payment->getMethod()?->getCode() === 'unzer_payment' ) {
+            $paymentDetails = $payment->getDetails();
         }
 
-        $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
-        if (null === $payment || $payment->getMethod()?->getCode() !== 'unzer_payment' ) {
-            return $templateContext;
+
+        if ($order->canBeProcessed()) {
+            $unzerPaymentType = $paymentDetails['unzer']['payment_type'] ?? '';;
         }
 
-        $paymentDetails = $payment->getDetails();
-        if (
-            !array_key_exists('unzer', $paymentDetails) ||
-            !array_key_exists('payment_page', $paymentDetails['unzer'])
-        ) {
-            return $templateContext;
-        }
-
-        $templateContext['unzer_payment_page'] = $payment->getDetails()['unzer']['payment_page'];
+        $templateContext['unzer_payment_page_url'] = $this->router->generate('unzer_paypage_create', ['orderId' => $order->getId()]);
+        $templateContext['unzer_payment_page_type'] = $unzerPaymentType;
 
         return $templateContext;
     }
 
     public function supports(TemplateBlock $templateBlock): bool
     {
-        return 'sylius.shop.checkout.complete.before_navigation' === $templateBlock->getEventName()
-            && 'unzer_payment_page_dialog' === $templateBlock->getName();
+        return 'unzer_payment_page_dialog' === $templateBlock->getName();
     }
 }

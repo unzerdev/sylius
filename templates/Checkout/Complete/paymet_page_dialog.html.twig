@@ -1,20 +1,37 @@
-{% if (unzer_payment_page.id is defined) %}
-    <div id="unzer-payment-dialog-placeholder"></div>
-    <script type="text/javascript">
-        //# sourceURL=payment_page_dialog.js
-        document.addEventListener('DOMContentLoaded', () => {
-            let unzerDialogPlaceholder = document.getElementById('unzer-payment-dialog-placeholder');
-            let checkoutCompleteForm = unzerDialogPlaceholder.closest('form');
-            if (!checkoutCompleteForm) {
+<div id="unzer-payment-dialog-placeholder"></div>
+<script type="text/javascript">
+    //# sourceURL=payment_page_dialog.js
+    document.addEventListener('DOMContentLoaded', () => {
+        const paymentPageCreateUrl = '{{ unzer_payment_page_url }}';
+        let unzerPaymentType = '{{ unzer_payment_page_type }}';
+        let unzerDialogPlaceholder = document.getElementById('unzer-payment-dialog-placeholder');
+        let checkoutCompleteForm = unzerDialogPlaceholder.closest('form');
+        if (!checkoutCompleteForm) {
+            return;
+        }
+
+        function createPayPage(selectedUnzerPaymentType) {
+            return fetch(paymentPageCreateUrl, {
+                method: 'post',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ paymentType: selectedUnzerPaymentType })
+            }).then(function(res) {
+                return res.status === 400 ? window.location.reload() : res.json();
+            })
+        }
+
+        checkoutCompleteForm.addEventListener("submit", function(event) {
+            let selectedUnzerPaymentType = unzerPaymentType || checkoutCompleteForm.querySelector('input[name=unzer_payment_method_type]:checked')?.value;
+            if (!selectedUnzerPaymentType) {
                 return;
             }
 
-            checkoutCompleteForm.addEventListener("submit", function(event) {
-                event.preventDefault();
+            event.preventDefault();
 
-                checkoutCompleteForm.classList.add('loading');
+            checkoutCompleteForm.classList.add('loading');
 
-                let checkout = new window.checkout('{{ unzer_payment_page.id }}');
+            createPayPage(selectedUnzerPaymentType).then(function (payPageData) {
+                let checkout = new window.checkout(payPageData.id);
 
                 checkout.abort(function() {
                     // handle abort event.
@@ -38,8 +55,7 @@
                     checkout.open();
                     checkoutCompleteForm.classList.remove('loading');
                 });
-
-            }, true);
-        });
-    </script>
-{% endif %}
+            });
+        }, true);
+    });
+</script>
