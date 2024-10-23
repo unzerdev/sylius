@@ -9,7 +9,7 @@
             <tag name="messenger.message_handler" priority="1" />
         </service>
 
-        <service id="unzer.payum_action.refund_order" class="SyliusUnzerPlugin\Actions\RefundOrderAction" public="true">
+        <service id="unzer.payum_action.refund_order" class="SyliusUnzerPlugin\Payum\Action\RefundOrderAction" public="true">
             <tag name="payum.action" factory="unzer_payment" alias="payum.action.refund_order"/>
         </service>
     </services>
