@@ -17,8 +17,20 @@
         </service>
 
         <service id="app.unzer_payment" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
-            <argument>SyliusUnzerPlugin\Factory\UnzerFactory</argument>
+            <argument>SyliusUnzerPlugin\Payum\Factory\UnzerFactory</argument>
             <tag name="payum.gateway_factory_builder" factory="unzer_payment"/>
+        </service>
+        <service id="SyliusUnzerPlugin\Payum\Action\StatusAction" autowire="true" autoconfigure="true" public="true" >
+            <tag name="payum.action" factory="unzer_payment" alias="payum.action.status" />
+        </service>
+        <service id="SyliusUnzerPlugin\Payum\Action\ConvertAction" autowire="true" autoconfigure="true" public="true" >
+            <tag name="payum.action" factory="unzer_payment" alias="payum.action.convert_payment" />
+        </service>
+        <service id="SyliusUnzerPlugin\Payum\Action\AuthorizeAction" autowire="true" autoconfigure="true" public="true" >
+            <tag name="payum.action" factory="unzer_payment" alias="payum.action.authorize" />
+        </service>
+        <service id="SyliusUnzerPlugin\Payum\Action\CaptureAction" autowire="true" autoconfigure="true" public="true" >
+            <tag name="payum.action" factory="unzer_payment" alias="payum.action.capture" />
         </service>
 
         <service id="SyliusUnzerPlugin\Controller\UnzerMethodsController"  autowire="true" autoconfigure="true" public="true" >
@@ -32,6 +44,7 @@
         <service id="SyliusUnzerPlugin\Controller\ConfigurationController" autowire="true" autoconfigure="true" public="true" />
 
         <service id="SyliusUnzerPlugin\Controller\CheckoutPaymentController"  autowire="true" autoconfigure="true" public="true" />
+        <service id="SyliusUnzerPlugin\Controller\Front\PaymentCompleteController"  autowire="true" autoconfigure="true" public="true" />
 
         <service id="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" class="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" public="false" autoconfigure="true" autowire="true">
             <tag name="twig.extension" />

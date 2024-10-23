@@ -56,7 +56,7 @@ class CredentialsController extends AbstractController
     public function getCredentialsData(Request $request): Response
     {
         $storeId = $this->getStoreIdString($request);
-        $store = AdminAPI::get()->stores()->getCurrentStore();
+        $store = AdminAPI::get()->stores()->getStoreById($storeId);
         $mode = $store->toArray()['mode'];
 
         $response = AdminAPI::get()->connection($storeId)->getCredentials(new GetCredentialsRequest($mode));

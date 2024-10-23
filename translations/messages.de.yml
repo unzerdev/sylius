@@ -3,3 +3,5 @@ sylius_unzer_plugin:
         configuration:
             button:
                 enable: 'Enable Unzer Payments'
+    checkout:
+        payment_error: 'Something went wrong. Please, try again.'

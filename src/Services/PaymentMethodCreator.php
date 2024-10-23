@@ -47,7 +47,9 @@ class PaymentMethodCreator implements UnzerPaymentMethodCreator
         if ($paymentMethod == null) {
             // add payment method in database.
             $paymentMethod = $this->paymentMethodFactory->createWithGateway(StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY);
-            $paymentMethod->getGatewayConfig()?->setGatewayName(StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY);
+            $gatewayConfig = $paymentMethod->getGatewayConfig();
+            $gatewayConfig?->setGatewayName(StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY);
+            $gatewayConfig?->setConfig(array_merge($gatewayConfig->getConfig(), ['use_authorize' => true]));
             $paymentMethod->setCode(StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY);
             $paymentMethod->setName(StaticHelper::UNZER_PAYMENT_METHOD_NAME);
             $this->paymentMethodRepository->add($paymentMethod);

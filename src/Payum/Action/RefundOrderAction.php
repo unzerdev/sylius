@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SyliusUnzerPlugin\Actions;
+namespace SyliusUnzerPlugin\Payum\Action;
 
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\GatewayAwareInterface;

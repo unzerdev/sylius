@@ -1,0 +1,4 @@
+unzer_payment_complete:
+    path: /unzer_payment_complete
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\PaymentCompleteController::process
