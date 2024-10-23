@@ -1,3 +1,6 @@
+sylius_refund:
+    resource: "@SyliusRefundPlugin/Resources/config/routing.yml"
+
 acme_sylius_example_shop:
     resource: "@SyliusUnzerPlugin/src/Resources/config/routing.yaml"
     prefix: /{_locale}
