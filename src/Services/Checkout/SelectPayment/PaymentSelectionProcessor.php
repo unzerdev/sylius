@@ -43,7 +43,7 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
 
         $unzerPaymentType = $this->requestStack->getCurrentRequest()?->get('unzer_payment_method_type', '');
         if ('' !== $unzerPaymentType) {
-            $paymentDetails['unzer'] = ['payment_type' => $unzerPaymentType];
+            $paymentDetails['unzer']['payment_type'] = $unzerPaymentType;
         }
 
         $payment->setDetails($paymentDetails);
