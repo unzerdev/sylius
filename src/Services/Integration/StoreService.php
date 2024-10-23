@@ -66,6 +66,23 @@ class StoreService implements StoreServiceInterface
     }
 
     /**
+     * @param int $id
+     *
+     * @return Store|null
+     */
+    public function getStoreById(int $id): ?Store
+    {
+        /** @var ?Channel $channel */
+        $channel = $this->channelRepository->findOneBy(['id' => $id]);
+
+        if (!$channel) {
+            return null;
+        }
+
+        return new Store($channel->getId(), $channel->getName());
+    }
+
+    /**
      * @return StoreOrderStatus[]
      */
     public function getStoreOrderStatuses(): array
@@ -95,4 +112,5 @@ class StoreService implements StoreServiceInterface
 
         return new Store($channel->getId(), $channel->getName());
     }
+
 }
