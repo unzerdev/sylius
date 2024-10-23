@@ -5,7 +5,19 @@
     <services>
         <defaults public="true" />
 
+        <service id="unzer.handler.payment_partial_event_listener" class="SyliusUnzerPlugin\Handler\PaymentPartialEventListener">
+            <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="payum"/>
+            <tag name="messenger.message_handler" priority="1" />
+        </service>
+
+        <service id="unzer.payum_action.refund_order" class="SyliusUnzerPlugin\Actions\RefundOrderAction" public="true">
+            <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface" />
+            <tag name="payum.action" factory="unzer_payment" alias="payum.action.refund_order"/>
+        </service>
+
         <service id="unzer.provider.divisor.divisor_provider" class="SyliusUnzerPlugin\Provider\Divisor\DivisorProvider"/>
+
         <service id="unzer.creator.payment_refund_command_creator" class="SyliusUnzerPlugin\Refund\PaymentRefundCommandCreator">
             <argument type="service" id="sylius.repository.order" />
             <argument type="service" id="sylius_refund.repository.refund" />
@@ -14,29 +26,45 @@
             <argument type="service" id="Sylius\RefundPlugin\Provider\RefundPaymentMethodsProviderInterface" />
             <argument type="service" id="unzer.provider.divisor.divisor_provider"/>
         </service>
+
         <service id="SyliusUnzerPlugin\Refund\PaymentRefundInterface" class="SyliusUnzerPlugin\Refund\PaymentRefund">
             <argument type="service" id="sylius.command_bus" />
             <argument type="service" id="unzer.creator.payment_refund_command_creator" />
         </service>
+
         <service id="unzer.refund.shipment_refund" class="SyliusUnzerPlugin\Refund\Units\ShipmentUnitRefund">
         </service>
+
         <service id="unzer.refund.units_item_refund" class="SyliusUnzerPlugin\Refund\Units\PaymentUnitsItemRefund">
             <argument type="service" id="unzer.refund.generator.payment_refunded_generator" />
             <argument type="service" id="unzer.refund.generator.payment_new_unit_refund_generator" />
             <argument type="service" id="unzer.calculator.refund.payment_refund_calculator" />
         </service>
+
         <service id="unzer.refund.units_item_order_refund" class="SyliusUnzerPlugin\Refund\Units\UnitsItemOrderRefund">
             <argument type="service" id="sylius_refund.repository.refund" />
         </service>
+
         <service id="unzer.refund.units.units_shipment_order_refund" class="SyliusUnzerPlugin\Refund\Units\UnitsShipmentOrderRefund">
             <argument type="service" id="sylius_refund.repository.refund" />
         </service>
+
         <service id="unzer.refund.generator.payment_new_unit_refund_generator" class="SyliusUnzerPlugin\Refund\Generator\PaymentNewUnitRefundGenerator">
         </service>
+
         <service id="unzer.refund.generator.payment_refunded_generator" class="SyliusUnzerPlugin\Refund\Generator\PaymentRefundedGenerator">
             <argument type="service" id="sylius_refund.repository.refund" />
         </service>
+
         <service id="unzer.calculator.refund.payment_refund_calculator" class="SyliusUnzerPlugin\Calculator\Refund\PaymentRefundCalculator">
         </service>
+
+        <service id="unzer.event_listener.refund_payment_generated_auto_complete_listener" class="SyliusUnzerPlugin\Handler\RefundPaymentGeneratedAutoCompleteListener">
+            <argument type="service" id="sylius_refund.repository.refund_payment" />
+            <argument type="service" id="Sylius\RefundPlugin\StateResolver\RefundPaymentCompletedStateApplier"/>
+            <argument type="service" id="sylius.repository.payment_method"/>
+            <tag name="messenger.message_handler" priority="10" />
+        </service>
+
     </services>
 </container>
