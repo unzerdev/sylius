@@ -10,6 +10,7 @@
         </service>
 
         <service id="unzer.payum_action.refund_order" class="SyliusUnzerPlugin\Actions\RefundOrderAction" public="true">
+            <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface" />
             <tag name="payum.action" factory="unzer_payment" alias="payum.action.refund_order"/>
         </service>
     </services>

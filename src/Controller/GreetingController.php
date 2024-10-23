@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
-use Psr\Log\LoggerInterface;
-use SyliusUnzerPlugin\Services\LoggerService;
+use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\Infrastructure\Logger\Logger;
@@ -19,10 +18,10 @@ final class GreetingController extends AbstractController
         return $this->render('@SyliusUnzerPlugin/static_greeting.html.twig', ['greeting' => $this->getGreeting($name)]);
     }
 
-    public function dynamicallyGreetAction(?string $name): Response
+    public function dynamicallyGreetAction(PaymentRefundInterface $paymentRefund, string $name): Response
     {
 
-
+        $paymentRefund->refund('17', 19000);
         Logger::logError('Test error');
         return $this->render('@SyliusUnzerPlugin/dynamic_greeting.html.twig',
             ['greeting' => $this->getGreeting($name)]);
