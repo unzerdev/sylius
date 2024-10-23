@@ -7,12 +7,12 @@
 
         <service id="unzer.handler.payment_partial_event_listener" class="SyliusUnzerPlugin\Handler\PaymentPartialEventListener">
             <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface" />
             <argument type="service" id="payum"/>
             <tag name="messenger.message_handler" priority="1" />
         </service>
 
         <service id="unzer.payum_action.refund_order" class="SyliusUnzerPlugin\Payum\Action\RefundOrderAction" public="true">
-            <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface" />
             <tag name="payum.action" factory="unzer_payment" alias="payum.action.refund_order"/>
         </service>
 

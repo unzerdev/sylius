@@ -21,6 +21,10 @@ sylius_payment:
 
 sylius_ui:
     events:
+        sylius.admin.order.show.payment_content:
+            blocks:
+                refund_transition:
+                    enabled: true
         sylius.admin.order.show.content:
             blocks:
                 aaa:

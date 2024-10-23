@@ -16,8 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class WebhookController extends AbstractController
 {
     /**
-     * @param string|null $name
-     *
+     * @param Request $request
      * @return Response
      */
     public function webhookAction(Request $request): Response

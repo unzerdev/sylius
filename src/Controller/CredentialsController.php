@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,7 +58,7 @@ class CredentialsController extends AbstractController
     public function getCredentialsData(Request $request): Response
     {
         $storeId = $this->getStoreIdString($request);
-        $store = AdminAPI::get()->stores()->getStoreById($storeId);
+        $store = AdminAPI::get()->stores()->getStoreById((int)$storeId);
         $mode = $store->toArray()['mode'];
 
         $response = AdminAPI::get()->connection($storeId)->getCredentials(new GetCredentialsRequest($mode));

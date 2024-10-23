@@ -12,6 +12,9 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Event\UnitsRefunded;
+use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
+use Sylius\RefundPlugin\Model\ShipmentRefund;
+use Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface;
 use SyliusUnzerPlugin\Handler\Request\RefundOrder;
 use SyliusUnzerPlugin\Util\StaticHelper;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -23,20 +26,26 @@ final class PaymentPartialEventListener
     /** @var OrderRepositoryInterface<OrderInterface> */
     private OrderRepositoryInterface $orderRepository;
 
+    /** @var OrderRefundedTotalProviderInterface */
+    private OrderRefundedTotalProviderInterface $orderRefundedTotalProvider;
+
 
     /** @var Payum */
     private Payum $payum;
 
     /**
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
+     * @param OrderRefundedTotalProviderInterface $orderRefundedTotalProvider
      * @param Payum $payum
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
+        OrderRefundedTotalProviderInterface $orderRefundedTotalProvider,
         Payum $payum
     ) {
         $this->orderRepository = $orderRepository;
         $this->payum = $payum;
+        $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
     }
 
 
@@ -65,6 +74,7 @@ final class PaymentPartialEventListener
 
         $details['metadata']['refund']['items'] = $units->units();
         $details['metadata']['refund']['shipments'] = $units->shipments();
+        $details['metadata']['refund']['refundedTotal'] = ($this->orderRefundedTotalProvider)($order);
         $payment->setDetails($details);
 
        // $hash = $details['metadata']['refund_token'];
