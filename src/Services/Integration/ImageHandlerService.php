@@ -26,12 +26,9 @@ class ImageHandlerService implements CoreImageService
 
     private const MIME_SVG = 'image/svg';
 
-    private const PATH = 'unzer/image/logo.jpg';
+    private const PATH = 'unzer/image/';
 
-    /**
-     * @var ImageUploader
-     */
-    private ImageUploader $imageUploader;
+    private const LOGO_NAME = 'logo.jpg';
 
     /**
      * @var Filesystem
@@ -49,15 +46,12 @@ class ImageHandlerService implements CoreImageService
     private RequestStack $requestStack;
 
     /**
-     * @param ImageUploader $imageUploader
      * @param Filesystem $filesystem
      * @param RequestStack $requestStack
      */
 
-    public function __construct(ImageUploader $imageUploader,
-    Filesystem $filesystem, RequestStack $requestStack)
+    public function __construct(Filesystem $filesystem, RequestStack $requestStack)
     {
-        $this->imageUploader = $imageUploader;
         $this->filesystem = $filesystem;
         $this->requestStack = $requestStack;
 
@@ -66,16 +60,17 @@ class ImageHandlerService implements CoreImageService
     }
 
     /**
-     * @param SplFileInfo $file
      *
+     * @param SplFileInfo $file
+     * @param string|null $path
      * @return string
      * @throws ReflectionException
      */
-    public function uploadImage(SplFileInfo $file): string
+    public function uploadImage(SplFileInfo $file, ?string $name = null): string
     {
         $symfonyFile = new File($file->getRealPath());
 
-        $logoImage = $this->createLogoImage($symfonyFile);
+        $logoImage = $this->createLogoImage($symfonyFile, $name);
 
         $this->upload($logoImage);
 
@@ -84,35 +79,25 @@ class ImageHandlerService implements CoreImageService
 
     /**
      * @param File $file
+     * @param string|null $name
      *
      * @return LogoImage
      */
-    private function createLogoImage(File $file): LogoImage
+    private function createLogoImage(File $file, ?string $name = null): LogoImage
     {
+        $imagePath = self::PATH . self::LOGO_NAME;
+        if ($name) {
+            $imagePath = self::PATH . $name;
+        }
 
         $logoImage = new LogoImage();
         $logoImage->setFile($file);
         $logoImage->setType('logo');
 
-        $logoImage->setPath(self::PATH);
+        $logoImage->setPath($imagePath);
 
 
         return $logoImage;
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function removeImage(string $path): bool
-    {
-        try {
-            $this->imageUploader->remove($path);
-            return true;
-        } catch (Exception) {
-            return false;
-        }
     }
 
     /**

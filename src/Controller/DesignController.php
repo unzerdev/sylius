@@ -9,7 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\PaymentPageSettings\Request\PaymentPageSettingsRequest;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Translations\Exceptions\InvalidTranslatableArrayException;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 class DesignController extends AbstractController
 {
@@ -48,6 +50,27 @@ class DesignController extends AbstractController
     /**
      * @param Request $request
      *
+     * @return Response
+     * @throws InvalidTranslatableArrayException
+     * @throws UnzerApiException
+     * @throws ConnectionSettingsNotFoundException
+     */
+    public function createPreviewPageAction(Request $request): Response
+    {
+        $storeId = $request->get('storeId');
+        $storeId = is_string($storeId) ? $storeId : '';
+
+        $request = $this->createPaymentPageSettingRequest($request);
+
+        $response = AdminAPI::get()->paymentPageSettings($storeId)->getPaymentPagePreview($request);
+
+
+        return $this->json($response->toArray());
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return PaymentPageSettingsRequest
      */
     private function createPaymentPageSettingRequest(Request $request): PaymentPageSettingsRequest
@@ -64,13 +87,13 @@ class DesignController extends AbstractController
         $shopName = $this->formatTranslatableField(json_decode($request->get('name')));
         $shopTagline = $this->formatTranslatableField(json_decode($request->get('tagline')));
 
-        $logoImageUrl = $data['logoImageUrl'] ?? '';
-        $headerBackgroundColor = $data['headerColor'] ?? '';
-        $headerFontColor = $data['headerFontColor'] ?? '';
-        $shopNameBackgroundColor = $data['shopNameBackground'] ?? '';
-        $shopNameFontColor = $data['shopNameColor'] ?? '';
-        $shopTaglineBackgroundColor = $data['shopTaglineBackgroundColor'] ?? '';
-        $shopTaglineFontColor = $data['shopTaglineColor'] ?? '';
+        $logoImageUrl = ($data['logoImageUrl'] === 'null') ? null : $data['logoImageUrl'];
+        $headerBackgroundColor = ($data['headerColor'] === 'null') ? null : $data['headerColor'];
+        $headerFontColor = ($data['headerFontColor'] === 'null') ? null : $data['headerFontColor'];
+        $shopNameBackgroundColor = ($data['shopNameBackground'] === 'null') ? null : $data['shopNameBackground'];
+        $shopNameFontColor = ($data['shopNameColor'] === 'null') ? null : $data['shopNameColor'];
+        $shopTaglineBackgroundColor = ($data['shopTaglineBackgroundColor'] === 'null') ? null : $data['shopTaglineBackgroundColor'];
+        $shopTaglineFontColor = ($data['shopTaglineColor'] === 'null') ? null : $data['shopTaglineColor'];
 
         return new PaymentPageSettingsRequest(
             $shopName,
