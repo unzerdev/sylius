@@ -16,6 +16,7 @@ use Unzer\Core\BusinessLogic\BootstrapComponent;
 use Unzer\Core\BusinessLogic\DataAccess\Connection\Entities\ConnectionSettings;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentMethodConfig\Entities\PaymentMethodConfig;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
+use Unzer\Core\BusinessLogic\DataAccess\TransactionHistory\Entities\TransactionHistory;
 use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
@@ -205,5 +206,6 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(TransactionHistory::getClassName(), BaseRepository::getClassName());
     }
 }
