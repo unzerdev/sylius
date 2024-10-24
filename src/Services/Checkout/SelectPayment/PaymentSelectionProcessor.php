@@ -27,25 +27,36 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
         Assert::isInstanceOf($order, OrderInterface::class);
 
         /** @var OrderInterface $order */
-        if (!$order->canBeProcessed()) {
+        $activePayment = $order->getLastPayment(PaymentInterface::STATE_CART);
+        if (null === $activePayment) {
             return;
         }
 
-        $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
-        if (null === $payment) {
+        if ($activePayment->getMethod()?->getCode() !== 'unzer_payment') {
+            $this->clearUnzerDetails($activePayment);
+
             return;
         }
 
-        $paymentDetails = $payment->getDetails();
-        if ($payment->getMethod()?->getCode() !== 'unzer_payment') {
-            unset($paymentDetails['unzer']);
-        }
-
+        /** @var string $unzerPaymentType */
         $unzerPaymentType = $this->requestStack->getCurrentRequest()?->get('unzer_payment_method_type', '');
-        if ('' !== $unzerPaymentType) {
-            $paymentDetails['unzer']['payment_type'] = $unzerPaymentType;
+        $this->setInUnzerDetails($activePayment, $unzerPaymentType);
+    }
+
+    private function setInUnzerDetails(PaymentInterface $payment, string $paymentType): void
+    {
+        $paymentDetails = $payment->getDetails();
+        if ('' !== $paymentType) {
+            $paymentDetails['unzer']['payment_type'] = $paymentType;
         }
 
+        $payment->setDetails($paymentDetails);
+    }
+
+    private function clearUnzerDetails(PaymentInterface $payment): void
+    {
+        $paymentDetails = $payment->getDetails();
+        unset($paymentDetails['unzer']);
         $payment->setDetails($paymentDetails);
     }
 }
