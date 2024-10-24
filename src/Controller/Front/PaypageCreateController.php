@@ -65,6 +65,7 @@ class PaypageCreateController extends AbstractController
         $this->router->getContext()->setScheme('https');
         $response = CheckoutAPI::get()->paymentPage($order->getChannel()->getId())->create(new PaymentPageCreateRequest(
             $paymentMethodType,
+            (string)$order->getId(),
             Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
             $this->router->generate('unzer_payment_complete', ['orderId' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
         ));
