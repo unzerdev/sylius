@@ -45,8 +45,7 @@ final class CheckoutPaymentController extends AbstractController
             return $this->render('@SyliusUnzerPlugin/Checkout/SelectPayment/payment_types.html.twig', $templateData);
         }
 
-        $lastPaymentStateToCheck = $order->canBeProcessed() ? PaymentInterface::STATE_CART : PaymentInterface::STATE_FAILED;
-        $payment = $order->getLastPayment($lastPaymentStateToCheck);
+        $payment = $order->getLastPayment();
         if (
             null !== $payment &&
             $payment->getMethod()?->getCode() === 'unzer_payment'
