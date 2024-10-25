@@ -8,7 +8,10 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Authorize;
 use Payum\Core\Request\Capture;
-use Sylius\Component\Payment\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Payment\Model\PaymentInterface as BasePaymentInterface;
+use Unzer\Core\BusinessLogic\CheckoutAPI\CheckoutAPI;
+use UnzerSDK\Constants\PaymentState;
 
 /**
  * Class StatusAction
@@ -17,7 +20,12 @@ use Sylius\Component\Payment\Model\PaymentInterface;
  */
 class AuthorizeAction implements ActionInterface
 {
-
+    private const STATUS_MAP = [
+        PaymentState::STATE_NAME_PENDING => BasePaymentInterface::STATE_AUTHORIZED,
+        PaymentState::STATE_NAME_COMPLETED => BasePaymentInterface::STATE_COMPLETED,
+        PaymentState::STATE_NAME_CANCELED => BasePaymentInterface::STATE_CANCELLED,
+        PaymentState::STATE_NAME_PAYMENT_REVIEW => BasePaymentInterface::STATE_PROCESSING,
+    ];
     /**
      * StatusAction constructor.
      */
@@ -39,18 +47,40 @@ class AuthorizeAction implements ActionInterface
          * @var Capture $request
          */
         $payment = $request->getFirstModel();
+        $order = $payment->getOrder();
 
-        $details = $payment->getDetails();
+        if (null === $order || null === $order->getChannel()) {
+            $this->setPaymentState($payment, BasePaymentInterface::STATE_UNKNOWN);
 
-        // TODO: Get payment status and mark appropriate status based on unzer status. We don't actually make authorize request here since paypage already done this.
-        $details['unzer']['payment']['status'] = PaymentInterface::STATE_AUTHORIZED;
-        $payment->setDetails($details);
+            return;
+        }
+
+        $response = CheckoutAPI::get()->paymentPage($order->getChannel()->getId())
+            ->getPaymentState((string)$order->getId());
+
+        if (
+            $response->isSuccessful() &&
+            array_key_exists($response->getPaymentState()->getName(), self::STATUS_MAP)
+        ) {
+            $this->setPaymentState($payment, self::STATUS_MAP[$response->getPaymentState()->getName()]);
+
+            return;
+        }
+
+        $this->setPaymentState($payment, BasePaymentInterface::STATE_PROCESSING);
     }
 
     public function supports($request): bool
     {
         return $request instanceof Authorize &&
             $request->getFirstModel() instanceof PaymentInterface;
+    }
+
+    private function setPaymentState(PaymentInterface $payment, string $state): void
+    {
+        $details = $payment->getDetails();
+        $details['unzer']['payment']['status'] = $state;
+        $payment->setDetails($details);
     }
 
     private function shouldAuthorize(Authorize $request): bool
@@ -60,11 +90,11 @@ class AuthorizeAction implements ActionInterface
          */
         $payment = $request->getFirstModel();
 
-        $status = $payment->getDetails()['unzer']['payment']['status'] ?? PaymentInterface::STATE_PROCESSING;
+        $status = $payment->getDetails()['unzer']['payment']['status'] ?? BasePaymentInterface::STATE_PROCESSING;
 
         return in_array($status, [
-            PaymentInterface::STATE_NEW,
-            PaymentInterface::STATE_PROCESSING,
+            BasePaymentInterface::STATE_NEW,
+            BasePaymentInterface::STATE_PROCESSING,
         ], true);
     }
 }

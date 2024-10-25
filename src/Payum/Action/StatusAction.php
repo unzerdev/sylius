@@ -36,14 +36,7 @@ class StatusAction implements ActionInterface
         $payment = $request->getModel();
         $details = $payment->getDetails();
 
-        // Use new status as default in case StatusAction is ever called before AuthorizeAction. New payment state will kick ConvertAction.
-        $status = $details['unzer']['payment']['status'] ?? BasePaymentInterface::STATE_NEW;
-
-        if ($status === BasePaymentInterface::STATE_NEW) {
-            $request->markNew();
-
-            return;
-        }
+        $status = $details['unzer']['payment']['status'] ?? BasePaymentInterface::STATE_PROCESSING;
 
         if ($status === BasePaymentInterface::STATE_COMPLETED) {
             $request->markCaptured();
@@ -53,6 +46,12 @@ class StatusAction implements ActionInterface
 
         if ($status === BasePaymentInterface::STATE_AUTHORIZED) {
             $request->markAuthorized();
+
+            return;
+        }
+
+        if ($status === BasePaymentInterface::STATE_CANCELLED) {
+            $request->markCanceled();
 
             return;
         }
