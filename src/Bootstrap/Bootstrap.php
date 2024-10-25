@@ -9,6 +9,8 @@ use SyliusUnzerPlugin\Services\Integration\CurrencyService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
 use SyliusUnzerPlugin\Services\Integration\ImageHandlerService;
 use SyliusUnzerPlugin\Services\Integration\LanguageService;
+use SyliusUnzerPlugin\Services\Integration\OrderService;
+use SyliusUnzerPlugin\Services\Integration\PaymentStatusMapService;
 use SyliusUnzerPlugin\Services\Integration\StoreService;
 use SyliusUnzerPlugin\Services\Integration\VersionService;
 use SyliusUnzerPlugin\Services\Integration\WebhookUrlService;
@@ -20,6 +22,8 @@ use Unzer\Core\BusinessLogic\DataAccess\TransactionHistory\Entities\TransactionH
 use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\PaymentStatusMap\PaymentStatusMapServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Uploader\UploaderService;
 use Unzer\Core\BusinessLogic\Domain\Integration\Versions\VersionService as VersionServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Store\StoreService as StoreServiceInterface;
@@ -85,6 +89,11 @@ class Bootstrap extends BootstrapComponent
     private static ImageHandlerService $imageHandlerService;
 
     /**
+     * @var OrderServiceInterface
+     */
+    private static OrderServiceInterface $orderService;
+
+    /**
      * @param ShopLoggerAdapter $loggerAdapter
      * @param EntityManagerInterface $entityManager
      * @param LanguageService $languageService
@@ -94,6 +103,7 @@ class Bootstrap extends BootstrapComponent
      * @param EncryptorService $encryptorService
      * @param CurrencyService $currencyService
      * @param ImageHandlerService $imageHandlerService
+     * @param OrderServiceInterface $orderService
      */
     public function __construct(
         ShopLoggerAdapter $loggerAdapter,
@@ -104,7 +114,8 @@ class Bootstrap extends BootstrapComponent
         WebhookUrlService $webhookUrlService,
         EncryptorService $encryptorService,
         CurrencyService $currencyService,
-        ImageHandlerService $imageHandlerService
+        ImageHandlerService $imageHandlerService,
+        OrderServiceInterface $orderService
     ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
@@ -115,6 +126,7 @@ class Bootstrap extends BootstrapComponent
         self::$encryptorService = $encryptorService;
         self::$currencyService = $currencyService;
         self::$imageHandlerService = $imageHandlerService;
+        self::$orderService = $orderService;
     }
 
     /**
@@ -186,6 +198,20 @@ class Bootstrap extends BootstrapComponent
             UploaderService::class,
             function () {
                 return self::$imageHandlerService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            PaymentStatusMapServiceInterface::class,
+            function () {
+                return new PaymentStatusMapService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            OrderServiceInterface::class,
+            function () {
+                return self::$orderService;
             }
         );
     }

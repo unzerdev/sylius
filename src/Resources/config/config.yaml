@@ -1,3 +1,13 @@
+winzou_state_machine:
+    sylius_payment:
+        callbacks:
+            after:
+                sylius_payment_cancelled:
+                    on: ["cancel"]
+                    do: ["@unzer.order_payment.cancel", "cancelPayment"]
+                    args: ["object"]
+                    priority: -200
+
 parameters:
     env(UNZER_ENCRYPTION_KEY): 'def000002f45b81aa090e24a233d11e5b6348131bf27a28fdcae1972841dd98a565d678b144a13b880c88bbea36327126f9962a40b2e07d5258360ec44c30804fb011883'
     sylius_refund.supported_gateways:

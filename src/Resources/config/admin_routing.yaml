@@ -80,4 +80,8 @@ unzer_admin_get_design:
         _controller: SyliusUnzerPlugin\Controller\DesignController::getDesignAction
         
 
-
+sylius_admin_order_payment_refund:
+    path: /orders/{orderId}/payments/{id}/refund
+    methods: [PUT,POST]
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Admin\RefundController

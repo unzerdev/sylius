@@ -5,6 +5,7 @@
     <services>
         <service id="SyliusUnzerPlugin\Controller\Front\WebhookController" autowire="true" autoconfigure="true"
                  public="true">
+            <argument type="service" id="payum"/>
         </service>
 
         <service id="SyliusUnzerPlugin\Controller\ConnectionController" autowire="true" autoconfigure="true"
@@ -29,6 +30,14 @@
 
         <service id="SyliusUnzerPlugin\Controller\DesignController" autowire="true" autoconfigure="true"
                  public="true">
+        </service>
+
+        <service id="SyliusUnzerPlugin\Controller\Admin\RefundController" class="SyliusUnzerPlugin\Controller\Admin\Refund" public="true">
+            <argument type="service" id="sylius.repository.payment"/>
+            <argument type="service" id="payum"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sm.factory"/>
+            <argument type="service" id="sylius.manager.payment"/>
         </service>
     </services>
 </container>

@@ -69,5 +69,8 @@
         <service id="SyliusUnzerPlugin\Command\CreateKeyCommand">
             <tag name="console.command" />
         </service>
+
+        <service  id="unzer.order_payment.cancel" class="SyliusUnzerPlugin\EventListener\PaymentCancelListener" public="true">
+        </service>
     </services>
 </container>
