@@ -32,7 +32,7 @@
                  public="true">
         </service>
 
-        <service id="SyliusUnzerPlugin\Controller\Admin\RefundController" class="SyliusUnzerPlugin\Controller\Admin\Refund" public="true">
+        <service id="SyliusUnzerPlugin\Controller\Admin\RefundController" class="SyliusUnzerPlugin\Controller\Admin\RefundController" public="true">
             <argument type="service" id="sylius.repository.payment"/>
             <argument type="service" id="payum"/>
             <argument type="service" id="request_stack"/>

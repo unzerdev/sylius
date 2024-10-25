@@ -17,17 +17,22 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Payment\PaymentTransitions;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
+use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
+use SyliusUnzerPlugin\Refund\PaymentRefundCommandCreator;
+use SyliusUnzerPlugin\Refund\PaymentRefundCommandCreatorInterface;
 use SyliusUnzerPlugin\Util\StaticHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionBagProxy;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class RefundController
 {
-    /** @var PaymentRepositoryInterface */
+    /** @var PaymentRepositoryInterface<PaymentInterface> */
     private PaymentRepositoryInterface $paymentRepository;
 
     /** @var Payum */
@@ -42,21 +47,36 @@ final class RefundController
     /** @var EntityManagerInterface */
     private EntityManagerInterface $paymentEntityManager;
 
+    /** @var PaymentRefundCommandCreatorInterface */
+    private  PaymentRefundCommandCreatorInterface $paymentRefundCommandCreator;
 
+    /**
+     * @param PaymentRepositoryInterface<PaymentInterface> $paymentRepository
+     * @param Payum $payum
+     * @param RequestStack $requestStack
+     * @param FactoryInterface $stateMachineFactory
+     * @param EntityManagerInterface $paymentEntityManager
+     * @param PaymentRefundCommandCreatorInterface $paymentRefundCommandCreator
+     */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
         Payum $payum,
         RequestStack $requestStack,
         FactoryInterface $stateMachineFactory,
         EntityManagerInterface $paymentEntityManager,
+        PaymentRefundCommandCreatorInterface $paymentRefundCommandCreator
     ) {
         $this->paymentRepository = $paymentRepository;
         $this->payum = $payum;
         $this->requestStack = $requestStack;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentEntityManager = $paymentEntityManager;
+        $this->paymentRefundCommandCreator = $paymentRefundCommandCreator;
     }
 
+    /**
+     * @throws SMException
+     */
     public function __invoke(Request $request): Response
     {
         /** @var PaymentInterface|null $payment */
@@ -73,49 +93,27 @@ final class RefundController
         $gatewayConfig = $paymentMethod->getGatewayConfig();
         $factoryName = $gatewayConfig->getGatewayName();
 
-        if ($factoryName === StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
+        if ($factoryName !== StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
             $this->applyStateMachineTransition($payment);
-            $this->requestStack->getSession()->getFlashBag()->add('success', 'sylius.payment.refunded');
-            return $this->redirectToReferer($request);
-        }
-        if (
-            (!isset($payment->getDetails()['payment_mollie_id']) || !isset($payment->getDetails()['metadata']['refund_token'])) &&
-            !isset($payment->getDetails()['order_mollie_id'])
-        ) {
-            $this->applyStateMachineTransition($payment);
-
-            $this->requestStack->getSession()->getFlashBag()->add('info', 'sylius_mollie_plugin.ui.refunded_only_locally');
-
+            /** @var Session $session */
+            $session = $this->requestStack->getSession();
+            $session->getFlashBag()->add('success', 'sylius.payment.refunded');
             return $this->redirectToReferer($request);
         }
 
-        $hash = $payment->getDetails()['metadata']['refund_token'];
+        $order = $payment->getOrder();
 
-        /** @var TokenInterface|null $token */
-        $token = $this->payum->getTokenStorage()->find($hash);
-
-        if (!$token instanceof TokenInterface) {
-            throw new BadRequestHttpException(sprintf('A token with hash `%s` could not be found.', $hash));
+        if ($order === null) {
+            throw new OrderNotAvailableForRefunding();
         }
-
-        $gateway = $this->payum->getGateway($token->getGatewayName());
-
-        try {
-            if (isset($payment->getDetails()['order_mollie_id'])) {
-                $gateway->execute(new RefundOrder($token));
-            } else {
-                $gateway->execute(new RefundAction($token));
-            }
-
-            $this->applyStateMachineTransition($payment);
-
-            $this->requestStack->getSession()->getFlashBag()->add('success', 'sylius.payment.refunded');
-        } catch (UpdateHandlingException $e) {
-            $this->loggerAction->addNegativeLog(sprintf('Error with refund: %s', $e->getMessage()));
-            $this->requestStack->getSession()->getFlashBag()->add('error', $e->getMessage());
-        }
+        $this->paymentRefundCommandCreator->fromOderAndAmount($order->getId(), $order->getTotal());
+        /** @var Session $session */
+        $session = $this->requestStack->getSession();
+        $session->getFlashBag()->add('success', 'sylius.payment.refunded');
 
         return $this->redirectToReferer($request);
+
+
     }
 
     /**
