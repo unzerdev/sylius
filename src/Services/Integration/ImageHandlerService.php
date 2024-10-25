@@ -3,12 +3,10 @@
 namespace SyliusUnzerPlugin\Services\Integration;
 
 use enshrined\svgSanitize\Sanitizer;
-use Exception;
 use Gaufrette\Filesystem;
 use ReflectionException;
 use SplFileInfo;
 use Sylius\Component\Core\Model\ImageInterface;
-use Sylius\Component\Core\Uploader\ImageUploader;
 use SyliusUnzerPlugin\Models\LogoImage;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -62,7 +60,7 @@ class ImageHandlerService implements CoreImageService
     /**
      *
      * @param SplFileInfo $file
-     * @param string|null $path
+     * @param string|null $name
      * @return string
      * @throws ReflectionException
      */
@@ -86,7 +84,8 @@ class ImageHandlerService implements CoreImageService
     private function createLogoImage(File $file, ?string $name = null): LogoImage
     {
         $imagePath = self::PATH . self::LOGO_NAME;
-        if ($name) {
+
+        if ($name !== null) {
             $imagePath = self::PATH . $name;
         }
 
@@ -115,7 +114,7 @@ class ImageHandlerService implements CoreImageService
         /** @var File $file */
         $file = $image->getFile();
 
-        $fileContent = $this->sanitizeContent(file_get_contents($file->getPathname()), $file->getMimeType());
+        $fileContent = $this->sanitizeContent((string)file_get_contents($file->getPathname()), (string)$file->getMimeType());
 
         $this->filesystem->write($image->getPath(), $fileContent, true);
     }
