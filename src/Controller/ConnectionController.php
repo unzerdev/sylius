@@ -21,6 +21,11 @@ use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PrivateKeyInvalidExcep
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PublicKeyInvalidException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
+/**
+ * Class ConnectionController.
+ *
+ * @package SyliusUnzerPlugin\Controller
+ */
 final class ConnectionController extends AbstractController
 {
 
