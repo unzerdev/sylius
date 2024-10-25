@@ -12,19 +12,19 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Event\UnitsRefunded;
-use Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface;
+use SyliusUnzerPlugin\EventListener\DisableListenerInterface;
+use SyliusUnzerPlugin\EventListener\DisableListenerTrait;
 use SyliusUnzerPlugin\Handler\Request\RefundOrder;
 use SyliusUnzerPlugin\Util\StaticHelper;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Webmozart\Assert\Assert;
 
-final class PaymentPartialEventListener
+final class PaymentPartialEventListener implements DisableListenerInterface
 {
+    use DisableListenerTrait;
+
     /** @var OrderRepositoryInterface<OrderInterface> */
     private OrderRepositoryInterface $orderRepository;
-
-    /** @var OrderRefundedTotalProviderInterface */
-    private OrderRefundedTotalProviderInterface $orderRefundedTotalProvider;
 
 
     /** @var Payum */
@@ -32,22 +32,22 @@ final class PaymentPartialEventListener
 
     /**
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
-     * @param OrderRefundedTotalProviderInterface $orderRefundedTotalProvider
      * @param Payum $payum
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        OrderRefundedTotalProviderInterface $orderRefundedTotalProvider,
         Payum $payum
     ) {
         $this->orderRepository = $orderRepository;
         $this->payum = $payum;
-        $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
     }
 
 
     public function __invoke(UnitsRefunded $units): void
     {
+        if (!$this->enabled) {
+            return;
+        }
         /** @var Order $order */
         $order = $this->orderRepository->findOneBy(['number' => $units->orderNumber()]);
 
@@ -73,9 +73,10 @@ final class PaymentPartialEventListener
         $details['metadata']['refund']['items'] = $units->units();
         $details['metadata']['refund']['shipments'] = $units->shipments();
         $details['metadata']['refund']['refundedTotal'] = $units->amount();
-        $details['metadata']['refund']['orderId'] = (string)$order->getId();
-        $details['metadata']['refund']['channelId'] = (string)$channel->getId();
-        $details['metadata']['refund']['currencyCode'] = (string)$order->getCurrencyCode();
+        $details['metadata']['refund']['orderId'] = (string) $order->getId();
+        $details['metadata']['refund']['channelId'] = (string) $channel->getId();
+        $details['metadata']['refund']['currencyCode'] = (string) $order->getCurrencyCode();
+        $details['metadata']['refund']['leftToRefund'] = $order->getTotal() - $units->amount();
         $payment->setDetails($details);
 
         $gateway = $this->payum->getGateway('unzer_payment');

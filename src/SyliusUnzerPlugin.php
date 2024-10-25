@@ -6,6 +6,9 @@ namespace SyliusUnzerPlugin;
 
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use SyliusUnzerPlugin\Bootstrap\Bootstrap;
+use SyliusUnzerPlugin\EventListener\DisableListenerInterface;
+use SyliusUnzerPlugin\EventListener\Event\DisableListenerEvent;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -29,7 +32,17 @@ final class SyliusUnzerPlugin extends Bundle
     {
         parent::boot();
         /** @var Bootstrap $bootstrap */
-        $bootstrap = $this->container->get(Bootstrap::class);
+        $bootstrap = $this->container?->get(Bootstrap::class);
         $bootstrap::init();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function build(ContainerBuilder $container): void
+    {
+        $container->registerForAutoconfiguration(DisableListenerInterface::class)
+            ->addTag('kernel.event_listener', ['event' => DisableListenerEvent::WEBHOOKS, 'method' => 'disable']);
+    }
+
 }

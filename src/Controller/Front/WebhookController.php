@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller\Front;
 
-use Payum\Core\Payum;
+use SyliusUnzerPlugin\EventListener\Event\DisableListenerEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\CurrencyMismatchException;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
@@ -24,17 +25,6 @@ use UnzerSDK\Exceptions\UnzerApiException;
 class WebhookController extends AbstractController
 {
 
-    /** @var Payum */
-    private Payum $payum;
-
-    /**
-     * @param Payum $payum
-     */
-    public function __construct(Payum $payum)
-    {
-        $this->payum = $payum;
-    }
-
 
     /**
      * @param Request $request
@@ -48,11 +38,17 @@ class WebhookController extends AbstractController
      * @throws ConnectionSettingsNotFoundException
      * @throws TransactionHistoryNotFoundException
      */
-    public function webhookAction(Request $request): Response
+    public function webhookAction(Request $request, EventDispatcherInterface $eventDispatcher): Response
     {
+        $eventDispatcher->dispatch(new DisableListenerEvent(), DisableListenerEvent::WEBHOOKS);
+
         $storeId = $request->get('storeId');
         $storeId = is_string($storeId) ? $storeId : '';
-        $response = WebhookAPI::get()->webhookHandle($storeId)->handle(new WebhookHandleRequest($request->getContent()));
+        $response = WebhookAPI::get()->webhookHandle($storeId)
+            ->handle(
+                new WebhookHandleRequest(
+                $request->getContent())
+            );
 
         if (!$response->isSuccessful()) {
             return $this->json($response->toArray(), 400);

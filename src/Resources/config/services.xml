@@ -67,7 +67,8 @@
             <tag name="console.command" />
         </service>
 
-        <service id="unzer.order_payment_listener" class="SyliusUnzerPlugin\EventListener\PaymentListener" public="true">
+        <service id="unzer.order_payment_listener" class="SyliusUnzerPlugin\EventListener\PaymentListener" public="true" autoconfigure="true">
+            <argument type="service" id="sm.factory"/>
         </service>
     </services>
 </container>

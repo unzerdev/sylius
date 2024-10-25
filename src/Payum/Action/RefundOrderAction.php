@@ -8,11 +8,17 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
+use SM\Factory\FactoryInterface;
+use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Order\OrderTransitions;
+use Sylius\Component\Payment\Model\PaymentInterface;
+use Sylius\Component\Payment\PaymentTransitions;
 use Sylius\RefundPlugin\Exception\InvalidRefundAmount;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
 use Sylius\RefundPlugin\Model\ShipmentRefund;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use SyliusUnzerPlugin\Handler\Request\RefundOrder;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\RefundRequest;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
@@ -22,6 +28,18 @@ final class RefundOrderAction implements ActionInterface, GatewayAwareInterface
 {
     use GatewayAwareTrait;
 
+    /**
+     * @var FactoryInterface
+     */
+    private FactoryInterface $stateMachineFactory;
+
+    /**
+     * @param FactoryInterface $stateMachineFactory
+     */
+    public function __construct(FactoryInterface $stateMachineFactory)
+    {
+        $this->stateMachineFactory = $stateMachineFactory;
+    }
 
     /** @inheritdoc  */
     public function execute($request): void
@@ -30,6 +48,8 @@ final class RefundOrderAction implements ActionInterface, GatewayAwareInterface
             throw RequestNotSupportedException::createActionNotSupported($this, $request);
         }
         RequestNotSupportedException::assertSupports($this, $request);
+        /** @var PaymentInterface $payment */
+        $payment = $request->getFirstModel();
 
         $details = ArrayObject::ensureArrayObject($request->getModel());
         /** @var array $metaData */
@@ -50,6 +70,13 @@ final class RefundOrderAction implements ActionInterface, GatewayAwareInterface
             );
             if ($response->isSuccessful()) {
                 $success = true;
+                if ($refundData['leftToRefund'] === 0) {
+                    $stateMachine = $this->stateMachineFactory->get(
+                        $payment, PaymentTransitions::GRAPH);
+                    if ($stateMachine->can(PaymentTransitions::TRANSITION_REFUND)) {
+                        $stateMachine->apply(PaymentTransitions::TRANSITION_REFUND);
+                    }
+                }
             }
         } catch (\Exception $e) {
         }

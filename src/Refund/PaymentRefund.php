@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Refund;
 
+use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -31,8 +32,7 @@ final class PaymentRefund implements PaymentRefundInterface
             $refundUnits = $this->commandCreator->fromOderAndAmount($oderId, $amount);
             $this->commandBus->dispatch($refundUnits);
         } catch (HandlerFailedException $e) {
-            $a = 1;
-            // log error
+            throw new OrderNotAvailableForRefunding($e->getMessage());
         }
     }
 }

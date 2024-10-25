@@ -9,7 +9,6 @@ use Sylius\Component\Order\OrderTransitions;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
 use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;

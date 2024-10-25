@@ -10,7 +10,6 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Command\RefundUnits;
 use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
 use Sylius\RefundPlugin\Provider\RefundPaymentMethodsProviderInterface;
-use SyliusUnzerPlugin\Provider\Divisor\DivisorProviderInterface;
 use SyliusUnzerPlugin\Refund\Units\PaymentUnitsItemRefundInterface;
 use SyliusUnzerPlugin\Refund\Units\ShipmentUnitRefundInterface;
 use Webmozart\Assert\Assert;
@@ -32,23 +31,19 @@ final class PaymentRefundCommandCreator implements PaymentRefundCommandCreatorIn
     /** @var RefundPaymentMethodsProviderInterface */
     private RefundPaymentMethodsProviderInterface $refundPaymentMethodProvider;
 
-    /** @var DivisorProviderInterface */
-    private DivisorProviderInterface $divisorProvider;
 
     public function __construct(
         RepositoryInterface $orderRepository,
         RepositoryInterface $refundUnitsRepository,
         PaymentUnitsItemRefundInterface $itemRefund,
         ShipmentUnitRefundInterface $shipmentRefund,
-        RefundPaymentMethodsProviderInterface $refundPaymentMethodProvider,
-        DivisorProviderInterface $divisorProvider
+        RefundPaymentMethodsProviderInterface $refundPaymentMethodProvider
     ) {
         $this->orderRepository = $orderRepository;
         $this->refundUnitsRepository = $refundUnitsRepository;
         $this->itemRefund = $itemRefund;
         $this->shipmentRefund = $shipmentRefund;
         $this->refundPaymentMethodProvider = $refundPaymentMethodProvider;
-        $this->divisorProvider = $divisorProvider;
     }
 
     public function fromOderAndAmount(string $orderId, int $amount): RefundUnits
@@ -58,11 +53,14 @@ final class PaymentRefundCommandCreator implements PaymentRefundCommandCreatorIn
         $order = $this->orderRepository->findOneBy(['id' => $orderId]);
         Assert::notNull($order, sprintf('Cannot find order id with id %s', $orderId));
 
-        $allRefunded = $this->refundUnitsRepository->findBy(['order' => $order->getId()]);
-
-        $refunded = $this->getSumOfAmountExistingRefunds($allRefunded);
-
+        $refunded = $this->getSumOfAmountExistingRefunds(
+            $this->refundUnitsRepository->findBy(['order' => $order->getId()])
+        );
+        $left = $order->getTotal() - $refunded;
         $toRefund = $amount;
+        if ($amount > $left || $amount < $left) {
+            $toRefund = $left;
+        }
 
         Assert::notNull($order->getChannel());
         $refundMethods = $this->refundPaymentMethodProvider->findForChannel($order->getChannel());

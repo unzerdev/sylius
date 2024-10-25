@@ -24,8 +24,10 @@ use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\InvalidTransac
 use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\TransactionHistoryNotFoundException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
-class PaymentListener
+class PaymentListener implements DisableListenerInterface
 {
+    use DisableListenerTrait;
+
     /**
      * @throws ConnectionSettingsNotFoundException
      * @throws TransactionHistoryNotFoundException
@@ -85,6 +87,12 @@ class PaymentListener
         }
         /** @var Order $order */
         $order = $payment->getOrder();
+
+        $details = $payment->getDetails();
+
+        if ($details['unzer']['payment']['status'] === $payment::STATE_COMPLETED) {
+            return;
+        }
         /** @var ChannelInterface $channel */
         $channel = $order->getChannel();
         $response = AdminAPI::get()->order((string)$channel->getId())->charge(
@@ -99,4 +107,6 @@ class PaymentListener
            throw new UpdateHandlingException('Unzer API complete call failed.');
         }
     }
+
+
 }

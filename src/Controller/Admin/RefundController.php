@@ -15,8 +15,6 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Payment\PaymentTransitions;
 use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
-use Sylius\RefundPlugin\Provider\OrderRefundedTotalProvider;
-use SyliusUnzerPlugin\Refund\PaymentRefundCommandCreatorInterface;
 use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
 use SyliusUnzerPlugin\Util\StaticHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -47,8 +45,6 @@ final class RefundController
     /** @var PaymentRefundInterface */
     private  PaymentRefundInterface $paymentRefund;
 
-    /** @var OrderRefundedTotalProvider */
-    private OrderRefundedTotalProvider $orderRefundedTotalProvider;
 
     /**
      * @param PaymentRepositoryInterface<PaymentInterface> $paymentRepository
@@ -57,6 +53,7 @@ final class RefundController
      * @param FactoryInterface $stateMachineFactory
      * @param EntityManagerInterface $paymentEntityManager
      * @param PaymentRefundInterface $paymentRefund
+
      */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
@@ -64,8 +61,7 @@ final class RefundController
         RequestStack $requestStack,
         FactoryInterface $stateMachineFactory,
         EntityManagerInterface $paymentEntityManager,
-        PaymentRefundInterface $paymentRefund,
-        OrderRefundedTotalProvider $orderRefundedTotalProvider
+        PaymentRefundInterface $paymentRefund
     ) {
         $this->paymentRepository = $paymentRepository;
         $this->payum = $payum;
@@ -73,7 +69,6 @@ final class RefundController
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentEntityManager = $paymentEntityManager;
         $this->paymentRefund = $paymentRefund;
-        $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
     }
 
     /**
@@ -94,11 +89,10 @@ final class RefundController
         /** @var GatewayConfigInterface $gatewayConfig */
         $gatewayConfig = $paymentMethod->getGatewayConfig();
         $factoryName = $gatewayConfig->getGatewayName();
-
+        /** @var Session $session */
+        $session = $this->requestStack->getSession();
         if ($factoryName !== StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
             $this->applyStateMachineTransition($payment);
-            /** @var Session $session */
-            $session = $this->requestStack->getSession();
             $session->getFlashBag()->add('success', 'sylius.payment.refunded');
             return $this->redirectToReferer($request);
         }
@@ -108,9 +102,16 @@ final class RefundController
         if ($order === null) {
             throw new OrderNotAvailableForRefunding();
         }
-        $this->paymentRefund->refund((string)$order->getId(), $order->getTotal() - ($this->orderRefundedTotalProvider)($order));
-        /** @var Session $session */
-        $session = $this->requestStack->getSession();
+        try {
+            $this->paymentRefund->refund(
+                (string)$order->getId(),
+                $order->getTotal()
+            );
+        } catch (\Exception $e) {
+            $session->getFlashBag()->add('error', $e->getMessage());
+
+            return $this->redirectToReferer($request);
+        }
         $session->getFlashBag()->add('success', 'sylius.payment.refunded');
 
         return $this->redirectToReferer($request);
