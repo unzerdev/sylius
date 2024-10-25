@@ -6,6 +6,7 @@ namespace SyliusUnzerPlugin\Controller;
 
 use App\Entity\Payment\PaymentMethod;
 use Sylius\Bundle\CoreBundle\Controller\PaymentMethodController as BasePaymentMethodController;
+use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Resource\ResourceActions;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

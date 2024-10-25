@@ -44,6 +44,21 @@ final class Version20241004144751 extends AbstractMigration
                             data MEDIUMTEXT,
                             PRIMARY KEY (id)
             )");
+
+        $this->addSql("CREATE TABLE unzer_transactions (
+                            id INT AUTO_INCREMENT NOT NULL,
+                            type VARCHAR(255),
+                            index_1 VARCHAR(255),
+                            index_2 VARCHAR(255),
+                            index_3 VARCHAR(255),
+                            index_4 VARCHAR(255),
+                            index_5 VARCHAR(255),
+                            index_6 VARCHAR(255),
+                            index_7 VARCHAR(255),
+                            index_8 VARCHAR(255),
+                            data MEDIUMTEXT,
+                            PRIMARY KEY (id)
+            )");
     }
 
     /**

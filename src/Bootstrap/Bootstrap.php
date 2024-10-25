@@ -4,12 +4,12 @@ namespace SyliusUnzerPlugin\Bootstrap;
 
 use Doctrine\ORM\EntityManagerInterface;
 use SyliusUnzerPlugin\Repositories\BaseRepository;
+use SyliusUnzerPlugin\Repositories\TransactionHistoryRepository;
 use SyliusUnzerPlugin\Services\Integration\CountryService;
 use SyliusUnzerPlugin\Services\Integration\CurrencyService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
 use SyliusUnzerPlugin\Services\Integration\ImageHandlerService;
 use SyliusUnzerPlugin\Services\Integration\LanguageService;
-use SyliusUnzerPlugin\Services\Integration\OrderService;
 use SyliusUnzerPlugin\Services\Integration\PaymentStatusMapService;
 use SyliusUnzerPlugin\Services\Integration\StoreService;
 use SyliusUnzerPlugin\Services\Integration\VersionService;
@@ -233,7 +233,7 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
-        RepositoryRegistry::registerRepository(TransactionHistory::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(TransactionHistory::getClassName(), TransactionHistoryRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentStatusMap::getClassName(), BaseRepository::getClassName());
     }
 }

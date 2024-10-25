@@ -38,7 +38,7 @@ sylius_ui:
     events:                    
         sylius.admin.order.show.content:
             blocks:
-                aaa:
+                unzer_order_page:
                     template: '@SyliusUnzerPlugin/Order/Show/_order.html.twig'
         sylius.shop.layout.stylesheets:
             blocks:

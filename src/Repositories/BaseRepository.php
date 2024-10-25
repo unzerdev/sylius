@@ -17,6 +17,7 @@ use Unzer\Core\Infrastructure\ORM\QueryFilter\Operators;
 use Unzer\Core\Infrastructure\ORM\QueryFilter\QueryCondition;
 use Unzer\Core\Infrastructure\ORM\QueryFilter\QueryFilter;
 use Unzer\Core\Infrastructure\ORM\Utility\IndexHelper;
+use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * Class BaseRepository.
@@ -124,7 +125,7 @@ class BaseRepository implements RepositoryInterface
      */
     public function save(Entity $entity): int
     {
-        /** @var UnzerBaseEntity $doctrineEntity */
+        /** @var ResourceInterface $doctrineEntity */
         $doctrineEntity = new static::$doctrineModel;
         $id = $this->persistEntity($entity, $doctrineEntity);
         $entity->setId($id);
@@ -146,7 +147,7 @@ class BaseRepository implements RepositoryInterface
         $result = true;
 
         try {
-            /** @var UnzerBaseEntity $doctrineEntity */
+            /** @var ResourceInterface $doctrineEntity */
             $doctrineEntity = $this->getEntityManager()->find(static::$doctrineModel, $entity->getId());
             if (!$doctrineEntity) {
                 return false;
@@ -207,7 +208,7 @@ class BaseRepository implements RepositoryInterface
 
         $result = [];
 
-        /** @var UnzerBaseEntity $doctrineEntity */
+        /** @var ResourceInterface $doctrineEntity */
         foreach ($doctrineEntities as $doctrineEntity) {
             $entity = $this->unserializeEntity($doctrineEntity->getData());
             if ($entity) {
@@ -223,14 +224,14 @@ class BaseRepository implements RepositoryInterface
      * Persists entity.
      *
      * @param Entity $entity
-     * @param UnzerBaseEntity $persistedEntity
+     * @param ResourceInterface $persistedEntity
      *
      * @return int
      *
      * @throws OptimisticLockException
      * @throws ORMException
      */
-    protected function persistEntity(Entity $entity, UnzerBaseEntity $persistedEntity): int
+    protected function persistEntity(Entity $entity, ResourceInterface $persistedEntity): int
     {
         $persistedEntity->setType($entity->getConfig()->getType());
         $indexValueMap = IndexHelper::transformFieldsToIndexes($entity);

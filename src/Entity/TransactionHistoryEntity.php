@@ -7,11 +7,11 @@ namespace SyliusUnzerPlugin\Entity;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
- * Class UnzerBaseEntity.
+ * Class TransactionHistoryEntity.
  *
- * @package SyliusUnzerPlugin\Repositories\Entities
+ * @package SyliusUnzerPlugin\Entity
  */
-class UnzerBaseEntity implements ResourceInterface
+class TransactionHistoryEntity implements ResourceInterface
 {
     /**
      * @var int
