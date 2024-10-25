@@ -33,7 +33,8 @@ final class GreetingController extends AbstractController
     {
         /** @var OrderServiceInterface $service */
         $service = ServiceRegister::getService(OrderServiceInterface::class);
-        $ammount = $service->getRefundedAmountForOrder('38');
+        $service->cancelOrder('38', Amount::fromInt(0, \Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency::getDefault()));
+        $ammunt = $service->getRefundedAmountForOrder('38');
         $paymentRefund->refund('14', 2000);
         AdminAPI::get()->paymentMethods('1')->enablePaymentMethod(new EnablePaymentMethodRequest(PaymentMethodTypes::CARDS, true));
 

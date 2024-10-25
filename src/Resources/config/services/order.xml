@@ -6,6 +6,8 @@
         <service id="Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface" class="SyliusUnzerPlugin\Services\Integration\OrderService">
             <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface" />
             <argument type="service" id="sylius.repository.order"/>
+            <argument type="service" id="SyliusUnzerPlugin\Refund\PaymentRefundInterface"/>
+            <argument type="service" id="sm.factory" />
         </service>
     </services>
 </container>

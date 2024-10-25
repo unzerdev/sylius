@@ -2,9 +2,14 @@
 
 namespace SyliusUnzerPlugin\Services\Integration;
 
+use SM\Factory\FactoryInterface;
+use SM\SMException;
 use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Order\OrderTransitions;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
+use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
@@ -22,16 +27,30 @@ class OrderService implements OrderServiceInterface
     /** @var OrderRepositoryInterface<OrderInterface> */
     private OrderRepositoryInterface $orderRepository;
 
+    /** @var PaymentRefundInterface $paymentRefund */
+    private PaymentRefundInterface $paymentRefund;
+
+    /**
+     * @var FactoryInterface
+     */
+    private FactoryInterface $stateMachineFactory;
+
     /**
      * @param OrderRefundedTotalProviderInterface $orderRefundedTotalProvider
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
+     * @param PaymentRefundInterface $paymentRefund
+     * @param FactoryInterface $stateMachineFactory
      */
     public function __construct(
         OrderRefundedTotalProviderInterface $orderRefundedTotalProvider,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        PaymentRefundInterface $paymentRefund,
+        FactoryInterface $stateMachineFactory
     ) {
         $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
         $this->orderRepository = $orderRepository;
+        $this->paymentRefund = $paymentRefund;
+        $this->stateMachineFactory = $stateMachineFactory;
     }
 
 
@@ -46,9 +65,7 @@ class OrderService implements OrderServiceInterface
         if (null === $order || null === $order->getChannel()) {
             throw new OrderNotAvailableForRefunding($orderId);
         }
-
-        $refunded = ($this->orderRefundedTotalProvider)($order);
-       return Amount::fromInt(1, Currency::fromIsoCode($order->getCurrencyCode()));
+       return Amount::fromInt(($this->orderRefundedTotalProvider)($order), Currency::fromIsoCode($order->getCurrencyCode()));
     }
 
     /**
@@ -56,23 +73,36 @@ class OrderService implements OrderServiceInterface
      */
     public function refundOrder(string $orderId, Amount $amount): void
     {
-        // TODO: Implement refundOrder() method.
+        $this->paymentRefund->refund($orderId, $amount->getValue());
     }
 
     /**
      * @inheritDoc
+     * @throws InvalidCurrencyCode
      */
     public function getCancelledAmountForOrder(string $orderId): ?Amount
     {
-        return Amount::fromFloat(1, Currency::getDefault());
+        /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
+        $order = $this->orderRepository->findOneBy(['id' => $orderId]);
+        if (null === $order || null === $order->getChannel()) {
+            return Amount::fromInt(0, Currency::getDefault());
+        }
+        return Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode()));
     }
 
     /**
      * @inheritDoc
+     * @throws SMException
      */
     public function cancelOrder(string $orderId, Amount $amount): void
     {
-        // TODO: Implement cancelOrder() method.
+        /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
+        $order = $this->orderRepository->findOneBy(['id' => $orderId]);
+        if (null === $order || null === $order->getChannel()) {
+           return;
+        }
+        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        $stateMachine->apply(OrderTransitions::TRANSITION_CANCEL);
     }
 
     /**
