@@ -50,6 +50,12 @@ class StatusAction implements ActionInterface
             return;
         }
 
+        if ($status === BasePaymentInterface::STATE_CANCELLED) {
+            $request->markCanceled();
+
+            return;
+        }
+
         if ($status === BasePaymentInterface::STATE_FAILED) {
             $request->markFailed();
 
