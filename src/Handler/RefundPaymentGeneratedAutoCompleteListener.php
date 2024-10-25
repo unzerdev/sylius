@@ -50,9 +50,9 @@ final class RefundPaymentGeneratedAutoCompleteListener
         $paymentMethod = $this->paymentMethodRepository->find($refundPaymentGenerated->paymentMethodId());
 
         Assert::notNull($paymentMethod->getGatewayConfig());
-//        if (StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY !== $paymentMethod->getGatewayConfig()->getGatewayName()) {
-//            return;
-//        }
+        if (StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY !== $paymentMethod->getGatewayConfig()->getGatewayName()) {
+            return;
+        }
 
         /** @var RefundPaymentInterface $refundPayment */
         $refundPayment = $this->refundPaymentRepository->find($refundPaymentGenerated->id());

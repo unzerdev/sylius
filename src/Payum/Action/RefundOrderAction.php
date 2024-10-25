@@ -8,21 +8,15 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
+use Sylius\RefundPlugin\Exception\InvalidRefundAmount;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
 use Sylius\RefundPlugin\Model\ShipmentRefund;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use SyliusUnzerPlugin\Handler\Request\RefundOrder;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\RefundRequest;
-use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\CurrencyMismatchException;
-use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
-use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
-use Unzer\Core\BusinessLogic\Domain\OrderManagement\Exceptions\RefundNotPossibleException;
-use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\InvalidTransactionHistory;
-use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\TransactionHistoryNotFoundException;
-use UnzerSDK\Exceptions\UnzerApiException;
 
 final class RefundOrderAction implements ActionInterface, GatewayAwareInterface
 {
@@ -45,22 +39,22 @@ final class RefundOrderAction implements ActionInterface, GatewayAwareInterface
         }
 
         $refundData = $metaData['refund'];
-
+        $success = false;
         try {
-            AdminAPI::get()->order($refundData['channelId'])->refund(
+            $response = AdminAPI::get()->order($refundData['channelId'])->refund(
                 new RefundRequest(
                     $refundData['orderId'],
                     Amount::fromInt($refundData['refundedTotal'],
                     Currency::fromIsoCode($refundData['currencyCode']))
                 )
             );
-        } catch (UnzerApiException $e) {
-        } catch (CurrencyMismatchException $e) {
-        } catch (ConnectionSettingsNotFoundException $e) {
-        } catch (RefundNotPossibleException $e) {
-        } catch (InvalidTransactionHistory $e) {
-        } catch (TransactionHistoryNotFoundException $e) {
-        } catch (InvalidCurrencyCode $e) {
+            if ($response->isSuccessful()) {
+                $success = true;
+            }
+        } catch (\Exception $e) {
+        }
+        if (!$success) {
+            throw new InvalidRefundAmount('Unzer API refund call failed.');
         }
     }
 

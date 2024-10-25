@@ -31,6 +31,7 @@ final class PaymentRefund implements PaymentRefundInterface
             $refundUnits = $this->commandCreator->fromOderAndAmount($oderId, $amount);
             $this->commandBus->dispatch($refundUnits);
         } catch (HandlerFailedException $e) {
+            $a = 1;
             // log error
         }
     }

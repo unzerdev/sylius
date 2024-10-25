@@ -8,25 +8,22 @@ namespace SyliusUnzerPlugin\Controller\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Payum;
-use Payum\Core\Request\Refund as RefundAction;
-use Payum\Core\Security\TokenInterface;
 use SM\Factory\FactoryInterface;
 use SM\SMException;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Payment\PaymentTransitions;
-use Sylius\Component\Resource\Exception\UpdateHandlingException;
 use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
-use SyliusUnzerPlugin\Refund\PaymentRefundCommandCreator;
+use Sylius\RefundPlugin\Provider\OrderRefundedTotalProvider;
 use SyliusUnzerPlugin\Refund\PaymentRefundCommandCreatorInterface;
+use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
 use SyliusUnzerPlugin\Util\StaticHelper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionBagProxy;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -47,8 +44,11 @@ final class RefundController
     /** @var EntityManagerInterface */
     private EntityManagerInterface $paymentEntityManager;
 
-    /** @var PaymentRefundCommandCreatorInterface */
-    private  PaymentRefundCommandCreatorInterface $paymentRefundCommandCreator;
+    /** @var PaymentRefundInterface */
+    private  PaymentRefundInterface $paymentRefund;
+
+    /** @var OrderRefundedTotalProvider */
+    private OrderRefundedTotalProvider $orderRefundedTotalProvider;
 
     /**
      * @param PaymentRepositoryInterface<PaymentInterface> $paymentRepository
@@ -56,7 +56,7 @@ final class RefundController
      * @param RequestStack $requestStack
      * @param FactoryInterface $stateMachineFactory
      * @param EntityManagerInterface $paymentEntityManager
-     * @param PaymentRefundCommandCreatorInterface $paymentRefundCommandCreator
+     * @param PaymentRefundInterface $paymentRefund
      */
     public function __construct(
         PaymentRepositoryInterface $paymentRepository,
@@ -64,14 +64,16 @@ final class RefundController
         RequestStack $requestStack,
         FactoryInterface $stateMachineFactory,
         EntityManagerInterface $paymentEntityManager,
-        PaymentRefundCommandCreatorInterface $paymentRefundCommandCreator
+        PaymentRefundInterface $paymentRefund,
+        OrderRefundedTotalProvider $orderRefundedTotalProvider
     ) {
         $this->paymentRepository = $paymentRepository;
         $this->payum = $payum;
         $this->requestStack = $requestStack;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->paymentEntityManager = $paymentEntityManager;
-        $this->paymentRefundCommandCreator = $paymentRefundCommandCreator;
+        $this->paymentRefund = $paymentRefund;
+        $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
     }
 
     /**
@@ -106,7 +108,7 @@ final class RefundController
         if ($order === null) {
             throw new OrderNotAvailableForRefunding();
         }
-        $this->paymentRefundCommandCreator->fromOderAndAmount($order->getId(), $order->getTotal());
+        $this->paymentRefund->refund((string)$order->getId(), $order->getTotal() - ($this->orderRefundedTotalProvider)($order));
         /** @var Session $session */
         $session = $this->requestStack->getSession();
         $session->getFlashBag()->add('success', 'sylius.payment.refunded');
