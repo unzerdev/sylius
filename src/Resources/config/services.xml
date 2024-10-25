@@ -21,16 +21,13 @@
             <tag name="payum.gateway_factory_builder" factory="unzer_payment"/>
         </service>
         <service id="SyliusUnzerPlugin\Payum\Action\StatusAction" autowire="true" autoconfigure="true" public="true" >
-            <tag name="payum.action" factory="unzer_payment" alias="payum.action.status" />
-        </service>
-        <service id="SyliusUnzerPlugin\Payum\Action\ConvertAction" autowire="true" autoconfigure="true" public="true" >
-            <tag name="payum.action" factory="unzer_payment" alias="payum.action.convert_payment" />
+            <tag name="payum.action" factory="unzer_payment" />
         </service>
         <service id="SyliusUnzerPlugin\Payum\Action\AuthorizeAction" autowire="true" autoconfigure="true" public="true" >
-            <tag name="payum.action" factory="unzer_payment" alias="payum.action.authorize" />
+            <tag name="payum.action" factory="unzer_payment" />
         </service>
         <service id="SyliusUnzerPlugin\Payum\Action\CaptureAction" autowire="true" autoconfigure="true" public="true" >
-            <tag name="payum.action" factory="unzer_payment" alias="payum.action.capture" />
+            <tag name="payum.action" factory="unzer_payment" />
         </service>
 
         <service id="SyliusUnzerPlugin\Controller\UnzerMethodsController"  autowire="true" autoconfigure="true" public="true" >
