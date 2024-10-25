@@ -4,6 +4,7 @@ namespace SyliusUnzerPlugin\Services\Integration;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Webhook\WebhookUrlServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Multistore\StoreContext;
 
 /**
  * Class WebhookUrlService.
@@ -31,9 +32,9 @@ class WebhookUrlService implements WebhookUrlServiceInterface
     public function getWebhookUrl(): string
     {
         return $this->urlGenerator->generate(
-            'unzer_webhook',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+                'unzer_webhook',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ) . '?storeId=' . StoreContext::getInstance()->getStoreId();
     }
 }

@@ -8,6 +8,13 @@ use Payum\Core\Payum;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\CurrencyMismatchException;
+use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
+use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\TransactionHistoryNotFoundException;
+use Unzer\Core\BusinessLogic\WebhookAPI\Handler\Request\WebhookHandleRequest;
+use Unzer\Core\BusinessLogic\WebhookAPI\WebhookAPI;
+use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
  * Class WebhookController.
@@ -31,10 +38,26 @@ class WebhookController extends AbstractController
 
     /**
      * @param Request $request
+     * @param Request $request
+     *
      * @return Response
+     *
+     * @throws UnzerApiException
+     * @throws CurrencyMismatchException
+     * @throws InvalidCurrencyCode
+     * @throws ConnectionSettingsNotFoundException
+     * @throws TransactionHistoryNotFoundException
      */
     public function webhookAction(Request $request): Response
     {
-        return $this->json(['']);
+        $storeId = $request->get('storeId');
+        $storeId = is_string($storeId) ? $storeId : '';
+        $response = WebhookAPI::get()->webhookHandle($storeId)->handle(new WebhookHandleRequest($request->getContent()));
+
+        if (!$response->isSuccessful()) {
+            return $this->json($response->toArray(), 400);
+        }
+
+        return $this->json([]);
     }
 }
