@@ -15,12 +15,18 @@ use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotF
 use Unzer\Core\BusinessLogic\Domain\Translations\Exceptions\InvalidTranslatableArrayException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
+/**
+ * Class DesignController
+ *
+ * @package SyliusUnzerPlugin\Controller
+ */
 class DesignController extends AbstractController
 {
     /**
      * @param Request $request
      *
      * @return Response
+     *
      * @throws InvalidTranslatableArrayException
      */
     public function saveDesignAction(Request $request): Response
@@ -34,6 +40,7 @@ class DesignController extends AbstractController
 
         return $this->json($response->toArray());
     }
+
     /**
      * @param Request $request
      *
@@ -53,6 +60,7 @@ class DesignController extends AbstractController
      * @param Request $request
      *
      * @return Response
+     *
      * @throws InvalidTranslatableArrayException
      * @throws UnzerApiException
      * @throws ConnectionSettingsNotFoundException
@@ -86,8 +94,16 @@ class DesignController extends AbstractController
             $fileLogo = new SplFileInfo($file->getRealPath());
         }
 
-        $shopName = $this->formatTranslatableField(json_decode($request->get('name')));
-        $shopTagline = $this->formatTranslatableField(json_decode($request->get('tagline')));
+        $shopNameJson = $request->get('name');
+        $shopTaglineJson = $request->get('tagline');
+
+        $shopName = $this->formatTranslatableField(
+            (array)json_decode(is_string($shopNameJson) ? $shopNameJson : '[]', true)
+        );
+
+        $shopTagline = $this->formatTranslatableField(
+            (array)json_decode(is_string($shopTaglineJson) ? $shopTaglineJson : '[]', true)
+        );
 
         $logoImageUrl = ($data['logoImageUrl'] === 'null') ? null : $data['logoImageUrl'];
         $headerBackgroundColor = ($data['headerColor'] === 'null') ? null : $data['headerColor'];

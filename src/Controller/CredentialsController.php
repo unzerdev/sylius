@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,11 @@ use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotF
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
+/**
+ * Class CredentialsController
+ *
+ * @package SyliusUnzerPlugin\Controller
+ */
 class CredentialsController extends AbstractController
 {
     /**
@@ -53,7 +59,7 @@ class CredentialsController extends AbstractController
      *
      * @return Response
      * @throws InvalidModeException
-     * @throws \Exception
+     * @throws Exception
      */
     public function getCredentialsData(Request $request): Response
     {

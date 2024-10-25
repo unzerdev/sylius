@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller;
 
-use Sylius\Component\Currency\Model\Currency;
 use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
-use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ConnectionRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\CancellationRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\ChargeRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\RefundRequest;
@@ -17,7 +15,6 @@ use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\EnablePaymentMethod
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Enums\PaymentMethodTypes;
-use Unzer\Core\Infrastructure\Logger\Logger;
 use Unzer\Core\Infrastructure\ServiceRegister;
 
 final class GreetingController extends AbstractController
