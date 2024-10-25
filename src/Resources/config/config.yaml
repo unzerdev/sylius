@@ -35,7 +35,7 @@ sylius_ui:
             blocks:
                 refund_transition:
                     template: '@SyliusUnzerPlugin/Order/Show/Payment/_refundTransition.html.twig'
-                    priority: 10
+                    priority: 1
                     
         sylius.admin.order.show.content:
             blocks:
