@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace SyliusUnzerPlugin\Handler;
 
 use Payum\Core\Payum;
-use Payum\Core\Security\TokenInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Event\UnitsRefunded;
-use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
-use Sylius\RefundPlugin\Model\ShipmentRefund;
 use Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface;
 use SyliusUnzerPlugin\Handler\Request\RefundOrder;
 use SyliusUnzerPlugin\Util\StaticHelper;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Webmozart\Assert\Assert;
 
@@ -66,27 +63,20 @@ final class PaymentPartialEventListener
         Assert::notNull($paymentMethod->getGatewayConfig());
         $gateWayName = $paymentMethod->getGatewayConfig()->getGatewayName();
 
-//        if (false === ($gateWayName === StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY)) {
-//            return;
-//        }
+        if ($gateWayName !== StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
+            return;
+        }
 
         $details = $payment->getDetails();
-
+        /** @var ChannelInterface $channel */
+        $channel = $order->getChannel();
         $details['metadata']['refund']['items'] = $units->units();
         $details['metadata']['refund']['shipments'] = $units->shipments();
-        $details['metadata']['refund']['refundedTotal'] = ($this->orderRefundedTotalProvider)($order);
+        $details['metadata']['refund']['refundedTotal'] = $units->amount();
+        $details['metadata']['refund']['orderId'] = (string)$order->getId();
+        $details['metadata']['refund']['channelId'] = (string)$channel->getId();
+        $details['metadata']['refund']['currencyCode'] = (string)$order->getCurrencyCode();
         $payment->setDetails($details);
-
-       // $hash = $details['metadata']['refund_token'];
-
-//        /** @var TokenInterface|mixed $token */
-//        $token = $this->payum->getTokenStorage()->find($hash);
-//
-//        if (null === $token || !$token instanceof TokenInterface) {
-//            $this->loggerAction->addNegativeLog(sprintf('A token with hash `%s` could not be found.', $hash));
-//
-//            throw new BadRequestHttpException(sprintf('A token with hash `%s` could not be found.', $hash));
-//        }
 
         $gateway = $this->payum->getGateway('unzer_payment');
 
