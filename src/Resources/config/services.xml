@@ -70,7 +70,7 @@
             <tag name="console.command" />
         </service>
 
-        <service  id="unzer.order_payment.cancel" class="SyliusUnzerPlugin\EventListener\PaymentCancelListener" public="true">
+        <service id="unzer.order_payment_listener" class="SyliusUnzerPlugin\EventListener\PaymentListener" public="true">
         </service>
     </services>
 </container>

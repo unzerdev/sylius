@@ -4,9 +4,14 @@ winzou_state_machine:
             after:
                 sylius_payment_cancelled:
                     on: ["cancel"]
-                    do: ["@unzer.order_payment.cancel", "cancelPayment"]
+                    do: ["@unzer.order_payment_listener", "cancelPayment"]
                     args: ["object"]
                     priority: -200
+                sylius_payment_completed:
+                    on: [ "complete" ]
+                    do: [ "@unzer.order_payment_listener", "cancelPayment" ]
+                    args: [ "object" ]
+                    priority: -200    
 
 parameters:
     env(UNZER_ENCRYPTION_KEY): 'def000002f45b81aa090e24a233d11e5b6348131bf27a28fdcae1972841dd98a565d678b144a13b880c88bbea36327126f9962a40b2e07d5258360ec44c30804fb011883'
@@ -30,13 +35,7 @@ sylius_payment:
                 controller: SyliusUnzerPlugin\Controller\PaymentMethodController
 
 sylius_ui:
-    events:
-        sylius.admin.order.show.payment_content:
-            blocks:
-                refund_transition:
-                    template: '@SyliusUnzerPlugin/Order/Show/Payment/_refundTransition.html.twig'
-                    priority: 1
-                    
+    events:                    
         sylius.admin.order.show.content:
             blocks:
                 aaa:
