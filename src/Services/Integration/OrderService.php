@@ -4,9 +4,11 @@ namespace SyliusUnzerPlugin\Services\Integration;
 
 use SM\Factory\FactoryInterface;
 use SM\SMException;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\OrderTransitions;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
+use Sylius\Component\Payment\Model\PaymentInterface as PaymentInterfaceAlias;
 use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
 use SyliusUnzerPlugin\Refund\PaymentRefundInterface;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
@@ -17,7 +19,6 @@ use Sylius\RefundPlugin\Provider\OrderRefundedTotalProviderInterface;
 
 class OrderService implements OrderServiceInterface
 {
-
     /**
      * @var OrderRefundedTotalProviderInterface $orderRefundedTotalProvider
      */
@@ -98,26 +99,51 @@ class OrderService implements OrderServiceInterface
         /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
         $order = $this->orderRepository->findOneBy(['id' => $orderId]);
         if (null === $order || null === $order->getChannel()) {
-           return;
+            return;
         }
         $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
         $stateMachine->apply(OrderTransitions::TRANSITION_CANCEL);
     }
 
     /**
-     * @inheritDoc
+     * @param string $orderId
+     *
+     * @return Amount|null
+     *
+     * @throws InvalidCurrencyCode
      */
     public function getChargeAmountForOrder(string $orderId): ?Amount
     {
-        return Amount::fromFloat(1, Currency::getDefault());
+        /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
+        $order = $this->orderRepository->findOneBy(['id' => $orderId]);
+        if (null === $order || null === $order->getChannel()) {
+            return Amount::fromInt(0, Currency::getDefault());
+        }
+
+        if ($order->getPaymentState() !== PaymentInterfaceAlias::STATE_AUTHORIZED) {
+            return Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode()));
+        }
+
+        return Amount::fromInt(0, Currency::fromIsoCode($order->getCurrencyCode()));
     }
 
     /**
-     * @inheritDoc
+     * @param string $orderId
+     * @param Amount $amount
+     *
+     * @return void
+     *
+     * @throws SMException
      */
     public function chargeOrder(string $orderId, Amount $amount): void
     {
-        // TODO: Implement chargeOrder() method.
+        /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
+        $order = $this->orderRepository->findOneBy(['id' => $orderId]);
+        if (null === $order || null === $order->getChannel()) {
+            return;
+        }
+        //TODO complete order
+        $order->setState(PaymentInterface::STATE_COMPLETED);
     }
 
     /**
