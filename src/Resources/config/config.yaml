@@ -9,7 +9,7 @@ winzou_state_machine:
                     priority: -200
                 sylius_payment_completed:
                     on: [ "complete" ]
-                    do: [ "@unzer.order_payment_listener", "cancelPayment" ]
+                    do: [ "@unzer.order_payment_listener", "completePayment" ]
                     args: [ "object" ]
                     priority: -200    
 
