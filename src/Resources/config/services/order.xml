@@ -8,6 +8,7 @@
             <argument type="service" id="sylius.repository.order"/>
             <argument type="service" id="SyliusUnzerPlugin\Refund\PaymentRefundInterface"/>
             <argument type="service" id="sm.factory" />
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
     </services>
 </container>
