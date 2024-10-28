@@ -85,7 +85,7 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
             $unzerPaymentTypes =  $response->toArray();
 
             foreach ($unzerPaymentTypes as $configPaymentType) {
-                $configPaymentType['surcharge'] = 10;
+                $configPaymentType['surcharge'] = 0;
                 if ($configPaymentType['type'] === $paymentType) {
                     $order->addAdjustment(
                         $this->adjustmentFactory->createWithData(

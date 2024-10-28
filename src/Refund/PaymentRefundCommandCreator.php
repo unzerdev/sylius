@@ -58,7 +58,7 @@ final class PaymentRefundCommandCreator implements PaymentRefundCommandCreatorIn
         );
         $left = $order->getTotal() - $refunded;
         $toRefund = $amount;
-        if ($amount > $left || $amount < $left) {
+        if ($amount > $left) {
             $toRefund = $left;
         }
 
