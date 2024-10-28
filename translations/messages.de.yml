@@ -1,3 +1,6 @@
+sylius:
+    ui:
+        discount: 'Adjustments'
 sylius_unzer_plugin:
     ui:
         configuration:
