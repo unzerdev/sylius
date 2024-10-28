@@ -25,6 +25,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class RefundController
+ *
+ * @package SyliusUnzerPlugin\Controller\Admin
+ */
 final class RefundController
 {
     /** @var PaymentRepositoryInterface<PaymentInterface> */

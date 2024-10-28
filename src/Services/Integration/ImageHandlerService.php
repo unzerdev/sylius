@@ -5,6 +5,7 @@ namespace SyliusUnzerPlugin\Services\Integration;
 use enshrined\svgSanitize\Sanitizer;
 use Gaufrette\Filesystem;
 use ReflectionException;
+use RuntimeException;
 use SplFileInfo;
 use Sylius\Component\Core\Model\ImageInterface;
 use SyliusUnzerPlugin\Models\LogoImage;
@@ -19,7 +20,6 @@ use Unzer\Core\BusinessLogic\Domain\Integration\Uploader\UploaderService as Core
  */
 class ImageHandlerService implements CoreImageService
 {
-
     private const MIME_SVG_XML = 'image/svg+xml';
 
     private const MIME_SVG = 'image/svg';
@@ -116,7 +116,14 @@ class ImageHandlerService implements CoreImageService
 
         $fileContent = $this->sanitizeContent((string)file_get_contents($file->getPathname()), (string)$file->getMimeType());
 
-        $this->filesystem->write($image->getPath(), $fileContent, true);
+        /**@var string|null $path */
+        $path = $image->getPath();
+
+        if ($path === null) {
+            throw new RuntimeException('Image path cannot be null.');
+        }
+
+        $this->filesystem->write($path, $fileContent, true);
     }
 
     /**
@@ -127,11 +134,17 @@ class ImageHandlerService implements CoreImageService
      */
     protected function sanitizeContent(string $fileContent, string $mimeType): string
     {
-        if (self::MIME_SVG_XML === $mimeType || self::MIME_SVG === $mimeType) {
-            $fileContent = $this->sanitizer->sanitize($fileContent);
+        if (!(self::MIME_SVG_XML === $mimeType || self::MIME_SVG === $mimeType)) {
+            return $fileContent;
         }
 
-        return $fileContent;
+        $sanitizedContent = $this->sanitizer->sanitize($fileContent);
+
+        if ($sanitizedContent === false) {
+            throw new RuntimeException('Sanitization failed.');
+        }
+
+        return $sanitizedContent;
     }
 
     /**
@@ -141,7 +154,7 @@ class ImageHandlerService implements CoreImageService
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request) {
+        if ($request !== null) {
             $scheme = $request->getScheme();
             $host = $request->getHost();
 
@@ -163,6 +176,8 @@ class ImageHandlerService implements CoreImageService
         $adapter = $this->filesystem->getAdapter();
         $reflection = new \ReflectionClass($adapter);
         $directory = $reflection->getProperty('directory');
+
+        /** @var string $path */
         $path = $directory->getValue($adapter);
 
         $parts = explode('/public', $path);

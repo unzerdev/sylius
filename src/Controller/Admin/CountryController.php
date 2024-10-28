@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 
+/**
+ * Class CountryController
+ *
+ * @package SyliusUnzerPlugin\Controller\Admin
+ */
 final class CountryController extends AbstractController
 {
     /**
@@ -18,7 +23,10 @@ final class CountryController extends AbstractController
      */
     public function getCountriesAction(Request $request): Response
     {
-        $countries  = AdminAPI::get()->countries($request->get('storeId'))->getCountries();
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
+
+        $countries  = AdminAPI::get()->countries($storeId)->getCountries();
 
         return $this->json($countries->toArray());
     }

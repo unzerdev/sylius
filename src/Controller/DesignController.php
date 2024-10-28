@@ -31,8 +31,8 @@ class DesignController extends AbstractController
      */
     public function saveDesignAction(Request $request): Response
     {
+        /** @var string $storeId */
         $storeId = $request->get('storeId');
-        $storeId = is_string($storeId) ? $storeId : '';
 
         $request = $this->createPaymentPageSettingRequest($request);
 
@@ -48,8 +48,8 @@ class DesignController extends AbstractController
      */
     public function getDesignAction(Request $request): Response
     {
+        /** @var string $storeId */
         $storeId = $request->get('storeId');
-        $storeId = is_string($storeId) ? $storeId : '';
 
         $response = AdminAPI::get()->paymentPageSettings($storeId)->getPaymentPageSettings();
 
@@ -67,8 +67,8 @@ class DesignController extends AbstractController
      */
     public function createPreviewPageAction(Request $request): Response
     {
+        /** @var string $storeId */
         $storeId = $request->get('storeId');
-        $storeId = is_string($storeId) ? $storeId : '';
 
         $request = $this->createPaymentPageSettingRequest($request);
 
@@ -86,13 +86,7 @@ class DesignController extends AbstractController
     private function createPaymentPageSettingRequest(Request $request): PaymentPageSettingsRequest
     {
         $data = $request->request->all();
-        $file = $request->files->get('logoFile');
-
-        $fileLogo = null;
-
-        if ($file instanceof UploadedFile) {
-            $fileLogo = new SplFileInfo($file->getRealPath());
-        }
+        $fileLogo = $this->getFileLogo($request);
 
         $shopNameJson = $request->get('name');
         $shopTaglineJson = $request->get('tagline');
@@ -105,13 +99,13 @@ class DesignController extends AbstractController
             (array)json_decode(is_string($shopTaglineJson) ? $shopTaglineJson : '[]', true)
         );
 
-        $logoImageUrl = ($data['logoImageUrl'] === 'null') ? null : $data['logoImageUrl'];
-        $headerBackgroundColor = ($data['headerColor'] === 'null') ? null : $data['headerColor'];
-        $headerFontColor = ($data['headerFontColor'] === 'null') ? null : $data['headerFontColor'];
-        $shopNameBackgroundColor = ($data['shopNameBackground'] === 'null') ? null : $data['shopNameBackground'];
-        $shopNameFontColor = ($data['shopNameColor'] === 'null') ? null : $data['shopNameColor'];
-        $shopTaglineBackgroundColor = ($data['shopTaglineBackgroundColor'] === 'null') ? null : $data['shopTaglineBackgroundColor'];
-        $shopTaglineFontColor = ($data['shopTaglineColor'] === 'null') ? null : $data['shopTaglineColor'];
+        $logoImageUrl = $this->parseNullableField($data['logoImageUrl'] ?? null);
+        $headerBackgroundColor = $this->parseNullableField($data['headerColor'] ?? null);
+        $headerFontColor = $this->parseNullableField($data['headerFontColor'] ?? null);
+        $shopNameBackgroundColor = $this->parseNullableField($data['shopNameBackground'] ?? null);
+        $shopNameFontColor = $this->parseNullableField($data['shopNameColor'] ?? null);
+        $shopTaglineBackgroundColor = $this->parseNullableField($data['shopTaglineBackgroundColor'] ?? null);
+        $shopTaglineFontColor = $this->parseNullableField($data['shopTaglineColor'] ?? null);
 
         return new PaymentPageSettingsRequest(
             $shopName,
@@ -144,6 +138,27 @@ class DesignController extends AbstractController
         }
 
         return $result;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return SplFileInfo|null
+     */
+    private function getFileLogo(Request $request): ?SplFileInfo
+    {
+        $file = $request->files->get('logoFile');
+        return $file instanceof UploadedFile ? new SplFileInfo($file->getRealPath()) : null;
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string|null
+     */
+    private function parseNullableField(?string $value): ?string
+    {
+        return $value === 'null' ? null : $value;
     }
 
 }

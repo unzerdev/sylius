@@ -9,7 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 
-
+/**
+ * Class StoreController
+ *
+ * @package SyliusUnzerPlugin\Controller\Admin
+ */
 final class StoreController extends AbstractController
 {
     /**

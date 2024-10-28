@@ -28,15 +28,14 @@ class WebhookController extends AbstractController
 
     /**
      * @param Request $request
-     * @param Request $request
-     *
+     * @param EventDispatcherInterface $eventDispatcher
      * @return Response
      *
-     * @throws UnzerApiException
+     * @throws ConnectionSettingsNotFoundException
      * @throws CurrencyMismatchException
      * @throws InvalidCurrencyCode
-     * @throws ConnectionSettingsNotFoundException
      * @throws TransactionHistoryNotFoundException
+     * @throws UnzerApiException
      */
     public function webhookAction(Request $request, EventDispatcherInterface $eventDispatcher): Response
     {

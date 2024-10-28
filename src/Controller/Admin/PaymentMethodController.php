@@ -17,6 +17,11 @@ use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidBookingMetho
 use Unzer\Core\BusinessLogic\Domain\Translations\Exceptions\InvalidTranslatableArrayException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
+/**
+ * Class PaymentMethodController
+ *
+ * @package SyliusUnzerPlugin\Controller\Admin
+ */
 final class PaymentMethodController extends AbstractController
 {
 
@@ -30,7 +35,10 @@ final class PaymentMethodController extends AbstractController
      */
     public function getPaymentMethodsAction(Request $request): Response
     {
-        $methods = AdminAPI::get()->paymentMethods($request->get('storeId'))->getPaymentMethods();
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
+
+        $methods = AdminAPI::get()->paymentMethods($storeId)->getPaymentMethods();
 
         return $this->json($methods->toArray());
     }
@@ -44,8 +52,11 @@ final class PaymentMethodController extends AbstractController
      */
     public function enablePaymentMethodAction(string $type, Request $request): Response
     {
-        $response = AdminAPI::get()->paymentMethods($request->get('storeId'))->enablePaymentMethod(
-            new EnablePaymentMethodRequest($type, $request->get('enabled'))
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
+
+        $response = AdminAPI::get()->paymentMethods($storeId)->enablePaymentMethod(
+            new EnablePaymentMethodRequest($type, (bool)$request->get('enabled'))
         );
 
         return $this->json($response->toArray());
@@ -59,7 +70,10 @@ final class PaymentMethodController extends AbstractController
      */
     public function getPaymentMethodConfiguration(string $type, Request $request): Response
     {
-        $method = AdminAPI::get()->paymentMethods($request->get('storeId'))->getPaymentConfig(
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
+
+        $method = AdminAPI::get()->paymentMethods($storeId)->getPaymentConfig(
             new GetPaymentMethodConfigRequest($type)
         );
 

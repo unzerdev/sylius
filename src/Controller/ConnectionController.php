@@ -65,24 +65,45 @@ final class ConnectionController extends AbstractController
             )
         );
 
+        $addChannelSuccess = true;
+
         if ($response->isSuccessful()) {
+           $addChannelSuccess = $this->addChannel($channelRepository, $paymentMethodRepository, $storeId);
+        }
 
-            /**@var ?ChannelInterface $channel */
-            $channel = $channelRepository->find((int)$storeId);
-            /** @var ?PaymentMethodInterface $paymentMethod */
-
-            $paymentMethod = $paymentMethodRepository->findOneBy(['code' => StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY]
-            );
-            if (($paymentMethod === null) || ($channel === null)) {
-                return $this->json(['error' => 'Payment method or channel not found'], 404);
-            }
-
-            if (!$paymentMethod->hasChannel($channel)) {
-                $paymentMethod->addChannel($channel);
-                $paymentMethodRepository->add($paymentMethod);;
-            }
+        if(!$addChannelSuccess) {
+            return $this->json(['error' => 'Payment method or channel not found'], 404);
         }
 
         return $this->json($response->toArray(), $response->isSuccessful() ? 200 : 400);
+    }
+
+    /**
+     * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
+     * @param PaymentMethodRepositoryInterface<PaymentMethodInterface> $paymentMethodRepository
+     * @param string $storeId
+     *
+     * @return bool
+     */
+    private function addChannel(
+        ChannelRepositoryInterface $channelRepository,
+        PaymentMethodRepositoryInterface $paymentMethodRepository, string $storeId
+    ) : bool
+    {
+        /**@var ?ChannelInterface $channel */
+        $channel = $channelRepository->find((int)$storeId);
+
+        /** @var ?PaymentMethodInterface $paymentMethod */
+        $paymentMethod = $paymentMethodRepository->findOneBy(['code' => StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY]
+        );
+        if (($paymentMethod === null) || !$channel instanceof ChannelInterface) {
+            return false;
+        }
+
+        if (!$paymentMethod->hasChannel($channel)) {
+            $paymentMethod->addChannel($channel);
+            $paymentMethodRepository->add($paymentMethod);;
+        }
+        return true;
     }
 }

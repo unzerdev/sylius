@@ -28,6 +28,12 @@ unzer_admin_reregister:
     defaults:
         _controller: SyliusUnzerPlugin\Controller\CredentialsController::reRegisterWebhookAction
     methods: [ POST ]
+    
+unzer_admin_reconnect:
+    path: /unzer/api/credential/reconnect
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\CredentialsController::reconnectAction
+    methods: [ POST ]
         
 unzer_admin_credentialsData:
     path: /unzer/api/credential/getData

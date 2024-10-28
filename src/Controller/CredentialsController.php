@@ -10,8 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
+use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReconnectRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidKeypairException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PrivateKeyInvalidException;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PublicKeyInvalidException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
@@ -25,12 +29,54 @@ class CredentialsController extends AbstractController
      * @param Request $request
      *
      * @return Response
+     * @throws ConnectionSettingsNotFoundException
+     * @throws InvalidKeypairException
+     * @throws InvalidModeException
+     * @throws PrivateKeyInvalidException
+     * @throws PublicKeyInvalidException
+     * @throws UnzerApiException
+     */
+    public function reconnectAction(Request $request): Response
+    {
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
+
+        /** @var string $environment */
+        $environment = $request->get('environment', '');
+
+        /** @var string $publicKey */
+        $publicKey = $request->get('publicKey', '');
+
+        /** @var string $privateKey */
+        $privateKey = $request->get('privateKey', '');
+
+        $deleteConfig = (bool)$request->get('deleteConfig', '');
+
+        $response = AdminAPI::get()->connection(
+            $storeId
+        )->reconnect(
+            new ReconnectRequest(
+                $environment,
+                $publicKey,
+                $privateKey,
+                $deleteConfig
+            )
+        );
+
+        return $this->json($response->toArray(), $response->isSuccessful() ? 200 : 400);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
      *
      * @throws UnzerApiException
      */
     public function disconnectAction(Request $request): Response
     {
-        $storeId = $this->getStoreIdString($request);
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
 
         $response = AdminAPI::get()->disconnect($storeId)->disconnect();
 
@@ -47,7 +93,8 @@ class CredentialsController extends AbstractController
      */
     public function reRegisterWebhookAction(Request $request): Response
     {
-        $storeId = $this->getStoreIdString($request);
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
 
         $response = AdminAPI::get()->connection($storeId)->reRegisterWebhooks();
 
@@ -63,23 +110,15 @@ class CredentialsController extends AbstractController
      */
     public function getCredentialsData(Request $request): Response
     {
-        $storeId = $this->getStoreIdString($request);
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
+
         $store = AdminAPI::get()->stores()->getStoreById((int)$storeId);
+
         $mode = $store->toArray()['mode'];
 
         $response = AdminAPI::get()->connection($storeId)->getCredentials(new GetCredentialsRequest($mode));
 
         return $this->json($response->toArray());
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return string
-     */
-    private function getStoreIdString(Request $request): string
-    {
-        $storeId = $request->get('storeId');
-        return is_string($storeId) ? $storeId : '';
     }
 }
