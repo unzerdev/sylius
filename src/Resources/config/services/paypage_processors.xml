@@ -6,7 +6,9 @@
         <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor"
                  class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\CustomerProcessor" autowire="true" autoconfigure="true"/>
         <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor"
-                 class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\LineItemsProcessor" autowire="true" autoconfigure="true"/>
+                 class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\LineItemsProcessor" autowire="true" autoconfigure="true">
+            <argument type="service" id="router" />
+        </service>
         <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider"
                  class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\MetadataProvider" autowire="true" autoconfigure="true"/>
     </services>
