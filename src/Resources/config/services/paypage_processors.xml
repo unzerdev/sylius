@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor"
+                 class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\CustomerProcessor" autowire="true" autoconfigure="true"/>
+        <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor"
+                 class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\LineItemsProcessor" autowire="true" autoconfigure="true"/>
+        <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider"
+                 class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\MetadataProvider" autowire="true" autoconfigure="true"/>
+    </services>
+</container>

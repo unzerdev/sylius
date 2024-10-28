@@ -14,6 +14,7 @@ use SyliusUnzerPlugin\Services\Integration\PaymentStatusMapService;
 use SyliusUnzerPlugin\Services\Integration\StoreService;
 use SyliusUnzerPlugin\Services\Integration\VersionService;
 use SyliusUnzerPlugin\Services\Integration\WebhookUrlService;
+use Unzer\Core\BusinessLogic\Bootstrap\SingleInstance;
 use Unzer\Core\BusinessLogic\BootstrapComponent;
 use Unzer\Core\BusinessLogic\DataAccess\Connection\Entities\ConnectionSettings;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentMethodConfig\Entities\PaymentMethodConfig;
@@ -24,6 +25,9 @@ use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface;
+use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider;
+use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor;
+use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor;
 use Unzer\Core\BusinessLogic\Domain\Integration\PaymentStatusMap\PaymentStatusMapServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Uploader\UploaderService;
 use Unzer\Core\BusinessLogic\Domain\Integration\Versions\VersionService as VersionServiceInterface;
@@ -93,6 +97,9 @@ class Bootstrap extends BootstrapComponent
      * @var OrderServiceInterface
      */
     private static OrderServiceInterface $orderService;
+    private static CustomerProcessor $customerProcessor;
+    private static LineItemsProcessor $lineItemsProcessor;
+    private static MetadataProvider $metadataProvider;
 
     /**
      * @param ShopLoggerAdapter $loggerAdapter
@@ -105,6 +112,9 @@ class Bootstrap extends BootstrapComponent
      * @param CurrencyService $currencyService
      * @param ImageHandlerService $imageHandlerService
      * @param OrderServiceInterface $orderService
+     * @param CustomerProcessor $customerProcessor
+     * @param LineItemsProcessor $lineItemsProcessor
+     * @param MetadataProvider $metadataProvider
      */
     public function __construct(
         ShopLoggerAdapter $loggerAdapter,
@@ -116,7 +126,10 @@ class Bootstrap extends BootstrapComponent
         EncryptorService $encryptorService,
         CurrencyService $currencyService,
         ImageHandlerService $imageHandlerService,
-        OrderServiceInterface $orderService
+        OrderServiceInterface $orderService,
+        CustomerProcessor $customerProcessor,
+        LineItemsProcessor $lineItemsProcessor,
+        MetadataProvider $metadataProvider
     ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
@@ -128,6 +141,9 @@ class Bootstrap extends BootstrapComponent
         self::$currencyService = $currencyService;
         self::$imageHandlerService = $imageHandlerService;
         self::$orderService = $orderService;
+        self::$customerProcessor = $customerProcessor;
+        self::$lineItemsProcessor = $lineItemsProcessor;
+        self::$metadataProvider = $metadataProvider;
     }
 
     /**
@@ -235,5 +251,20 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(TransactionHistory::getClassName(), TransactionHistoryRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentStatusMap::getClassName(), BaseRepository::getClassName());
+    }
+
+    protected static function initRequestProcessors(): void
+    {
+        parent::initRequestProcessors();
+
+        ServiceRegister::registerService(CustomerProcessor::class, new SingleInstance(static function () {
+            return self::$customerProcessor;
+        }));
+        ServiceRegister::registerService(LineItemsProcessor::class, new SingleInstance(static function () {
+            return self::$lineItemsProcessor;
+        }));
+        ServiceRegister::registerService(MetadataProvider::class, new SingleInstance(static function () {
+            return self::$metadataProvider;
+        }));
     }
 }
