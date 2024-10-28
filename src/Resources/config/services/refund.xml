@@ -44,9 +44,6 @@
             <argument type="service" id="sylius_refund.repository.refund" />
         </service>
 
-        <service id="unzer.refund.units.units_shipment_order_refund" class="SyliusUnzerPlugin\Refund\Units\UnitsShipmentOrderRefund">
-            <argument type="service" id="sylius_refund.repository.refund" />
-        </service>
 
         <service id="unzer.refund.generator.payment_new_unit_refund_generator" class="SyliusUnzerPlugin\Refund\Generator\PaymentNewUnitRefundGenerator">
         </service>
