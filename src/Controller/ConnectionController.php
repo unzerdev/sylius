@@ -46,8 +46,7 @@ final class ConnectionController extends AbstractController
         Request $request,
         ChannelRepositoryInterface $channelRepository,
         PaymentMethodRepositoryInterface $paymentMethodRepository
-    ): Response
-    {
+    ): Response {
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
         /** @var string $environment */
@@ -56,22 +55,6 @@ final class ConnectionController extends AbstractController
         $publicKey = $request->get('publicKey', '');
         /** @var string $privateKey */
         $privateKey = $request->get('privateKey', '');
-
-        /** @var ?ChannelInterface $channel */
-        $channel = $channelRepository->find((int)$storeId);
-        /** @var ?PaymentMethodInterface $paymentMethod */
-        $paymentMethod = $paymentMethodRepository->findOneBy(['code' => StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY]);
-        if (($paymentMethod === null) || ($channel === null)) {
-            return $this->json(['error' => 'Payment method or channel not found'], 404);
-        }
-
-        if ($paymentMethod->hasChannel($channel)) {
-            return $this->json(['error' => 'Channel already connected'], 400);
-        }
-        $paymentMethod->addChannel($channel);
-
-        $paymentMethodRepository->add($paymentMethod);
-
         $response = AdminAPI::get()->connection(
             $storeId
         )->connect(
@@ -81,6 +64,24 @@ final class ConnectionController extends AbstractController
                 $privateKey
             )
         );
+
+        if ($response->isSuccessful()) {
+
+            /**@var ?ChannelInterface $channel */
+            $channel = $channelRepository->find((int)$storeId);
+            /** @var ?PaymentMethodInterface $paymentMethod */
+
+            $paymentMethod = $paymentMethodRepository->findOneBy(['code' => StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY]
+            );
+            if (($paymentMethod === null) || ($channel === null)) {
+                return $this->json(['error' => 'Payment method or channel not found'], 404);
+            }
+
+            if (!$paymentMethod->hasChannel($channel)) {
+                $paymentMethod->addChannel($channel);
+                $paymentMethodRepository->add($paymentMethod);;
+            }
+        }
 
         return $this->json($response->toArray(), $response->isSuccessful() ? 200 : 400);
     }
