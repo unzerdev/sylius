@@ -15,6 +15,9 @@
             <argument type="service" id="unzer.currency.service"/>
             <argument type="service" id="unzer.imageHandler.service"/>
             <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface"/>
+            <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor"/>
+            <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor"/>
+            <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider"/>
         </service>
     </services>
 </container>
