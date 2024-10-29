@@ -19,7 +19,6 @@ use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
 use UnzerSDK\Exceptions\UnzerApiException;
-use Webmozart\Assert\Assert;
 
 /**
  * Class PaymentSelectionProcessor
