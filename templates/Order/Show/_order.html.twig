@@ -1,1 +1,90 @@
-Branko Janjic
+{% import '@SyliusAdmin/Common/Macro/money.html.twig' as money %}
+
+{% set transaction = unzer_transaction(order) %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/syliusunzerplugin/admin/css/unzer_admin.scss') }}">
+{% endblock %}
+
+{% if transaction %}
+    <div class="twelve wide column sticky-column">
+        <div class="ui segment">
+            <div class="unzer-logo-container">
+                <img class="unzer-logo" src="{{ asset('bundles/syliusunzerplugin/admin/images/unzer_logo.png') }}"
+                     alt="unzer_logo">
+                <span>{{ 'sylius_unzer_plugin.order.unzer.label'|trans }}</span>
+            </div>
+        </div>
+
+        <h4 class="ui attached styled header top">
+            {{ 'sylius_unzer_plugin.order.transaction_details.header'|trans }}
+        </h4>
+        <div class="ui attached segment">
+            <table class="ui celled compact table">
+                <thead>
+                <tr>
+                    <th class="center aligned"> {{ 'sylius_unzer_plugin.order.transaction_details.date'|trans }}</th>
+                    <th class="center aligned ">{{ 'sylius_unzer_plugin.order.transaction_details.payment_id'|trans }}</th>
+                    <th class="center aligned ">{{ 'sylius_unzer_plugin.order.transaction_details.payment_method'|trans }}</th>
+                    <th class="center aligned ">{{ 'sylius_unzer_plugin.order.transaction_details.authorized'|trans }}</th>
+                    <th class="center aligned ">{{ 'sylius_unzer_plugin.order.transaction_details.charged'|trans }}</th>
+                    <th class="center aligned ">{{ 'sylius_unzer_plugin.order.transaction_details.refunded'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <td class="center aligned">{{ transaction.items[0].date }}</td>
+                <td class="center aligned">{{ transaction.paymentId }}</td>
+                <td class="center aligned">
+                    <div class="unzer-transaction-container">
+                        <img class="unzer-transaction-image" alt="{{ transaction.type }}"
+                             src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ transaction.type ~ '.svg') }}"/>
+                        <span
+                            class="unzer-transaction-label">{{ transaction.type|capitalize }}</span>
+                    </div>
+                </td>
+                <td class="center aligned">{{ money.format((transaction.amounts.authorized.amount * 100)|round, transaction.amounts.authorized.currency) }}</td>
+                <td class="center aligned">{{ money.format((transaction.amounts.charged.amount * 100)|round, transaction.amounts.charged.currency) }}</td>
+                <td class="center aligned">{{ money.format((transaction.amounts.refunded.amount * 100)|round, transaction.amounts.refunded.currency) }}</td>
+                </tbody>
+            </table>
+        </div>
+
+        {% if transaction.items|length > 1 %}
+            <h4 class="ui attached styled header top">
+                {{ 'sylius_unzer_plugin.order.transaction_history.header'|trans }}
+            </h4>
+            <div class="ui attached segment">
+                <table class="ui celled compact table">
+                    <thead>
+                    <tr>
+                        <th class="center aligned"> {{ 'sylius_unzer_plugin.order.transaction_history.date'|trans }}</th>
+                        <th class="center aligned"> {{ 'sylius_unzer_plugin.order.transaction_history.payment_id'|trans }}</th>
+                        <th class="center aligned"> {{ 'sylius_unzer_plugin.order.transaction_history.payment_method'|trans }}</th>
+                        <th class="center aligned"> {{ 'sylius_unzer_plugin.order.transaction_history.type'|trans }}</th>
+                        <th class="center aligned"> {{ 'sylius_unzer_plugin.order.transaction_history.amount'|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in transaction.items|slice(1) %}
+                        <tr>
+                            <td class="center aligned">{{ item.date }}</td>
+                            <td class="center aligned">{{ transaction.paymentId }}</td>
+                            <td class="center aligned">
+                                <div class="unzer-transaction-container">
+                                    <img class="unzer-transaction-image" alt="{{ transaction.type }}"
+                                         src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ transaction.type ~ '.svg') }}"/>
+                                    <span
+                                        class="unzer-transaction-label">{{ transaction.type|capitalize }}</span>
+                                </div>
+                            </td>
+                            <td class="center aligned">{{ item.type|capitalize }} </td>
+                            <td class="center aligned">{{ money.format((item.amount.amount * 100)|round, item.amount.currency) }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+

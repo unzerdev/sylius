@@ -175,4 +175,13 @@ The `UNZER_ENCRYPTION_KEY` exists with a default value. It is **not recommended*
 php bin/console sylius:unzer-key:create
 ```
 After generating the key, set the value as an environment variable (UNZER_ENCRYPTION_KEY) for your environment.
-    
+
+### Order page extension
+- Override the original code in templates/bundles/SyliusAdminBundle/Order/Show/_summaryWidget.html.twig file:
+    ```html
+    <div class="ui segment" style="overflow-x: auto;">
+    {% include '@SyliusAdmin/Order/Show/_summary.html.twig' %}
+    </div>
+    {% include '@SyliusUnzerPlugin/Order/Show/_order.html.twig' %}
+    ```
+

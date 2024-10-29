@@ -107,6 +107,4 @@ class PaymentListener implements DisableListenerInterface
            throw new UpdateHandlingException('Unzer API complete call failed.');
         }
     }
-
-
 }
