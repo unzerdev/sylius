@@ -48,6 +48,10 @@
             <tag name="twig.extension" />
         </service>
 
+        <service id="SyliusUnzerPlugin\Twig\Extension\UnzerTransaction" class="SyliusUnzerPlugin\Twig\Extension\UnzerTransaction" public="false" autoconfigure="true" autowire="true">
+            <tag name="twig.extension" />
+        </service>
+
         <service id="SyliusUnzerPlugin\Services\Checkout\SelectPayment\PaymentSelectionProcessor" class="SyliusUnzerPlugin\Services\Checkout\SelectPayment\PaymentSelectionProcessor" autowire="true">
             <!-- Priority set to -1 so that service is executed after Sylius core payment processor (see:sylius.order_processing.order_payment_processor.checkout for details) -->
             <tag name="sylius.order_processor" priority="-1"/>

@@ -11,3 +11,33 @@
     width: 16px;
     height: 16px;
 }
+
+.unzer-logo {
+    max-width: 110px;
+    display: block;
+    height: auto;
+}
+
+.unzer-logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.unzer-logo-container span {
+    margin-left: 25px;
+}
+
+.unzer-transaction-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.unzer-transaction-image {
+    max-width: 40px;
+    max-height: 40px;
+}
+
+.unzer-transaction-label {
+    margin-left: 10px;
+}
