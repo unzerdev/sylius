@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SyliusUnzerPlugin\Controller;
+namespace SyliusUnzerPlugin\Controller\Admin;
 
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -28,7 +28,6 @@ use UnzerSDK\Exceptions\UnzerApiException;
  */
 final class ConnectionController extends AbstractController
 {
-
     /**
      * @param Request $request
      * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository

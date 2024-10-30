@@ -9,9 +9,6 @@
         <defaults autowire="false" />
         <defaults autoconfigure="false" />
 
-        <service id="SyliusUnzerPlugin\Controller\GreetingController" autowire="true" autoconfigure="true" public="true" >
-        </service>
-
         <service id="SyliusUnzerPlugin\Services\LoggerService" class="SyliusUnzerPlugin\Services\LoggerService">
             <argument type="service" id="logger" />
         </service>
@@ -38,7 +35,7 @@
             <argument type="service" id="sylius.repository.order" />
         </service>
 
-        <service id="SyliusUnzerPlugin\Controller\ConfigurationController" autowire="true" autoconfigure="true" public="true" />
+        <service id="SyliusUnzerPlugin\Controller\Admin\ConfigurationController" autowire="true" autoconfigure="true" public="true" />
 
         <service id="SyliusUnzerPlugin\Controller\CheckoutPaymentController"  autowire="true" autoconfigure="true" public="true" />
         <service id="SyliusUnzerPlugin\Controller\Front\PaymentCompleteController"  autowire="true" autoconfigure="true" public="true" />

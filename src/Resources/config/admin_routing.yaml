@@ -1,7 +1,7 @@
 unzer_admin_config:
     path: /unzer/configuration/{all?}
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\ConfigurationController::configAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\ConfigurationController::configAction
         all: ''
     requirements:
         all: ".*"
@@ -9,36 +9,36 @@ unzer_admin_config:
 unzer_admin_enable:
     path: /unzer/enable-payment-method
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\ConfigurationController::enableAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\ConfigurationController::enableAction
 
 unzer_admin_connection:
     path: /unzer/api/connection
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\ConnectionController::connectAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\ConnectionController::connectAction
     methods: [ POST ]
 
 unzer_admin_disconnect:
     path: /unzer/api/credential/disconnect
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\CredentialsController::disconnectAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\CredentialsController::disconnectAction
     methods: [ DELETE ]
 
 unzer_admin_reregister:
     path: /unzer/api/credential/reregister
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\CredentialsController::reRegisterWebhookAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\CredentialsController::reRegisterWebhookAction
     methods: [ POST ]
     
 unzer_admin_reconnect:
     path: /unzer/api/credential/reconnect
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\CredentialsController::reconnectAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\CredentialsController::reconnectAction
     methods: [ POST ]
         
 unzer_admin_credentialsData:
     path: /unzer/api/credential/getData
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\CredentialsController::getCredentialsData
+        _controller: SyliusUnzerPlugin\Controller\Admin\CredentialsController::getCredentialsData
     methods: [ GET ]
 
 unzer_admin_payment_methods:
@@ -77,19 +77,19 @@ unzer_admin_payment_methods_enable:
 unzer_admin_create_paypage_preview:
     path: /unzer/api/design/createPreviewPage
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\DesignController::createPreviewPageAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\DesignController::createPreviewPageAction
     methods: [ POST ]
 
 unzer_admin_save_design:
     path: /unzer/api/design/saveDesign
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\DesignController::saveDesignAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\DesignController::saveDesignAction
     methods: [ POST ]
 
 unzer_admin_get_design:
     path: /unzer/api/design/getDesign
     defaults:
-        _controller: SyliusUnzerPlugin\Controller\DesignController::getDesignAction
+        _controller: SyliusUnzerPlugin\Controller\Admin\DesignController::getDesignAction
     methods: [ GET ]
 
 sylius_admin_order_payment_refund:

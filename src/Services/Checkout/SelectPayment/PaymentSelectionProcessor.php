@@ -33,8 +33,8 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
      */
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly AdjustmentFactoryInterface $adjustmentFactory)
-    {
+        private readonly AdjustmentFactoryInterface $adjustmentFactory
+    ) {
     }
 
     /**
@@ -43,24 +43,30 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
      */
     public function process(BaseOrderInterface $order): void
     {
-
-        if (! $order instanceof OrderInterface) {
-           return;
-        }
-        /** @var PaymentInterface $payment */
-        $payment = $order->getPayments()->first();
-
-        /** @var PaymentMethodInterface $paymentMethod */
-        $paymentMethod = $payment->getMethod();
-        $this->clearUnzerAdjustment($order);
-        if ($paymentMethod->getGatewayConfig()?->getGatewayName() !== StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
-            $this->clearUnzerDetails($payment);
+        if (!$order instanceof OrderInterface) {
             return;
         }
+
+        /** @var ?PaymentInterface $payment */
+        $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
+        if (null === $payment) {
+            return;
+        }
+
+        /** @var ?PaymentMethodInterface $paymentMethod */
+        $paymentMethod = $payment->getMethod();
+        $this->clearUnzerAdjustment($order);
+        if ($paymentMethod?->getCode() !== StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
+            $this->clearUnzerDetails($payment);
+            $payment->setAmount($order->getTotal());
+
+            return;
+        }
+
         /** @var string $unzerPaymentType */
         $unzerPaymentType = $this->requestStack->getCurrentRequest()?->get('unzer_payment_method_type', '');
         $this->setInUnzerDetails($order, $payment, $unzerPaymentType);
-
+        $payment->setAmount($order->getTotal());
     }
 
     /**
@@ -73,6 +79,7 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
         if ('' !== $paymentType) {
             $paymentDetails['unzer']['payment_type'] = $paymentType;
         }
+
         $response = CheckoutAPI::get()->paymentMethods((string)$order->getChannel()?->getId())
             ->getAvailablePaymentMethods(new PaymentMethodsRequest(
                 (string)$order->getBillingAddress()?->getCountryCode(),
@@ -80,24 +87,24 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
                 (string)$order->getLocaleCode()
             ));
 
-        if ($response->isSuccessful()) {
-            $unzerPaymentTypes =  $response->toArray();
+        if (!$response->isSuccessful()) {
+            return;
+        }
 
-            foreach ($unzerPaymentTypes as $configPaymentType) {
-                $configPaymentType['surcharge'] = 0;
-                if ($configPaymentType['type'] === $paymentType) {
-                    $order->addAdjustment(
-                        $this->adjustmentFactory->createWithData(
-                            AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT,
-                            StaticHelper::UNZER_PAYMENT_METHOD_SURCHARGE,
-                            $surcharge = Amount::fromFloat(
-                                $configPaymentType['surcharge'],
-                                Currency::fromIsoCode($order->getCurrencyCode())
-                            )->getValue()
-                        ));
-                    $paymentDetails['unzer']['surcharge'] = $surcharge;
-                    break;
-                }
+        $unzerPaymentTypes = $response->toArray();
+
+        foreach ($unzerPaymentTypes as $configPaymentType) {
+            if ($configPaymentType['type'] === $paymentType && array_key_exists('surcharge', $configPaymentType)) {
+                $order->addAdjustment($this->adjustmentFactory->createWithData(
+                    AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT,
+                    StaticHelper::UNZER_PAYMENT_METHOD_SURCHARGE,
+                    $surcharge = $configPaymentType['surcharge']['value'],
+                    false,
+                    ['paymentMethodCode' => StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY]
+                ));
+                $paymentDetails['unzer']['surcharge'] = $surcharge;
+
+                break;
             }
         }
 
@@ -114,13 +121,12 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
     private function clearUnzerAdjustment(OrderInterface $order): void
     {
         foreach ($order->getAdjustments(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT) as $adjustment) {
-            if ($adjustment->getLabel() === StaticHelper::UNZER_PAYMENT_METHOD_SURCHARGE) {
+            $paymentCode = $adjustment->getDetails()['paymentMethodCode'] ?? '';
+            if ($paymentCode === StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY) {
                 $order->removeAdjustment($adjustment);
+
                 break;
             }
-
-
         }
-
     }
 }

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services\Integration;
 
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
-use Sylius\Component\Locale\Model\Locale;
+use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Locale\Model\LocaleInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as CoreLanguageService;
 use Unzer\Core\BusinessLogic\Domain\Language\Models\Language;
 use Unzer\Core\BusinessLogic\Domain\Multistore\StoreContext;
@@ -16,12 +19,12 @@ use Unzer\Core\BusinessLogic\Domain\Multistore\StoreContext;
 class LanguageService implements CoreLanguageService
 {
     /**
-     * @var ChannelRepositoryInterface
+     * @var ChannelRepositoryInterface<ChannelInterface> $channelRepository
      */
     private ChannelRepositoryInterface $channelRepository;
 
     /**
-     * @param ChannelRepositoryInterface $channelRepository
+     * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
      */
     public function __construct(ChannelRepositoryInterface $channelRepository)
     {
@@ -36,13 +39,15 @@ class LanguageService implements CoreLanguageService
     public function getLanguages(): array
     {
         $channelId = StoreContext::getInstance()->getStoreId();
+
+        /** @var ChannelInterface $channel */
         $channel = $this->channelRepository->find($channelId);
 
         if ($channel == null) {
             return [];
         }
 
-        return $channel->getLocales()->map(function (Locale $locale) {
+        return $channel->getLocales()->map(function (LocaleInterface $locale) {
             $localeCode = $locale->getCode();
             $flag = is_string($localeCode) ? $this->getFlagFromCode($localeCode) : 'default';
 

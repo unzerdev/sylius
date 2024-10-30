@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services;
 
 use Unzer\Core\Infrastructure\Configuration\Configuration;
@@ -15,7 +17,7 @@ class ConfigurationService extends Configuration
     /**
      * Singleton instance of this class.
      *
-     * @var ?static
+     * @var ?Singleton
      */
     protected static ?Singleton $instance = null;
 

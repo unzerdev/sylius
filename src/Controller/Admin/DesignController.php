@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SyliusUnzerPlugin\Controller;
+namespace SyliusUnzerPlugin\Controller\Admin;
 
 use SplFileInfo;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

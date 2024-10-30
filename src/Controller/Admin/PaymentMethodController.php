@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SyliusUnzerPlugin\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
@@ -92,26 +93,66 @@ final class PaymentMethodController extends AbstractController
      */
     public function upsertPaymentMethodConfiguration(string $type, Request $request): Response
     {
-        $minAmount = $request->get('minOrderAmount');
-        $maxAmount = $request->get('maxOrderAmount');
-        $surcharge = $request->get('surcharge');
+        /** @var string $storeId */
+        $storeId = $request->get('storeId', '');
 
-        $response = AdminAPI::get()->paymentMethods($request->get('storeId'))->savePaymentConfig(
-            new SavePaymentMethodConfigRequest(
-                $type,
-                $request->get('bookingMethod'),
-                $request->get('name'),
-                $request->get('description'),
-                $request->get('statusIdToCharge'),
-                $minAmount ? (double)$minAmount : null,
-                $maxAmount ? (double)$maxAmount : null,
-                $surcharge ? (double)$surcharge : null,
-                $request->get('restrictedCountries'),
-                $request->get('sendBasketData'),
-            )
+
+        $response = AdminAPI::get()->paymentMethods($storeId)->savePaymentConfig(
+            $this->createSavePaymentMethodConfigRequest($type, $request)
         );
 
         return $this->json($response->toArray());
+    }
+
+    /**
+     * @param string $type
+     * @param Request $request
+     *
+     * @return SavePaymentMethodConfigRequest
+     */
+    private function createSavePaymentMethodConfigRequest(
+        string $type,
+        Request $request
+    ): SavePaymentMethodConfigRequest {
+        /** @var double|null $minAmount */
+        $minAmount = $request->get('minOrderAmount');
+
+        /** @var double|null $maxAmount */
+        $maxAmount = $request->get('maxOrderAmount');
+
+        /** @var double|null $surcharge */
+        $surcharge = $request->get('surcharge');
+
+        /** @var string $bookingMethod */
+        $bookingMethod = $request->get('bookingMethod', '');
+
+        /** @var array $name */
+        $name = $request->get('name', []);
+
+        /** @var array $description */
+        $description = $request->get('description', []);
+
+        /** @var string $statusIdToCharge */
+        $statusIdToCharge = $request->get('statusIdToCharge', '');
+
+        /** @var array $restrictedCountries */
+        $restrictedCountries = $request->get('restrictedCountries', []);
+
+        /** @var bool $sendBasketData */
+        $sendBasketData = $request->get('sendBasketData', false);
+
+        return new SavePaymentMethodConfigRequest(
+            $type,
+            $bookingMethod,
+            $name,
+            $description,
+            $statusIdToCharge,
+            $minAmount,
+            $maxAmount,
+            $surcharge,
+            $restrictedCountries,
+            $sendBasketData,
+        );
     }
 
 }

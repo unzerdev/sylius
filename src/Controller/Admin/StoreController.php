@@ -17,7 +17,6 @@ use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 final class StoreController extends AbstractController
 {
     /**
-     *
      * @return Response*
      */
     public function getOrderStatusesAction(): Response

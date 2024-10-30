@@ -1,8 +1,3 @@
-unzer_test:
-    path: /dynamic-welcome/{name}
-    defaults:
-        _controller: SyliusUnzerPlugin\Controller\GreetingController::dynamicallyGreetAction  
-
 unzer_shop:
     resource: "shop_routing.yaml"
 

@@ -39,6 +39,7 @@ class PaymentCompleteController extends AbstractController
 
     /**
      * @param Request $request
+     * @param SessionInterface $session
      * @return Response
      * @throws SMException
      */
