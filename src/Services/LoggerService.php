@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services;
 
 use Psr\Log\LoggerInterface;
@@ -74,7 +76,7 @@ class LoggerService implements ShopLoggerAdapter
 
         $contextData = [];
         $context = $data->getContext();
-        if (!empty($context)) {
+        if ($context !== []) {
             foreach ($context as $item) {
                 $contextData[$item->getName()] = $item->getValue();
             }

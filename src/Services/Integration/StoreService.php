@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services\Integration;
 use ReflectionClass;
 use Sylius\Component\Channel\Model\Channel;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Unzer\Core\BusinessLogic\Domain\Stores\Models\Store;
@@ -18,13 +21,13 @@ use Unzer\Core\BusinessLogic\Domain\Stores\Models\StoreOrderStatus;
 class StoreService implements StoreServiceInterface
 {
     /**
-     * @var ChannelRepositoryInterface
+     * @var ChannelRepositoryInterface<ChannelInterface> $channelRepository
      */
     private ChannelRepositoryInterface $channelRepository;
     private TranslatorInterface $translator;
 
     /**
-     * @param ChannelRepositoryInterface $channelRepository
+     * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
      * @param TranslatorInterface $translator
      */
     public function __construct(ChannelRepositoryInterface $channelRepository, TranslatorInterface $translator)
@@ -42,9 +45,12 @@ class StoreService implements StoreServiceInterface
         $channels = $this->channelRepository->findAll();
 
         return array_map(function (Channel $channel) {
+
+            $name = $channel->getName() === null ? '' : $channel->getName();
+
             return new Store(
-                $channel->getId(),
-                $channel->getName()
+                (string)$channel->getId(),
+                $name
             );
         }, $channels);
     }
@@ -75,11 +81,13 @@ class StoreService implements StoreServiceInterface
         /** @var ?Channel $channel */
         $channel = $this->channelRepository->findOneBy(['id' => $id]);
 
-        if (!$channel) {
+        if ($channel === null) {
             return null;
         }
 
-        return new Store($channel->getId(), $channel->getName());
+        $name = $channel->getName() === null ? '' : $channel->getName();
+
+        return new Store((string)$channel->getId(), $name);
     }
 
     /**
@@ -92,7 +100,9 @@ class StoreService implements StoreServiceInterface
 
         $orderStatuses = [];
         foreach ($values as $value) {
-            $orderStatuses[] = new StoreOrderStatus($value, $this->translator->trans("sylius.ui.$value"));
+            if (is_string($value)) {
+                $orderStatuses[] = new StoreOrderStatus($value, $this->translator->trans("sylius.ui.$value"));
+            }
         }
 
         return $orderStatuses;
@@ -106,11 +116,13 @@ class StoreService implements StoreServiceInterface
         /** @var ?Channel $channel */
         $channel = $this->channelRepository->findOneBy(['enabled' => true]);
 
-        if (!$channel) {
+        if ($channel === null) {
             return null;
         }
 
-        return new Store($channel->getId(), $channel->getName());
+        $name = $channel->getName() === null ? '' : $channel->getName();
+
+        return new Store((string)$channel->getId(), $name);
     }
 
 }

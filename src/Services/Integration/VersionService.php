@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services\Integration;
 
 use Composer\InstalledVersions;
@@ -19,6 +21,10 @@ class VersionService implements VersionServiceInterface
     public function getVersion(): Version
     {
         $version = InstalledVersions::getPrettyVersion('unzer/sylius-plugin');
+
+        if($version === null) {
+            $version = '';
+        }
 
         return new Version($version);
     }

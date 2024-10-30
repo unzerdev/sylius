@@ -24,8 +24,6 @@ use UnzerSDK\Exceptions\UnzerApiException;
  */
 class WebhookController extends AbstractController
 {
-
-
     /**
      * @param Request $request
      * @param EventDispatcherInterface $eventDispatcher

@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller\Admin;
@@ -120,7 +119,6 @@ final class RefundController
         $session->getFlashBag()->add('success', 'sylius.payment.refunded');
 
         return $this->redirectToReferer($request);
-
 
     }
 

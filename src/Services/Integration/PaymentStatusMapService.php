@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services\Integration;
 
 use Sylius\Component\Payment\Model\PaymentInterface;

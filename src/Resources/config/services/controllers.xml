@@ -8,11 +8,11 @@
             <argument type="service" id="payum"/>
         </service>
 
-        <service id="SyliusUnzerPlugin\Controller\ConnectionController" autowire="true" autoconfigure="true"
+        <service id="SyliusUnzerPlugin\Controller\Admin\ConnectionController" autowire="true" autoconfigure="true"
                  public="true">
         </service>
 
-        <service id="SyliusUnzerPlugin\Controller\CredentialsController" autowire="true" autoconfigure="true"
+        <service id="SyliusUnzerPlugin\Controller\Admin\CredentialsController" autowire="true" autoconfigure="true"
                  public="true">
         </service>
 
@@ -28,7 +28,7 @@
                  public="true">
         </service>
 
-        <service id="SyliusUnzerPlugin\Controller\DesignController" autowire="true" autoconfigure="true"
+        <service id="SyliusUnzerPlugin\Controller\Admin\DesignController" autowire="true" autoconfigure="true"
                  public="true">
         </service>
 

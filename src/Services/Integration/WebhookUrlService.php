@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services\Integration;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

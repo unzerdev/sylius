@@ -14,6 +14,7 @@ use Unzer\Core\BusinessLogic\CheckoutAPI\CheckoutAPI;
 use Unzer\Core\BusinessLogic\CheckoutAPI\PaymentMethods\Request\PaymentMethodsRequest;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
+use Unzer\Core\Infrastructure\Logger\LogContextData;
 use Unzer\Core\Infrastructure\Logger\Logger;
 
 /**
@@ -68,7 +69,10 @@ final class CheckoutPaymentController extends AbstractController
             Logger::logWarning(
                 'Exception while fetching available payment methods.',
                 'Integration',
-                ['exceptionMessage' => $e->getMessage(), 'exceptionTrace' => $e->getTraceAsString()]
+                [
+                    new LogContextData('exceptionMessage', $e->getMessage()),
+                    new LogContextData('exceptionTrace', $e->getTraceAsString()),
+                ]
             );
         }
 

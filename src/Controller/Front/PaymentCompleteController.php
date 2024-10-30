@@ -38,6 +38,7 @@ class PaymentCompleteController extends AbstractController
 
     /**
      * @param Request $request
+     * @param SessionInterface $session
      * @return Response
      */
     public function process(Request $request, SessionInterface $session): Response

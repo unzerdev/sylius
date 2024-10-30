@@ -20,7 +20,9 @@ final class SyliusUnzerExtension extends AbstractResourceExtension implements Pr
 {
     use PrependDoctrineMigrationsTrait;
 
-    /** @psalm-suppress UnusedVariable */
+    /** @psalm-suppress UnusedVariable
+     * @throws \Exception
+     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

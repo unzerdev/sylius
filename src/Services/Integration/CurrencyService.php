@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Services\Integration;
 
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Currency\Converter\CurrencyConverterInterface;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
@@ -18,7 +21,7 @@ use Unzer\Core\BusinessLogic\Domain\Multistore\StoreContext;
 class CurrencyService implements CurrencyServiceInterface
 {
     /**
-     * @var ChannelRepositoryInterface
+     * @var ChannelRepositoryInterface<ChannelInterface> $channelRepository
      */
     private ChannelRepositoryInterface $channelRepository;
 
@@ -28,7 +31,7 @@ class CurrencyService implements CurrencyServiceInterface
     private CurrencyConverterInterface $currencyConverter;
 
     /**
-     * @param ChannelRepositoryInterface $channelRepository
+     * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
      * @param CurrencyConverterInterface $currencyConverter
      */
     public function __construct(
@@ -45,14 +48,21 @@ class CurrencyService implements CurrencyServiceInterface
     public function getDefaultCurrency(): Currency
     {
         $channelId = StoreContext::getInstance()->getStoreId();
+
+        /** @var ?ChannelInterface $channel */
         $channel = $this->channelRepository->find($channelId);
 
-        if ($channel == null) {
+        if ($channel === null) {
+            return Currency::getDefault();
+        }
+
+        $baseCurrency = $channel->getBaseCurrency();
+        if ($baseCurrency === null) {
             return Currency::getDefault();
         }
 
         try {
-            return Currency::fromIsoCode($channel->getBaseCurrency()->getCode());
+            return Currency::fromIsoCode($baseCurrency->getCode());
         } catch (InvalidCurrencyCode) {
             return Currency::getDefault();
         }
