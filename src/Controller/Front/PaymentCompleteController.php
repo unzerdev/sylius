@@ -7,6 +7,7 @@ namespace SyliusUnzerPlugin\Controller\Front;
 use Doctrine\Persistence\ObjectManager;
 use Payum\Core\Payum;
 use SM\Factory\FactoryInterface;
+use SM\SMException;
 use Sylius\Bundle\CoreBundle\Provider\FlashBagProvider;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
@@ -39,6 +40,7 @@ class PaymentCompleteController extends AbstractController
     /**
      * @param Request $request
      * @return Response
+     * @throws SMException
      */
     public function process(Request $request, SessionInterface $session): Response
     {
@@ -78,6 +80,9 @@ class PaymentCompleteController extends AbstractController
         return new RedirectResponse($token->getTargetUrl());
     }
 
+    /**
+     * @throws SMException
+     */
     private function completeCheckout(OrderInterface $order): void
     {
         $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
