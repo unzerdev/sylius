@@ -8,3 +8,15 @@ unzer_paypage_create:
     methods: [ POST, GET ]
     defaults:
         _controller: SyliusUnzerPlugin\Controller\Front\PaypageCreateController::create
+
+unzer_webhook:
+    path: /unzer/webhook
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\WebhookController::webhookAction
+    methods: [POST]
+    
+unzer_async:
+    path: /unzer/async
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\AsyncProcessController::asyncAction
+    methods: [POST]    

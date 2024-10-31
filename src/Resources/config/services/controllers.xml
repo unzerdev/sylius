@@ -32,13 +32,19 @@
                  public="true">
         </service>
 
-        <service id="SyliusUnzerPlugin\Controller\Admin\RefundController" class="SyliusUnzerPlugin\Controller\Admin\RefundController" public="true" autowire="true" autoconfigure="true">
+        <service id="SyliusUnzerPlugin\Controller\Admin\RefundController"
+                 class="SyliusUnzerPlugin\Controller\Admin\RefundController" public="true" autowire="true"
+                 autoconfigure="true">
             <argument type="service" id="sylius.repository.payment"/>
             <argument type="service" id="payum"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sm.factory"/>
             <argument type="service" id="sylius.manager.payment"/>
             <argument type="service" id="SyliusUnzerPlugin\Refund\PaymentRefundInterface"/>
+        </service>
+
+        <service id="SyliusUnzerPlugin\Controller\Front\AsyncProcessController" autowire="true" autoconfigure="true"
+                 public="true">
         </service>
     </services>
 </container>

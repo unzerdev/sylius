@@ -62,6 +62,9 @@
         <service id="SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodChecker" class="SyliusUnzerPlugin\Services\PaymentMethodCheckerService" public="false" autoconfigure="true" autowire="true">
         </service>
 
+        <service id="Unzer\Core\Infrastructure\TaskExecution\Interfaces\TaskRunnerWakeup" class="Unzer\Core\Infrastructure\TaskExecution\TaskRunnerWakeupService" public="false" autoconfigure="true" autowire="true">
+        </service>
+
         <service id="SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator" class="SyliusUnzerPlugin\Services\PaymentMethodCreator" public="false" autoconfigure="true" autowire="true">
         </service>
         <service id="SyliusUnzerPlugin\Command\CreateKeyCommand">

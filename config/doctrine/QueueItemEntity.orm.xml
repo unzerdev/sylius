@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrSyliusUnzerPlugin\Repositories\Entities\UnzerBaseEntitine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+>
+    <entity name="SyliusUnzerPlugin\Entity\QueueItemEntity" table="unzer_queue">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="type" column="type" type="string"/>
+        <field name="index1" column="index_1" type="string"/>
+        <field name="index2" column="index_2" type="string"/>
+        <field name="index3" column="index_3" type="string"/>
+        <field name="index4" column="index_4" type="string"/>
+        <field name="index5" column="index_5" type="string"/>
+        <field name="index6" column="index_6" type="string"/>
+        <field name="index7" column="index_7" type="string"/>
+        <field name="index8" column="index_8" type="string"/>
+        <field name="index9" column="index_9" type="string"/>
+        <field name="data" column="data" type="text"/>
+    </entity>
+</doctrine-mapping>

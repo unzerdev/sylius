@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
+use Unzer\Core\Infrastructure\TaskExecution\Interfaces\TaskRunnerWakeup;
 
 final class ConfigurationController extends AbstractController
 {
-
     /**
      * @var UnzerPaymentMethodCreator
      */
@@ -28,15 +28,23 @@ final class ConfigurationController extends AbstractController
     private UnzerPaymentMethodChecker $unzerPaymentMethodChecker;
 
     /**
+     * @var TaskRunnerWakeup
+     */
+    private TaskRunnerWakeup $taskRunnerWakeup;
+
+    /**
      * @param UnzerPaymentMethodCreator $paymentMethodCreator
      * @param UnzerPaymentMethodChecker $unzerPaymentMethodChecker
+     * @param TaskRunnerWakeup $taskRunnerWakeup
      */
     public function __construct(
         UnzerPaymentMethodCreator $paymentMethodCreator,
-        UnzerPaymentMethodChecker $unzerPaymentMethodChecker
+        UnzerPaymentMethodChecker $unzerPaymentMethodChecker,
+        TaskRunnerWakeup $taskRunnerWakeup
     ) {
         $this->paymentMethodCreator = $paymentMethodCreator;
         $this->unzerPaymentMethodChecker = $unzerPaymentMethodChecker;
+        $this->taskRunnerWakeup = $taskRunnerWakeup;
     }
 
     /**
@@ -48,10 +56,9 @@ final class ConfigurationController extends AbstractController
      */
     public function configAction(Request $request): Response
     {
-
         /**@var bool|int $selectedStore**/
         $selectedStore = $request->query->get('store', false);
-
+        $this->taskRunnerWakeup->wakeup();
         if (!$this->unzerPaymentMethodChecker->exists()) {
             return $this->redirectToRoute('sylius_admin_payment_method_index');
         }

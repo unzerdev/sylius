@@ -59,6 +59,22 @@ final class Version20241004144751 extends AbstractMigration
                             data MEDIUMTEXT,
                             PRIMARY KEY (id)
             )");
+
+        $this->addSql("CREATE TABLE unzer_queue (
+                            id INT AUTO_INCREMENT NOT NULL,
+                            type VARCHAR(255),
+                            index_1 VARCHAR(255),
+                            index_2 VARCHAR(255),
+                            index_3 VARCHAR(255),
+                            index_4 VARCHAR(255),
+                            index_5 VARCHAR(255),
+                            index_6 VARCHAR(255),
+                            index_7 VARCHAR(255),
+                            index_8 VARCHAR(255),
+                            index_9 VARCHAR(255),
+                            data MEDIUMTEXT,
+                            PRIMARY KEY (id)
+            )");
     }
 
     /**
@@ -75,5 +91,7 @@ final class Version20241004144751 extends AbstractMigration
             'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('DROP TABLE unzer_entity');
+        $this->addSql('DROP TABLE unzer_transactions');
+        $this->addSql('DROP TABLE unzer_queue');
     }
 }
