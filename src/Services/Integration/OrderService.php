@@ -73,7 +73,7 @@ class OrderService implements OrderServiceInterface
      * @inheritDoc
      * @throws InvalidCurrencyCode
      */
-    public function getRefundedAmountForOrder(string $orderId): ?Amount
+    public function getRefundedAmountForOrder(string $orderId): Amount
     {
         /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
         $order = $this->orderRepository->findOneBy(['id' => $orderId]);
@@ -96,7 +96,7 @@ class OrderService implements OrderServiceInterface
      * @inheritDoc
      * @throws InvalidCurrencyCode
      */
-    public function getCancelledAmountForOrder(string $orderId): ?Amount
+    public function getCancelledAmountForOrder(string $orderId): Amount
     {
         /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
         $order = $this->orderRepository->findOneBy(['id' => $orderId]);
@@ -135,7 +135,7 @@ class OrderService implements OrderServiceInterface
      *
      * @throws InvalidCurrencyCode
      */
-    public function getChargeAmountForOrder(string $orderId): ?Amount
+    public function getChargeAmountForOrder(string $orderId): Amount
     {
         /** @var \Sylius\Component\Core\Model\OrderInterface|null $order */
         $order = $this->orderRepository->findOneBy(['id' => $orderId]);
