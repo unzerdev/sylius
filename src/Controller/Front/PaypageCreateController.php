@@ -72,7 +72,8 @@ class PaypageCreateController extends AbstractController
             (string)$order->getId(),
             Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
             $this->router->generate('unzer_payment_complete', ['orderId' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ['order' => $order]
+            ['order' => $order],
+            $order->getLocaleCode() ?? 'default'
         ));
 
         if (!$response->isSuccessful()) {
