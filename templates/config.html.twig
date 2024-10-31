@@ -25,7 +25,8 @@
                 version: {{ version|json_encode|raw }},
                 imagesUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images') }}",
                 flagsUrl:  "{{ asset('bundles/syliusunzerplugin/admin-ui/images/flags') }}",
-                locales: {{ locales|json_encode|raw }}
+                locales: {{ locales|json_encode|raw }},
+                chargeStatusFlag: true
             },
             connectionData : {
                 'privateKey': "{{ connectionData.privateKey is defined ? connectionData.privateKey : '' }}",

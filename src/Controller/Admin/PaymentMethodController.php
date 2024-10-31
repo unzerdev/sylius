@@ -114,14 +114,15 @@ final class PaymentMethodController extends AbstractController
         string $type,
         Request $request
     ): SavePaymentMethodConfigRequest {
-        /** @var double|null $minAmount */
-        $minAmount = $request->get('minOrderAmount');
 
-        /** @var double|null $maxAmount */
-        $maxAmount = $request->get('maxOrderAmount');
+        /** @var float|null $minAmount */
+        $minAmount = is_numeric($request->get('minOrderAmount')) ? (float) $request->get('minOrderAmount') : null;
 
-        /** @var double|null $surcharge */
-        $surcharge = $request->get('surcharge');
+        /** @var float|null $maxAmount */
+        $maxAmount = is_numeric($request->get('maxOrderAmount')) ? (float) $request->get('maxOrderAmount') : null;
+
+        /** @var float|null $surcharge */
+        $surcharge = is_numeric($request->get('surcharge')) ? (float) $request->get('surcharge') : null;
 
         /** @var string $bookingMethod */
         $bookingMethod = $request->get('bookingMethod', '');
