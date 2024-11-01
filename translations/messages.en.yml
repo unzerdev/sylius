@@ -27,3 +27,4 @@ sylius_unzer_plugin:
             payment_method: 'Payment method'
             type: 'Type'
             amount: 'Amount'
+            status: 'Status'

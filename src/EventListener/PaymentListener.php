@@ -18,9 +18,6 @@ use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
-use Unzer\Core\BusinessLogic\Domain\OrderManagement\Exceptions\CancellationNotPossibleException;
-use Unzer\Core\BusinessLogic\Domain\OrderManagement\Exceptions\ChargeNotPossibleException;
-use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\InvalidTransactionHistory;
 use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\TransactionHistoryNotFoundException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
@@ -31,10 +28,8 @@ class PaymentListener implements DisableListenerInterface
     /**
      * @throws ConnectionSettingsNotFoundException
      * @throws TransactionHistoryNotFoundException
-     * @throws InvalidTransactionHistory
      * @throws UnzerApiException
      * @throws InvalidCurrencyCode
-     * @throws CancellationNotPossibleException
      * @throws UpdateHandlingException
      */
     public function cancelPayment(PaymentInterface $payment): void
@@ -68,9 +63,7 @@ class PaymentListener implements DisableListenerInterface
     /**
      * @throws ConnectionSettingsNotFoundException
      * @throws TransactionHistoryNotFoundException
-     * @throws InvalidTransactionHistory
      * @throws UnzerApiException
-     * @throws ChargeNotPossibleException
      * @throws InvalidCurrencyCode
      * @throws UpdateHandlingException
      */
