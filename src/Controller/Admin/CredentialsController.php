@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
-use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReconnectRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidKeypairException;
@@ -106,7 +105,6 @@ class CredentialsController extends AbstractController
      * @param Request $request
      *
      * @return Response
-     * @throws InvalidModeException
      * @throws Exception
      */
     public function getCredentialsData(Request $request): Response
@@ -114,11 +112,7 @@ class CredentialsController extends AbstractController
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
 
-        $store = AdminAPI::get()->stores()->getStoreById((int)$storeId);
-
-        $mode = $store->toArray()['mode'];
-
-        $response = AdminAPI::get()->connection($storeId)->getCredentials(new GetCredentialsRequest($mode));
+        $response = AdminAPI::get()->connection($storeId)->getCredentials();
 
         return $this->json($response->toArray());
     }
