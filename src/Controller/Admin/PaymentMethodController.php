@@ -14,6 +14,7 @@ use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\GetPaymentMethodCon
 use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\SavePaymentMethodConfigRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Country\Exceptions\InvalidCountryArrayException;
+use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidAmountsException;
 use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidBookingMethodException;
 use Unzer\Core\BusinessLogic\Domain\Translations\Exceptions\InvalidTranslatableArrayException;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -50,6 +51,7 @@ final class PaymentMethodController extends AbstractController
      *
      * @return Response
      *
+     * @throws InvalidAmountsException
      */
     public function enablePaymentMethodAction(string $type, Request $request): Response
     {
@@ -89,7 +91,7 @@ final class PaymentMethodController extends AbstractController
      *
      * @throws InvalidCountryArrayException
      * @throws InvalidBookingMethodException
-     * @throws InvalidTranslatableArrayException
+     * @throws InvalidTranslatableArrayException|InvalidAmountsException
      */
     public function upsertPaymentMethodConfiguration(string $type, Request $request): Response
     {

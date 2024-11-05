@@ -16,6 +16,7 @@ use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidKeypairExceptio
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PrivateKeyInvalidException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PublicKeyInvalidException;
+use Unzer\Core\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
@@ -34,7 +35,7 @@ class CredentialsController extends AbstractController
      * @throws InvalidModeException
      * @throws PrivateKeyInvalidException
      * @throws PublicKeyInvalidException
-     * @throws UnzerApiException
+     * @throws UnzerApiException|QueryFilterInvalidParamException
      */
     public function reconnectAction(Request $request): Response
     {
