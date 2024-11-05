@@ -68,10 +68,7 @@ final class ConfigurationController extends AbstractController
         )->getStoreById((int)$selectedStore);
 
         $version = AdminAPI::get()->version()->getVersion();
-        $mode = $store->toArray()['mode'];
-        $credentials = AdminAPI::get()->connection($store->toArray()['storeId'])->getCredentials(
-            new GetCredentialsRequest($mode)
-        )->toArray();
+        $credentials = AdminAPI::get()->connection($store->toArray()['storeId'])->getCredentials()->toArray();
         $locales = AdminAPI::get()->languages($store->toArray()['storeId'])->getLanguages()->toArray();
 
         $connectionData = $credentials['connectionData'] ?? [];
