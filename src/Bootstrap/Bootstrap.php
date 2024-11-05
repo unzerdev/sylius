@@ -23,7 +23,7 @@ use Unzer\Core\BusinessLogic\DataAccess\PaymentMethodConfig\Entities\PaymentMeth
 use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentStatusMap\Entities\PaymentStatusMap;
 use Unzer\Core\BusinessLogic\DataAccess\TransactionHistory\Entities\TransactionHistory;
-use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
+use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookSettings;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface;
@@ -288,7 +288,7 @@ class Bootstrap extends BootstrapComponent
         RepositoryRegistry::registerRepository(Process::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(ConfigEntity::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(ConnectionSettings::getClassName(), BaseRepository::getClassName());
-        RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(WebhookSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(TransactionHistory::getClassName(), TransactionHistoryRepository::getClassName());
