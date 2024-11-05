@@ -11,8 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
-use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
-use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 use Unzer\Core\Infrastructure\TaskExecution\Interfaces\TaskRunnerWakeup;
 
 final class ConfigurationController extends AbstractController
@@ -51,7 +49,6 @@ final class ConfigurationController extends AbstractController
      * @param Request $request
      *
      * @return Response
-     * @throws InvalidModeException
      * @throws Exception
      */
     public function configAction(Request $request): Response
@@ -68,10 +65,8 @@ final class ConfigurationController extends AbstractController
         )->getStoreById((int)$selectedStore);
 
         $version = AdminAPI::get()->version()->getVersion();
-        $credentials = AdminAPI::get()->connection($store->toArray()['storeId'])->getCredentials()->toArray();
         $locales = AdminAPI::get()->languages($store->toArray()['storeId'])->getLanguages()->toArray();
 
-        $connectionData = $credentials['connectionData'] ?? [];
 
         return $this->render(
             '@SyliusUnzerPlugin/config.html.twig',
@@ -79,7 +74,6 @@ final class ConfigurationController extends AbstractController
                 'stores' => $stores->toArray(),
                 'store' => $store->toArray(),
                 'version' => $version->toArray(),
-                'connectionData' => $connectionData,
                 'locales' => $locales,
             ]
         );
