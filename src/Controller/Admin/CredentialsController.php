@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReconnectRequest;
+use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReRegisterWebhookRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidKeypairException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
@@ -89,6 +90,7 @@ class CredentialsController extends AbstractController
      * @return Response
      *
      * @throws ConnectionSettingsNotFoundException
+     * @throws InvalidModeException
      * @throws UnzerApiException
      */
     public function reRegisterWebhookAction(Request $request): Response
@@ -96,7 +98,10 @@ class CredentialsController extends AbstractController
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
 
-        $response = AdminAPI::get()->connection($storeId)->reRegisterWebhooks();
+        /** @var string $environment */
+        $environment = $request->get('environment', '');
+
+        $response = AdminAPI::get()->connection($storeId)->reRegisterWebhooks(new ReregisterWebhookRequest($environment));
 
         return $this->json($response->toArray());
     }
