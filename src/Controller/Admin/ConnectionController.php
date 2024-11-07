@@ -32,6 +32,7 @@ final class ConnectionController extends AbstractController
      * @param Request $request
      * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
      * @param PaymentMethodRepositoryInterface<PaymentMethodInterface> $paymentMethodRepository
+     *
      * @return Response
      *
      * @throws ConnectionSettingsNotFoundException
@@ -67,10 +68,10 @@ final class ConnectionController extends AbstractController
         $addChannelSuccess = true;
 
         if ($response->isSuccessful()) {
-           $addChannelSuccess = $this->addChannel($channelRepository, $paymentMethodRepository, $storeId);
+            $addChannelSuccess = $this->addChannel($channelRepository, $paymentMethodRepository, $storeId);
         }
 
-        if(!$addChannelSuccess) {
+        if (!$addChannelSuccess) {
             return $this->json(['error' => 'Payment method or channel not found'], 404);
         }
 
@@ -86,9 +87,9 @@ final class ConnectionController extends AbstractController
      */
     private function addChannel(
         ChannelRepositoryInterface $channelRepository,
-        PaymentMethodRepositoryInterface $paymentMethodRepository, string $storeId
-    ) : bool
-    {
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
+        string $storeId
+    ): bool {
         /**@var ?ChannelInterface $channel */
         $channel = $channelRepository->find((int)$storeId);
 
@@ -103,6 +104,7 @@ final class ConnectionController extends AbstractController
             $paymentMethod->addChannel($channel);
             $paymentMethodRepository->add($paymentMethod);;
         }
+
         return true;
     }
 }
