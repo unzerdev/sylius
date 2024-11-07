@@ -25,6 +25,7 @@ final class CheckoutPaymentController extends AbstractController
 {
     /**
      * CheckoutPaymentController constructor.
+     *
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
      */
     public function __construct(private readonly OrderRepositoryInterface $orderRepository)
@@ -58,7 +59,7 @@ final class CheckoutPaymentController extends AbstractController
                 ->getAvailablePaymentMethods(new PaymentMethodsRequest(
                     (string)$order->getBillingAddress()?->getCountryCode(),
                     Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
-                    (string)$order->getLocaleCode()
+                    $request->getLocale()
                 ));
 
             if ($response->isSuccessful()) {
