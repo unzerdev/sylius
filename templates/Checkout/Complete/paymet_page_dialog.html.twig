@@ -46,6 +46,12 @@
                     checkoutCompleteForm.classList.remove('loading');
                 });
 
+                checkout.success(function(data) {
+                    if(!data.redirectUrl) {
+                        window.location.href = data.returnUrl;
+                    }
+                });
+
                 checkout.init().then(function() {
                     checkout.open();
                     checkoutCompleteForm.classList.remove('loading');
