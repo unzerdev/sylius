@@ -40,6 +40,7 @@
         <service id="SyliusUnzerPlugin\Controller\CheckoutPaymentController"  autowire="true" autoconfigure="true" public="true" />
         <service id="SyliusUnzerPlugin\Controller\Front\PaymentCompleteController"  autowire="true" autoconfigure="true" public="true" />
         <service id="SyliusUnzerPlugin\Controller\Front\PaypageCreateController"  autowire="true" autoconfigure="true" public="true" />
+        <service id="SyliusUnzerPlugin\Controller\Front\PaymentErrorController"  autowire="true" autoconfigure="true" public="true" />
 
         <service id="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" class="SyliusUnzerPlugin\Twig\Extension\UnzerEnabled" public="false" autoconfigure="true" autowire="true">
             <tag name="twig.extension" />

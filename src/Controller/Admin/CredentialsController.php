@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReconnectRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReRegisterWebhookRequest;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionDataNotFound;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidKeypairException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
@@ -91,7 +92,7 @@ class CredentialsController extends AbstractController
      *
      * @throws ConnectionSettingsNotFoundException
      * @throws InvalidModeException
-     * @throws UnzerApiException
+     * @throws ConnectionDataNotFound
      */
     public function reRegisterWebhookAction(Request $request): Response
     {

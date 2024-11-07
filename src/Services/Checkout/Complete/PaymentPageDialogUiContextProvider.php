@@ -39,6 +39,7 @@ class PaymentPageDialogUiContextProvider implements ContextProviderInterface
         }
 
         $templateContext['unzer_payment_page_url'] = $this->router->generate('unzer_paypage_create', ['orderId' => $order->getId()]);
+        $templateContext['unzer_payment_error'] = $this->router->generate('unzer_payment_error');
         $templateContext['unzer_payment_page_type'] = $unzerPaymentType;
 
         return $templateContext;

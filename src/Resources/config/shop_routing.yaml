@@ -3,6 +3,12 @@ unzer_payment_complete:
     defaults:
         _controller: SyliusUnzerPlugin\Controller\Front\PaymentCompleteController::process
 
+unzer_payment_error:
+    path: /unzer_payment_error
+    methods: [ POST ]
+    defaults:
+        _controller: SyliusUnzerPlugin\Controller\Front\PaymentErrorController::process
+
 unzer_paypage_create:
     path: /unzer_paypage_create
     methods: [ POST, GET ]
@@ -13,10 +19,10 @@ unzer_webhook:
     path: /unzer/webhook
     defaults:
         _controller: SyliusUnzerPlugin\Controller\Front\WebhookController::webhookAction
-    methods: [POST]
-    
+    methods: [ POST ]
+
 unzer_async:
     path: /unzer/async
     defaults:
         _controller: SyliusUnzerPlugin\Controller\Front\AsyncProcessController::asyncAction
-    methods: [POST]    
+    methods: [ POST ]    
