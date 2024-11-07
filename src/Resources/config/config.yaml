@@ -52,3 +52,11 @@ sylius_ui:
                 unzer_payment_page_dialog:
                     template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
 
+monolog:
+    channels: ['unzer']
+    handlers:
+        paypal:
+            level: debug
+            type: stream
+            path: '%kernel.logs_dir%/unzer.log'
+            channels: [unzer]

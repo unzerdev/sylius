@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SyliusUnzerPlugin\Services;
 
 use Psr\Log\LoggerInterface;
-use SyliusUnzerPlugin\Repositories\BaseRepository;
 use Unzer\Core\Infrastructure\Configuration\Configuration;
 use Unzer\Core\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
 use Unzer\Core\Infrastructure\Logger\LogData;
