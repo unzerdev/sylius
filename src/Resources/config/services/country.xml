@@ -5,6 +5,7 @@
     <services>
         <service id="unzer.country.service" class="SyliusUnzerPlugin\Services\Integration\CountryService">
             <argument type="service" id="sylius.repository.channel"/>
+            <argument type="service" id="sylius.repository.country"/>
         </service>
     </services>
 </container>
