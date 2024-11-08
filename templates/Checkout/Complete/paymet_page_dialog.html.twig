@@ -48,7 +48,7 @@
                     return fetch(paymentErrorUrl, {
                         method: 'post',
                         headers: { 'content-type': 'application/json' },
-                        body: JSON.stringify({ errorMessage: error.error.message })
+                        body: JSON.stringify({ errorMessage: error.error.customerMessage || error.error.message })
                     }).then(function(res) {
                         return res.status === 400
                             ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 100))
