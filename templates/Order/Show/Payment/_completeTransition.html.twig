@@ -1,0 +1,9 @@
+{% set lastPayment = order.payments|last %}
+
+{% if lastPayment and lastPayment.method.code != 'unzer_payment' %}
+    {% include '@SyliusAdmin/Order/Show/Payment/_completeTransition.html.twig' %}
+{% endif %}
+
+{% if lastPayment and lastPayment.method.code == 'unzer_payment' and lastPayment.state != 'new' %}
+    {% include '@SyliusAdmin/Order/Show/Payment/_completeTransition.html.twig' %}
+{% endif %}

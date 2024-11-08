@@ -25,6 +25,7 @@ sylius_unzer_plugin:
             header: 'HISTORY'
             date: 'Date'
             payment_id: 'Payment ID'
+            transaction_id: 'Transaction ID'
             payment_method: 'Payment method'
             type: 'Type'
             amount: 'Amount'

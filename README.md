@@ -184,4 +184,3 @@ After generating the key, set the value as an environment variable (UNZER_ENCRYP
     </div>
     {% include '@SyliusUnzerPlugin/Order/Show/_order.html.twig' %}
     ```
-

@@ -51,6 +51,14 @@ sylius_ui:
             blocks:
                 unzer_payment_page_dialog:
                     template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
+        sylius.admin.order.show.payment_content:
+            blocks:
+                complete_transition:
+                    template: "@SyliusUnzerPlugin/Order/Show/Payment/_completeTransition.html.twig"
+        sylius.admin.order.show.summary:
+            blocks:
+                unzer_payment_content:
+                    template: "@SyliusUnzerPlugin/Order/Show/_order.html.twig"
 
 monolog:
     channels: ['unzer']
