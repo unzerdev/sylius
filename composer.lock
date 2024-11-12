@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fcdadec7f13e66317ce95485450e68a6",
+    "content-hash": "dee2ce3b39c4276d74fc44a318131315",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -13576,12 +13576,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:logeecom/unzer-core.git",
-                "reference": "eefa73ee45673a9fe7352219fa4b946b7092c3f4"
+                "reference": "68048d8f97cdf88d574eba0714c1e5578cbaaf03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/logeecom/unzer-core/zipball/eefa73ee45673a9fe7352219fa4b946b7092c3f4",
-                "reference": "eefa73ee45673a9fe7352219fa4b946b7092c3f4",
+                "url": "https://api.github.com/repos/logeecom/unzer-core/zipball/68048d8f97cdf88d574eba0714c1e5578cbaaf03",
+                "reference": "68048d8f97cdf88d574eba0714c1e5578cbaaf03",
                 "shasum": ""
             },
             "require": {
@@ -13611,7 +13611,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2024-11-12T09:37:52+00:00"
+            "time": "2024-11-12T13:22:10+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
