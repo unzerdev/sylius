@@ -25,7 +25,7 @@ use UnzerSDK\Resources\EmbeddedResources\BasketItem;
  */
 class LineItemsProcessor implements LineItemsProcessorInterface
 {
-    public function __construct(private readonly UrlGeneratorInterface $router)
+    public function __construct(private UrlGeneratorInterface $router)
     {
     }
 
