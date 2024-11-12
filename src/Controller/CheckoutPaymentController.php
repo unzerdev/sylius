@@ -29,7 +29,7 @@ final class CheckoutPaymentController extends AbstractController
      *
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
      */
-    public function __construct(private readonly OrderRepositoryInterface $orderRepository)
+    public function __construct(private OrderRepositoryInterface $orderRepository)
     {
     }
 

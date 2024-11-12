@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PaymentPageDialogUiContextProvider implements ContextProviderInterface
 {
-    public function __construct(private readonly UrlGeneratorInterface $router)
+    public function __construct(private UrlGeneratorInterface $router)
     {
     }
 

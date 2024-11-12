@@ -21,7 +21,7 @@ class PaymentErrorController extends AbstractController
     /**
      * @param TranslatorInterface $translator
      */
-    public function __construct(private readonly TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
     }
 

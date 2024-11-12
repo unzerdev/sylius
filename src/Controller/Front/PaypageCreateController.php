@@ -34,10 +34,10 @@ class PaypageCreateController extends AbstractController
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
      */
     public function __construct(
-        private readonly OrderRepositoryInterface $orderRepository,
-        private readonly UrlGeneratorInterface $router,
-        private readonly ObjectManager $orderManager,
-        private readonly TranslatorInterface $translator
+        private OrderRepositoryInterface $orderRepository,
+        private UrlGeneratorInterface $router,
+        private ObjectManager $orderManager,
+        private TranslatorInterface $translator
     ) {
     }
 
