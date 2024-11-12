@@ -60,6 +60,7 @@ final class ConfigurationController extends AbstractController
             return $this->redirectToRoute('sylius_admin_payment_method_index');
         }
         $stores = AdminAPI::get()->stores()->getStores();
+        $currentLocale = $request->getLocale();
 
         $store = $selectedStore === false ? AdminAPI::get()->stores()->getCurrentStore() : AdminAPI::get()->stores(
         )->getStoreById((int)$selectedStore);
@@ -75,6 +76,7 @@ final class ConfigurationController extends AbstractController
                 'store' => $store->toArray(),
                 'version' => $version->toArray(),
                 'locales' => $locales,
+                'currentLocale' => $currentLocale,
             ]
         );
     }
