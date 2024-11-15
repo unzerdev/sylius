@@ -13,35 +13,30 @@
         console.log({{ stores|json_encode|raw }})
         Unzer = {
             config: {
-                apiUrl: "/admin/unzer/api",
-                connectionUrl: "/admin/unzer/api/connection",
-                paymentMethodsUrl: "/admin/unzer/api/paymentMethod",
-                storeUrl: "/admin/unzer/api/store",
-                countryUrl: "/admin/unzer/api/country",
-                credentialUrl: "/admin/unzer/api/credential",
+                apiUrl: '/admin/unzer/api',
+                connectionUrl: '/admin/unzer/api/connection',
+                paymentMethodsUrl: '/admin/unzer/api/paymentMethod',
+                storeUrl: '/admin/unzer/api/store',
+                countryUrl: '/admin/unzer/api/country',
+                credentialUrl: '/admin/unzer/api/credential',
                 appPath: "{{ path('unzer_admin_config') }}/",
                 stores: {{ stores|json_encode|raw }},
                 store: {{ store|json_encode|raw }},
                 version: {{ version|json_encode|raw }},
                 imagesUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images') }}",
-                flagsUrl:  "{{ asset('bundles/syliusunzerplugin/admin-ui/images/flags') }}",
+                flagsUrl: "{{ asset('bundles/syliusunzerplugin/admin-ui/images/flags') }}",
                 locales: {{ locales|json_encode|raw }},
-                currentLocale: {{ currentLocale|json_encode|raw}},
+                currentLocale: {{ currentLocale|json_encode|raw }},
                 chargeStatusFlag: false
-            },
-            connectionData : {
-                'privateKey': "{{ connectionData.privateKey is defined ? connectionData.privateKey : '' }}",
-                'publicKey': "{{ connectionData.publicKey is defined ? connectionData.publicKey : '' }}"
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            Unzer.stateController.start();
-        });
+            Unzer.stateController.start()
+        })
     </script>
     <script type="application/javascript" src="{{ asset('bundles/syliusunzerplugin/admin-ui/js/index.js') }}"></script>
-    <link rel="stylesheet" href="https://static.unzer.com/v1/unzer.css" />
-    <script type="text/javascript" src="https://static.unzer.com/v1/checkout.js"></script>
+    <script type="module" src="https://static-v2.unzer.com/v2/ui-components/index.js"></script>
 
 
 {% endblock %}
@@ -57,6 +52,7 @@
                 <div class="unzer-content-holder">
                     <main id="unzer-main-page"></main>
                 </div>
+                <div id="unzer-container"></div>
                 <footer id="unzer-footer"></footer>
             </div>
         </main>

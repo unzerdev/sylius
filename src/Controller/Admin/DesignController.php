@@ -88,38 +88,48 @@ class DesignController extends AbstractController
     private function createPaymentPageSettingRequest(Request $request): PaymentPageSettingsRequest
     {
         $data = $request->request->all();
-        $fileLogo = $this->getFileLogo($request);
+        $logoFile = $this->getFile($request, 'logoFile');
+
+        $backgroundFile = $this->getFile($request, 'backgroundFile');
 
         $shopNameJson = $request->get('name');
-        $shopTaglineJson = $request->get('tagline');
 
         $shopName = TranslationCollection::fromArray($this->formatTranslatableField(
             (array)json_decode(is_string($shopNameJson) ? $shopNameJson : '[]', true)
         ));
 
-        $shopTagline =  TranslationCollection::fromArray($this->formatTranslatableField(
-            (array)json_decode(is_string($shopTaglineJson) ? $shopTaglineJson : '[]', true)
-        ));
 
         $logoImageUrl = $this->parseNullableField($data['logoImageUrl'] ?? null);
-        $headerBackgroundColor = $this->parseNullableField($data['headerColor'] ?? null);
-        $headerFontColor = $this->parseNullableField($data['headerFontColor'] ?? null);
-        $shopNameBackgroundColor = $this->parseNullableField($data['shopNameBackground'] ?? null);
-        $shopNameFontColor = $this->parseNullableField($data['shopNameColor'] ?? null);
-        $shopTaglineBackgroundColor = $this->parseNullableField($data['shopTaglineBackgroundColor'] ?? null);
-        $shopTaglineFontColor = $this->parseNullableField($data['shopTaglineColor'] ?? null);
+        $backgroundImageUrl =  $this->parseNullableField($data['backgroundImageUrl'] ?? null);
+        $headerColor = $this->parseNullableField($data['headerColor'] ?? null);
+        $brandColor = $this->parseNullableField($data['brandColor'] ?? null);
+        $textColor = $this->parseNullableField($data['textColor'] ?? null);
+        $linkColor = $this->parseNullableField($data['linkColor'] ?? null);
+        $backgroundColor = $this->parseNullableField($data['backgroundColor'] ?? null);
+        $footerColor = $this->parseNullableField($data['footerColor'] ?? null);
+        $font = $this->parseNullableField($data['font'] ?? null);
+        $shadows = $this->parseNullableField($data['shadows'] ?? null);
+        $hideUnzerLogo = $this->parseNullableField($data['hideUnzerLogo'] ?? null);
+        $hideBasket = $this->parseNullableField($data['hideBasket'] ?? null);
+        $cornerRadius = $this->parseNullableField($data['cornerRadius'] ?? null);
 
         return new PaymentPageSettingsRequest(
             $shopName,
-            $shopTagline,
             $logoImageUrl,
-            $fileLogo,
-            $headerBackgroundColor,
-            $headerFontColor,
-            $shopNameBackgroundColor,
-            $shopNameFontColor,
-            $shopTaglineBackgroundColor,
-            $shopTaglineFontColor
+            $logoFile,
+            $backgroundImageUrl,
+            $backgroundFile,
+            $headerColor,
+            $brandColor,
+            $textColor,
+            $linkColor,
+            $backgroundColor,
+            $footerColor,
+            $font,
+            (bool)$shadows,
+            (bool)$hideUnzerLogo,
+            (bool)$hideBasket,
+            $cornerRadius
         );
     }
 
@@ -144,12 +154,13 @@ class DesignController extends AbstractController
 
     /**
      * @param Request $request
+     * @param string $name
      *
      * @return SplFileInfo|null
      */
-    private function getFileLogo(Request $request): ?SplFileInfo
+    private function getFile(Request $request, string $name): ?SplFileInfo
     {
-        $file = $request->files->get('logoFile');
+        $file = $request->files->get($name);
         return $file instanceof UploadedFile ? new SplFileInfo($file->getRealPath()) : null;
     }
 
