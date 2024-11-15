@@ -90,7 +90,7 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             )
             ->setTitle((string)$item->getProductName())
             ->setSubTitle($item->getProduct()?->getShortDescription())
-            ->setImageUrl($this->getProductImage($item))
+         //   ->setImageUrl($this->getProductImage($item))
             ->setType(BasketItemTypes::GOODS);
     }
 
@@ -134,18 +134,10 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             return null;
         }
 
-        $imageUrl = $this->router->generate(
+        return $this->router->generate(
             'liip_imagine_filter',
             ['filter' => 'sylius_admin_product_original', 'path' => $image->getPath()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-
-        try {
-            getimagesize($imageUrl);
-        } catch (Throwable) {
-            return null;
-        }
-
-        return $imageUrl;
     }
 }
