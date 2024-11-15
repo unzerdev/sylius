@@ -1,8 +1,8 @@
-## Installation
+# Installation
 
 - Copy next line under 'imports' in Sylius config/packages/_sylius.yaml directory:
     ```bash 
-  { resource: "@SyliusUnzerPlugin/src/Resources/config/config.yaml" }
+  - { resource: "@SyliusUnzerPlugin/src/Resources/config/config.yaml" }
     ```
 
 - Require Unzer repositories in composer.json (This is required step until repository is not public):
@@ -49,7 +49,7 @@ php bin/console sylius:unzer-key:create
 ```
 After generating the key, set the value as an environment variable (UNZER_ENCRYPTION_KEY) for your environment.
 
-### Checkout setup
+## Checkout setup
 - Override how Unzer payment method is rendered on the checkout buy wrapping original content of `templates/bundles/SyliusShopBundle/Checkout/SelectPayment/_choice.html.twig` file with following condition
     ```html 
     {% if method.gatewayConfig.factoryName == 'unzer_payment' %}                                                                
@@ -58,3 +58,11 @@ After generating the key, set the value as an environment variable (UNZER_ENCRYP
         <!--    Original file content goes here    -->
     {% endif %}
     ```
+
+## Cache clear
+
+- Run the following command to clear the store cache to ensure translations function correctly:
+
+```bash
+php bin/console cache:clear
+```

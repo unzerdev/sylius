@@ -10,6 +10,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Taxation\Resolver\TaxRateResolverInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Throwable;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
 use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor as LineItemsProcessorInterface;
@@ -133,10 +134,18 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             return null;
         }
 
-        return $this->router->generate(
+        $imageUrl = $this->router->generate(
             'liip_imagine_filter',
             ['filter' => 'sylius_admin_product_original', 'path' => $image->getPath()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        try {
+            getimagesize($imageUrl);
+        } catch (Throwable) {
+            return null;
+        }
+
+        return $imageUrl;
     }
 }
