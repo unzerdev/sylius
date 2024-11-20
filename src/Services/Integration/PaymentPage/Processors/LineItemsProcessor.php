@@ -38,7 +38,7 @@ class LineItemsProcessor implements LineItemsProcessorInterface
         $currency = Currency::fromIsoCode($order->getCurrencyCode());
 
         foreach ($order->getItems() as $item) {
-            $basket->addBasketItem($this->mapLLineItem($item, $currency));
+            $basket->addBasketItem($this->mapLineItem($item, $currency));
         }
 
         foreach ($order->getAdjustments() as $adjustment) {
@@ -121,22 +121,21 @@ class LineItemsProcessor implements LineItemsProcessorInterface
         return true;
     }
 
-    private function mapLLineItem(OrderItemInterface $item, Currency $currency): BasketItem
+    private function mapLineItem(OrderItemInterface $item, Currency $currency): BasketItem
     {
         $amountWithTax = $this->getUnitPriceWithTax($item);
-        $taxAmount = $item->getTaxTotal();
-        $amountWithoutTax = $amountWithTax - (int)round($taxAmount / $item->getQuantity());
 
         return (new BasketItem())
             ->setBasketItemReferenceId((string)$item->getId())
             ->setQuantity($item->getQuantity())
-            ->setVat((100 * ($taxAmount / $amountWithoutTax)) / $item->getQuantity())
+            ->setVat((100 * ($item->getTaxTotal() / $item->getSubtotal())) / $item->getQuantity())
             ->setAmountDiscountPerUnitGross(
                 Amount::fromInt($item->getUnitPrice() - $item->getFullDiscountedUnitPrice(), $currency)
                     ->getPriceInCurrencyUnits()
             )
             ->setAmountPerUnitGross(
-                Amount::fromInt($amountWithTax, $currency)->getPriceInCurrencyUnits()
+                Amount::fromInt($amountWithTax + (int)round($item->getTaxTotal() / $item->getQuantity()), $currency)
+                    ->getPriceInCurrencyUnits()
             )
             ->setAmountDiscount(
                 Amount::fromInt($item->getUnitPrice() - $item->getFullDiscountedUnitPrice(), $currency)
@@ -150,10 +149,10 @@ class LineItemsProcessor implements LineItemsProcessorInterface
                 Amount::fromInt($item->getTotal(), $currency)->getPriceInCurrencyUnits()
             )
             ->setAmountNet(
-                Amount::fromInt($amountWithoutTax * $item->getQuantity(), $currency)->getPriceInCurrencyUnits()
+                Amount::fromInt($item->getSubtotal(), $currency)->getPriceInCurrencyUnits()
             )
             ->setAmountVat(
-                Amount::fromInt($taxAmount, $currency)->getPriceInCurrencyUnits()
+                Amount::fromInt($item->getTaxTotal(), $currency)->getPriceInCurrencyUnits()
             )
             ->setTitle((string)$item->getProductName())
             ->setSubTitle($item->getProduct()?->getShortDescription())
@@ -191,6 +190,8 @@ class LineItemsProcessor implements LineItemsProcessorInterface
     private function getUnitPriceWithTax(OrderItemInterface $item): int
     {
         $totalTax = $item->getTaxTotal();
+
+
         $fullUnitPrice = $item->getFullDiscountedUnitPrice();
         if (0 >= $totalTax) {
             return $fullUnitPrice;
