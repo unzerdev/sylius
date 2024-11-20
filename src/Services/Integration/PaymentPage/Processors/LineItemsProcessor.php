@@ -124,8 +124,7 @@ class LineItemsProcessor implements LineItemsProcessorInterface
     private function mapLineItem(OrderItemInterface $item, Currency $currency): BasketItem
     {
         $amountWithTax = $this->getUnitPriceWithTax($item);
-        $amountWithoutTax = $item->getSubtotal() - $item->getQuantity() * $item->getAdjustmentsTotal
-            (AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
+        $amountWithoutTax = $item->getTotal() - $item->getTaxTotal();
 
         return (new BasketItem())
             ->setBasketItemReferenceId((string)$item->getId())
