@@ -1,4 +1,5 @@
 {% extends '@SyliusAdmin/layout.html.twig' %}
+{% import '@SyliusAdmin/Macro/breadcrumb.html.twig' as breadcrumb %}
 
 {% block title %}Unzer{% endblock %}
 
@@ -41,7 +42,20 @@
 
 {% endblock %}
 
+{% set header = 'Your header value' %}
+{% set configuration = 'Config value' %}
+
+
 {% block content %}
+
+    {% set breadcrumbs = [
+        { label: 'sylius.ui.administration'|trans, url: path('sylius_admin_dashboard') },
+        { label: 'sylius.ui.payment_methods'|trans, url: path('sylius_admin_payment_method_index') },
+        { label: 'Unzer'}
+    ]
+    %}
+
+    {{ breadcrumb.crumble(breadcrumbs) }}
     <div class="adl-page" id="adl-page">
         <main>
             <header id="adl-main-header">

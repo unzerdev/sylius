@@ -7,6 +7,7 @@ namespace SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor as CustomerProcessorInterface;
 use Unzer\Core\BusinessLogic\Domain\PaymentPage\Models\PaymentPageCreateContext;
 use UnzerSDK\Constants\Salutations;
@@ -20,6 +21,16 @@ use UnzerSDK\Resources\EmbeddedResources\Address;
  */
 class CustomerProcessor implements CustomerProcessorInterface
 {
+    /** @var ChannelContextInterface $channelContext */
+    private ChannelContextInterface $channelContext;
+
+    /**
+     * @param ChannelContextInterface $channelContext
+     */
+    public function __construct(ChannelContextInterface $channelContext)
+    {
+        $this->channelContext = $channelContext;
+    }
 
     public function process(Customer $customer, PaymentPageCreateContext $context): void
     {
@@ -30,8 +41,15 @@ class CustomerProcessor implements CustomerProcessorInterface
         /** @var OrderInterface $order */
         $order = $context->getCheckoutSession()->get('order');
 
+        $hostname = $this->channelContext->getChannel()->getHostname() ?? '';
+        $domain = str_replace(['http://', 'https://'], '', $hostname);
+        $email = $order->getCustomer() !== null && $order->getCustomer()->getEmail() !== null ?
+            $order->getCustomer()->getEmail() : '';
+        /** @var string $customerId */
+        $customerId = $order->getCustomer() !== null ? (string)$order->getCustomer()->getId() . '_' . $email . '_' . $domain : null;
+
         $customer
-            ->setCustomerId($order->getCustomer() !== null ? (string)$order->getCustomer()->getId() : null)
+            ->setCustomerId(sha1($customerId))
             ->setFirstname($order->getCustomer()?->getFirstName())
             ->setLastname($order->getCustomer()?->getLastName())
             ->setSalutation($this->getSalutation($order->getCustomer()))
@@ -50,7 +68,7 @@ class CustomerProcessor implements CustomerProcessorInterface
         }
 
         $order = $context->getCheckoutSession()->get('order');
-        if (! $order instanceof OrderInterface) {
+        if (!$order instanceof OrderInterface) {
             return false;
         }
 
