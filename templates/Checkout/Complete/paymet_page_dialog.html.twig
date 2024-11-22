@@ -34,10 +34,19 @@
             checkoutCompleteForm.classList.add('loading');
 
             createPayPage(selectedUnzerPaymentType).then(function (payPageData) {
-                let checkout = new window.checkout(payPageData.id);
+
+                const unzerContainer = document.getElementById("unzer-payment-dialog-placeholder");
+                unzerContainer.innerHTML = `
+            <unzer-payment publicKey="${payPageData.publicKey}">
+                <unzer-pay-page
+                    id="checkout"
+                    payPageId="${payPageData.id}"
+                ></unzer-pay-page>
+            </unzer-payment>
+        `;
+                const checkout = document.getElementById("checkout");
 
                 checkout.abort(function() {
-                    // handle abort event.
                     checkout._hideIframe();
                     checkoutCompleteForm.classList.remove('loading');
                 });
@@ -62,10 +71,9 @@
                     }
                 });
 
-                checkout.init().then(function() {
-                    checkout.open();
-                    checkoutCompleteForm.classList.remove('loading');
-                });
+                checkout.open();
+                checkoutCompleteForm.classList.remove('loading');
+
             });
         }, true);
     });
