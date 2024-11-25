@@ -4,7 +4,9 @@ namespace SyliusUnzerPlugin\Bootstrap;
 
 use Doctrine\ORM\EntityManagerInterface;
 use SyliusUnzerPlugin\Repositories\BaseRepository;
+use SyliusUnzerPlugin\Repositories\QueueItemRepository;
 use SyliusUnzerPlugin\Repositories\TransactionHistoryRepository;
+use SyliusUnzerPlugin\Services\ConfigurationService;
 use SyliusUnzerPlugin\Services\Integration\CountryService;
 use SyliusUnzerPlugin\Services\Integration\CurrencyService;
 use SyliusUnzerPlugin\Services\Integration\EncryptorService;
@@ -21,7 +23,7 @@ use Unzer\Core\BusinessLogic\DataAccess\PaymentMethodConfig\Entities\PaymentMeth
 use Unzer\Core\BusinessLogic\DataAccess\PaymentPageSettings\Entities\PaymentPageSettings;
 use Unzer\Core\BusinessLogic\DataAccess\PaymentStatusMap\Entities\PaymentStatusMap;
 use Unzer\Core\BusinessLogic\DataAccess\TransactionHistory\Entities\TransactionHistory;
-use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookData;
+use Unzer\Core\BusinessLogic\DataAccess\Webhook\Entities\WebhookSettings;
 use Unzer\Core\BusinessLogic\Domain\Integration\Language\LanguageService as LanguageServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Country\CountryService as CountryServiceInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\Order\OrderServiceInterface;
@@ -39,7 +41,12 @@ use Unzer\Core\Infrastructure\Configuration\ConfigEntity;
 use Unzer\Core\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
 use Unzer\Core\Infrastructure\ORM\Exceptions\RepositoryClassException;
 use Unzer\Core\Infrastructure\ORM\RepositoryRegistry;
+use Unzer\Core\Infrastructure\Serializer\Concrete\JsonSerializer;
+use Unzer\Core\Infrastructure\Serializer\Serializer;
 use Unzer\Core\Infrastructure\ServiceRegister;
+use Unzer\Core\Infrastructure\TaskExecution\Process;
+use Unzer\Core\Infrastructure\TaskExecution\QueueItem;
+use Unzer\Core\Infrastructure\Configuration\Configuration;
 
 /**
  * Class Bootstrap.
@@ -97,9 +104,26 @@ class Bootstrap extends BootstrapComponent
      * @var OrderServiceInterface
      */
     private static OrderServiceInterface $orderService;
+
+    /**
+     * @var CustomerProcessor
+     */
     private static CustomerProcessor $customerProcessor;
+
+    /**
+     * @var LineItemsProcessor
+     */
     private static LineItemsProcessor $lineItemsProcessor;
+
+    /**
+     * @var MetadataProvider
+     */
     private static MetadataProvider $metadataProvider;
+
+    /**
+     * @var ConfigurationService
+     */
+    private static ConfigurationService $configurationService;
 
     /**
      * @param ShopLoggerAdapter $loggerAdapter
@@ -115,6 +139,7 @@ class Bootstrap extends BootstrapComponent
      * @param CustomerProcessor $customerProcessor
      * @param LineItemsProcessor $lineItemsProcessor
      * @param MetadataProvider $metadataProvider
+     * @param ConfigurationService $configurationService
      */
     public function __construct(
         ShopLoggerAdapter $loggerAdapter,
@@ -129,7 +154,8 @@ class Bootstrap extends BootstrapComponent
         OrderServiceInterface $orderService,
         CustomerProcessor $customerProcessor,
         LineItemsProcessor $lineItemsProcessor,
-        MetadataProvider $metadataProvider
+        MetadataProvider $metadataProvider,
+        ConfigurationService $configurationService
     ) {
         self::$loggerAdapter = $loggerAdapter;
         self::$entityManager = $entityManager;
@@ -144,6 +170,7 @@ class Bootstrap extends BootstrapComponent
         self::$customerProcessor = $customerProcessor;
         self::$lineItemsProcessor = $lineItemsProcessor;
         self::$metadataProvider = $metadataProvider;
+        self::$configurationService = $configurationService;
     }
 
     /**
@@ -231,6 +258,20 @@ class Bootstrap extends BootstrapComponent
                 return self::$orderService;
             }
         );
+
+        ServiceRegister::registerService(
+            Configuration::CLASS_NAME,
+            function () {
+                return self::$configurationService;
+            }
+        );
+
+        ServiceRegister::registerService(
+            Serializer::CLASS_NAME,
+            static function () {
+                return new JsonSerializer();
+            }
+        );
     }
 
     /**
@@ -244,13 +285,15 @@ class Bootstrap extends BootstrapComponent
 
         BaseRepository::setEntityManager(self::$entityManager);
 
+        RepositoryRegistry::registerRepository(Process::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(ConfigEntity::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(ConnectionSettings::getClassName(), BaseRepository::getClassName());
-        RepositoryRegistry::registerRepository(WebhookData::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(WebhookSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentPageSettings::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentMethodConfig::getClassName(), BaseRepository::getClassName());
         RepositoryRegistry::registerRepository(TransactionHistory::getClassName(), TransactionHistoryRepository::getClassName());
         RepositoryRegistry::registerRepository(PaymentStatusMap::getClassName(), BaseRepository::getClassName());
+        RepositoryRegistry::registerRepository(QueueItem::getClassName(), QueueItemRepository::getClassName());
     }
 
     protected static function initRequestProcessors(): void

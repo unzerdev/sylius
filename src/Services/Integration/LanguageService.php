@@ -50,8 +50,10 @@ class LanguageService implements CoreLanguageService
         return $channel->getLocales()->map(function (LocaleInterface $locale) {
             $localeCode = $locale->getCode();
             $flag = is_string($localeCode) ? $this->getFlagFromCode($localeCode) : 'default';
+            /** @var string $name */
+            $name = $locale->getName();
 
-            return new Language($localeCode ?? 'unknown', $flag);
+            return new Language($localeCode ?? 'unknown', $flag, $name);
         })->toArray();
     }
 
@@ -66,7 +68,7 @@ class LanguageService implements CoreLanguageService
     {
         $parts = explode('_', $localeCode);
         if (!isset($parts[1])) {
-            return 'default';
+            return 'country-xx';
         }
 
         $countryCode = strtolower($parts[1]);

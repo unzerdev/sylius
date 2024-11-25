@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Services;
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Unzer\Core\Infrastructure\Configuration\Configuration;
 use Unzer\Core\Infrastructure\Singleton;
 
@@ -15,6 +16,11 @@ use Unzer\Core\Infrastructure\Singleton;
 class ConfigurationService extends Configuration
 {
     /**
+     * @var UrlGeneratorInterface
+     */
+    private  UrlGeneratorInterface $urlGenerator;
+
+    /**
      * Singleton instance of this class.
      *
      * @var ?Singleton
@@ -22,11 +28,13 @@ class ConfigurationService extends Configuration
     protected static ?Singleton $instance = null;
 
     /**
-     * @return ConfigurationService
+     * @param UrlGeneratorInterface $urlGenerator
      */
-    public static function create(): ConfigurationService
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
-       return static::getInstance();
+        parent::__construct();
+
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -42,6 +50,10 @@ class ConfigurationService extends Configuration
      */
     public function getAsyncProcessUrl(string $guid): string
     {
-        return 'https://sylius.unzer.com/integration/async-process/';
+        return $this->urlGenerator->generate(
+            'unzer_async',
+            ['guid' => $guid],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
     }
 }

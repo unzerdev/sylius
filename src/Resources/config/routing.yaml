@@ -1,8 +1,2 @@
 unzer_shop:
     resource: "shop_routing.yaml"
-
-unzer_webhook:
-    path: /unzer/webhook
-    defaults:
-        _controller: SyliusUnzerPlugin\Controller\Front\WebhookController::webhookAction  
-    methods: [POST]

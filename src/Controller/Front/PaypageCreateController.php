@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Unzer\Core\BusinessLogic\CheckoutAPI\CheckoutAPI;
 use Unzer\Core\BusinessLogic\CheckoutAPI\PaymentPage\Request\PaymentPageCreateRequest;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
@@ -33,9 +34,10 @@ class PaypageCreateController extends AbstractController
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
      */
     public function __construct(
-        private readonly OrderRepositoryInterface $orderRepository,
-        private readonly UrlGeneratorInterface $router,
-        private readonly ObjectManager $orderManager,
+        private OrderRepositoryInterface $orderRepository,
+        private UrlGeneratorInterface $router,
+        private ObjectManager $orderManager,
+        private TranslatorInterface $translator
     ) {
     }
 
@@ -71,8 +73,10 @@ class PaypageCreateController extends AbstractController
             $paymentMethodType,
             (string)$order->getId(),
             Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
-            $this->router->generate('unzer_payment_complete', ['orderId' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
-            ['order' => $order]
+            $this->router->generate('unzer_payment_complete', ['orderId' => $order->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            ['order' => $order],
+            $order->getLocaleCode() ?? 'default'
         ));
 
         if (!$response->isSuccessful()) {
@@ -94,7 +98,7 @@ class PaypageCreateController extends AbstractController
     {
         /** @var FlashBagInterface $flashBag */
         $flashBag = $request->getSession()->getBag('flashes');
-        $flashBag->add('error', 'sylius_unzer_plugin.checkout.payment_error');
+        $flashBag->add('error', $this->translator->trans('sylius_unzer_plugin.checkout.payment_error'));
 
         return new JsonResponse([], Response::HTTP_BAD_REQUEST);
     }

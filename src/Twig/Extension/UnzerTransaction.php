@@ -11,6 +11,7 @@ use Twig\Extension\AbstractExtension;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\Transaction\Request\GetTransactionHistoryRequest;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\CurrencyMismatchException;
+use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 
 /**
  * Class UnzerTransaction.
@@ -39,6 +40,7 @@ class UnzerTransaction extends AbstractExtension
      * @return array
      *
      * @throws CurrencyMismatchException
+     * @throws InvalidCurrencyCode
      */
     public function getUnzerTransaction(OrderInterface $order): array
     {

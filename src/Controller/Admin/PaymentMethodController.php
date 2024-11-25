@@ -14,6 +14,7 @@ use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\GetPaymentMethodCon
 use Unzer\Core\BusinessLogic\AdminAPI\PaymentMethods\Request\SavePaymentMethodConfigRequest;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Country\Exceptions\InvalidCountryArrayException;
+use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidAmountsException;
 use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Exceptions\InvalidBookingMethodException;
 use Unzer\Core\BusinessLogic\Domain\Translations\Exceptions\InvalidTranslatableArrayException;
 use UnzerSDK\Exceptions\UnzerApiException;
@@ -50,6 +51,7 @@ final class PaymentMethodController extends AbstractController
      *
      * @return Response
      *
+     * @throws InvalidAmountsException
      */
     public function enablePaymentMethodAction(string $type, Request $request): Response
     {
@@ -89,7 +91,7 @@ final class PaymentMethodController extends AbstractController
      *
      * @throws InvalidCountryArrayException
      * @throws InvalidBookingMethodException
-     * @throws InvalidTranslatableArrayException
+     * @throws InvalidTranslatableArrayException|InvalidAmountsException
      */
     public function upsertPaymentMethodConfiguration(string $type, Request $request): Response
     {
@@ -114,14 +116,15 @@ final class PaymentMethodController extends AbstractController
         string $type,
         Request $request
     ): SavePaymentMethodConfigRequest {
-        /** @var double|null $minAmount */
-        $minAmount = $request->get('minOrderAmount');
 
-        /** @var double|null $maxAmount */
-        $maxAmount = $request->get('maxOrderAmount');
+        /** @var float|null $minAmount */
+        $minAmount = is_numeric($request->get('minOrderAmount')) ? (float) $request->get('minOrderAmount') : null;
 
-        /** @var double|null $surcharge */
-        $surcharge = $request->get('surcharge');
+        /** @var float|null $maxAmount */
+        $maxAmount = is_numeric($request->get('maxOrderAmount')) ? (float) $request->get('maxOrderAmount') : null;
+
+        /** @var float|null $surcharge */
+        $surcharge = is_numeric($request->get('surcharge')) ? (float) $request->get('surcharge') : null;
 
         /** @var string $bookingMethod */
         $bookingMethod = $request->get('bookingMethod', '');

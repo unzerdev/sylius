@@ -27,19 +27,21 @@ class PaymentCompleteController extends AbstractController
 {
     /**
      * CheckoutPaymentController constructor.
+     *
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
      */
     public function __construct(
-        private readonly OrderRepositoryInterface $orderRepository,
-        private readonly Payum $payum,
-        private readonly FactoryInterface $stateMachineFactory,
-        private readonly ObjectManager $orderManager
+        private OrderRepositoryInterface $orderRepository,
+        private Payum $payum,
+        private FactoryInterface $stateMachineFactory,
+        private ObjectManager $orderManager
     ) {
     }
 
     /**
      * @param Request $request
      * @param SessionInterface $session
+     *
      * @return Response
      * @throws SMException
      */

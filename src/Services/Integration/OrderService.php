@@ -170,13 +170,16 @@ class OrderService implements OrderServiceInterface
             return;
         }
 
-        foreach ($order->getPayments() as $payment) {
+        $payment = $order->getPayments()->filter(function (PaymentInterfaceAlias $payment) {
+            return $payment->getState() === PaymentInterfaceAlias::STATE_AUTHORIZED;
+        })->last();
+
+        if ($payment !== false) {
             $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
             $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
             $this->entityManager->persist($payment);
+            $this->entityManager->flush();
         }
-
-        $this->entityManager->flush();
     }
 
     /**

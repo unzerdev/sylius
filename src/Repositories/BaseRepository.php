@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SyliusUnzerPlugin\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -116,7 +118,7 @@ class BaseRepository implements RepositoryInterface
 
         $result = $this->getResult($query);
 
-        return !empty($result[0]) ? $result[0] : null;
+        return count($result) > 0 ? $result[0] : null;
     }
 
     /**
@@ -138,9 +140,6 @@ class BaseRepository implements RepositoryInterface
      * @param QueryFilter|null $queryFilter
      *
      * @return bool
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function update(Entity $entity, QueryFilter $queryFilter = null): bool
     {
@@ -204,6 +203,7 @@ class BaseRepository implements RepositoryInterface
      */
     protected function getResult(QueryBuilder $builder): array
     {
+        /** @var array $doctrineEntities */
         $doctrineEntities = $builder->getQuery()->getResult();
 
         $result = [];

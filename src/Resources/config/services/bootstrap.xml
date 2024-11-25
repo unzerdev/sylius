@@ -18,6 +18,7 @@
             <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor"/>
             <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor"/>
             <argument type="service" id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider"/>
+            <argument type="service" id="unzer.config.service" on-invalid="ignore"/>
         </service>
     </services>
 </container>

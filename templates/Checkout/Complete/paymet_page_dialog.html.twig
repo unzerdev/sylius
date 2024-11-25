@@ -3,6 +3,7 @@
     //# sourceURL=payment_page_dialog.js
     document.addEventListener('DOMContentLoaded', () => {
         const paymentPageCreateUrl = '{{ unzer_payment_page_url }}';
+        const paymentErrorUrl = '{{ unzer_payment_error }}';
         let unzerPaymentType = '{{ unzer_payment_page_type }}';
         let unzerDialogPlaceholder = document.getElementById('unzer-payment-dialog-placeholder');
         let checkoutCompleteForm = unzerDialogPlaceholder.closest('form');
@@ -16,7 +17,9 @@
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({ paymentType: selectedUnzerPaymentType })
             }).then(function(res) {
-                return res.status === 400 ? window.location.reload() : res.json();
+                return res.status === 400
+                    ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 100))
+                    : res.json();
             })
         }
 
@@ -40,10 +43,23 @@
                 });
 
                 checkout.error(function(error) {
-                    console.log(error);
-
                     checkout._hideIframe();
                     checkoutCompleteForm.classList.remove('loading');
+                    return fetch(paymentErrorUrl, {
+                        method: 'post',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({ errorMessage: error.error.customerMessage || error.error.message })
+                    }).then(function(res) {
+                        return res.status === 400
+                            ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 100))
+                            : res.json();
+                    })
+                });
+
+                checkout.success(function(data) {
+                    if(!data.redirectUrl) {
+                        window.location.href = data.returnUrl;
+                    }
                 });
 
                 checkout.init().then(function() {

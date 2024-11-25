@@ -32,8 +32,8 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
      * @param AdjustmentFactoryInterface<AdjustmentInterface> $adjustmentFactory
      */
     public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly AdjustmentFactoryInterface $adjustmentFactory
+        private RequestStack $requestStack,
+        private AdjustmentFactoryInterface $adjustmentFactory
     ) {
     }
 

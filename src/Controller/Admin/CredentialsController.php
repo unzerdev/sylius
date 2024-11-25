@@ -4,18 +4,26 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Controller\Admin;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
+use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
+use SyliusUnzerPlugin\Util\StaticHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
-use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\GetCredentialsRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReconnectRequest;
+use Unzer\Core\BusinessLogic\AdminAPI\Connection\Request\ReRegisterWebhookRequest;
+use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionDataNotFound;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidKeypairException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\InvalidModeException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PrivateKeyInvalidException;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\PublicKeyInvalidException;
+use Unzer\Core\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use UnzerSDK\Exceptions\UnzerApiException;
 
 /**
@@ -34,7 +42,7 @@ class CredentialsController extends AbstractController
      * @throws InvalidModeException
      * @throws PrivateKeyInvalidException
      * @throws PublicKeyInvalidException
-     * @throws UnzerApiException
+     * @throws UnzerApiException|QueryFilterInvalidParamException
      */
     public function reconnectAction(Request $request): Response
     {
@@ -68,17 +76,33 @@ class CredentialsController extends AbstractController
 
     /**
      * @param Request $request
+     * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
+     * @param PaymentMethodRepositoryInterface<PaymentMethodInterface> $paymentMethodRepository
+     * @param EntityManagerInterface $entityManager
      *
      * @return Response
      *
      * @throws UnzerApiException
      */
-    public function disconnectAction(Request $request): Response
-    {
+    public function disconnectAction(
+        Request $request,
+        ChannelRepositoryInterface $channelRepository,
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
+        EntityManagerInterface $entityManager,
+    ): Response {
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
 
         $response = AdminAPI::get()->disconnect($storeId)->disconnect();
+
+        if ($response->isSuccessful()) {
+            $this->removePaymentMethodFromChannel(
+                $storeId,
+                $channelRepository,
+                $paymentMethodRepository,
+                $entityManager
+            );
+        }
 
         return $this->json($response->toArray());
     }
@@ -89,14 +113,18 @@ class CredentialsController extends AbstractController
      * @return Response
      *
      * @throws ConnectionSettingsNotFoundException
-     * @throws UnzerApiException
+     * @throws InvalidModeException
+     * @throws ConnectionDataNotFound
      */
     public function reRegisterWebhookAction(Request $request): Response
     {
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
 
-        $response = AdminAPI::get()->connection($storeId)->reRegisterWebhooks();
+        /** @var string $environment */
+        $environment = $request->get('environment', '');
+
+        $response = AdminAPI::get()->connection($storeId)->reRegisterWebhooks(new ReregisterWebhookRequest($environment));
 
         return $this->json($response->toArray());
     }
@@ -105,7 +133,6 @@ class CredentialsController extends AbstractController
      * @param Request $request
      *
      * @return Response
-     * @throws InvalidModeException
      * @throws Exception
      */
     public function getCredentialsData(Request $request): Response
@@ -113,12 +140,39 @@ class CredentialsController extends AbstractController
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
 
-        $store = AdminAPI::get()->stores()->getStoreById((int)$storeId);
-
-        $mode = $store->toArray()['mode'];
-
-        $response = AdminAPI::get()->connection($storeId)->getCredentials(new GetCredentialsRequest($mode));
+        $response = AdminAPI::get()->connection($storeId)->getCredentials();
 
         return $this->json($response->toArray());
+    }
+
+    /**
+     * @param string $storeId
+     * @param ChannelRepositoryInterface<ChannelInterface> $channelRepository
+     * @param PaymentMethodRepositoryInterface<PaymentMethodInterface> $paymentMethodRepository
+     * @param EntityManagerInterface $entityManager
+     *
+     * @return void
+     */
+    private function removePaymentMethodFromChannel(
+        string $storeId,
+        ChannelRepositoryInterface $channelRepository,
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
+        EntityManagerInterface $entityManager,
+    ): void {
+        /**@var ?ChannelInterface $channel */
+        $channel = $channelRepository->find((int)$storeId);
+        /** @var ?PaymentMethodInterface $paymentMethod */
+        $paymentMethod = $paymentMethodRepository->findOneBy(['code' => StaticHelper::UNZER_PAYMENT_METHOD_GATEWAY]
+        );
+
+        if (($paymentMethod === null) || !$channel instanceof ChannelInterface) {
+            return;
+        }
+
+        if ($paymentMethod->hasChannel($channel)) {
+            $paymentMethod->removeChannel($channel);
+            $entityManager->persist($paymentMethod);
+            $entityManager->flush();
+        }
     }
 }

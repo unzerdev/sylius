@@ -6,6 +6,7 @@ namespace SyliusUnzerPlugin\Controller;
 
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\Payment\Model\PaymentInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +26,10 @@ final class CheckoutPaymentController extends AbstractController
 {
     /**
      * CheckoutPaymentController constructor.
+     *
      * @param OrderRepositoryInterface<OrderInterface> $orderRepository
      */
-    public function __construct(private readonly OrderRepositoryInterface $orderRepository)
+    public function __construct(private OrderRepositoryInterface $orderRepository)
     {
     }
 
@@ -45,7 +47,14 @@ final class CheckoutPaymentController extends AbstractController
             return $this->render('@SyliusUnzerPlugin/Checkout/SelectPayment/payment_types.html.twig', $templateData);
         }
 
-        $payment = $order->getLastPayment();
+        $payment = $order->getLastPayment(PaymentInterface::STATE_CART);
+        if (!$order->canBeProcessed()) {
+            /** @var ?PaymentInterface $payment */
+            $payment = $order->getPayments()->filter(function (PaymentInterface $payment) {
+                return in_array($payment->getState(),[PaymentInterface::STATE_CANCELLED, PaymentInterface::STATE_FAILED], true);
+            })->last();
+        }
+
         if (
             null !== $payment &&
             $payment->getMethod()?->getCode() === 'unzer_payment'
@@ -58,7 +67,7 @@ final class CheckoutPaymentController extends AbstractController
                 ->getAvailablePaymentMethods(new PaymentMethodsRequest(
                     (string)$order->getBillingAddress()?->getCountryCode(),
                     Amount::fromInt($order->getTotal(), Currency::fromIsoCode($order->getCurrencyCode())),
-                    (string)$order->getLocaleCode()
+                    $request->getLocale()
                 ));
 
             if ($response->isSuccessful()) {

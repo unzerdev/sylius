@@ -8,6 +8,7 @@ sylius_unzer_plugin:
                 enable: 'Enable Unzer Payments'
     checkout:
         payment_error: 'Something went wrong. Please, try again.'
+        payment_processing_error: 'Unzer payment failed. Reason: '
     order:
         unzer:
             label: 'UNZER PAYMENTS'
@@ -24,6 +25,8 @@ sylius_unzer_plugin:
             header: 'HISTORY'
             date: 'Date'
             payment_id: 'Payment ID'
+            transaction_id: 'Transaction ID'
             payment_method: 'Payment method'
             type: 'Type'
             amount: 'Amount'
+            status: 'Status'

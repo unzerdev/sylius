@@ -6,7 +6,6 @@ namespace SyliusUnzerPlugin\Services\Integration;
 
 use enshrined\svgSanitize\Sanitizer;
 use Gaufrette\Filesystem;
-use ReflectionException;
 use RuntimeException;
 use SplFileInfo;
 use Sylius\Component\Core\Model\ImageInterface;
@@ -60,11 +59,10 @@ class ImageHandlerService implements CoreImageService
     }
 
     /**
-     *
      * @param SplFileInfo $file
      * @param string|null $name
+     *
      * @return string
-     * @throws ReflectionException
      */
     public function uploadImage(SplFileInfo $file, ?string $name = null): string
     {
@@ -74,7 +72,7 @@ class ImageHandlerService implements CoreImageService
 
         $this->upload($logoImage);
 
-        return $this->getImageUrl($logoImage);
+        return $this->getDomain() . '/media/image/' . $logoImage->getPath();
     }
 
     /**
@@ -96,7 +94,6 @@ class ImageHandlerService implements CoreImageService
         $logoImage->setType('logo');
 
         $logoImage->setPath($imagePath);
-
 
         return $logoImage;
     }
@@ -164,30 +161,5 @@ class ImageHandlerService implements CoreImageService
         }
 
         return '';
-    }
-
-    /**
-     * Retrieves the full URL for the uploaded logo image.
-     *
-     * @param LogoImage $logoImage
-     * @return string
-     * @throws ReflectionException
-     */
-    private function getImageUrl(LogoImage $logoImage): string
-    {
-        $adapter = $this->filesystem->getAdapter();
-        $reflection = new \ReflectionClass($adapter);
-        $directory = $reflection->getProperty('directory');
-
-        /** @var string $path */
-        $path = $directory->getValue($adapter);
-
-        $parts = explode('/public', $path);
-        if (count($parts) > 1) {
-            $path = ltrim($parts[1], '/');
-        }
-
-        $domain = $this->getDomain();
-        return $domain . '/' . $path . '/' . $logoImage->getPath();
     }
 }

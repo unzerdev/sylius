@@ -16,7 +16,6 @@ winzou_state_machine:
 parameters:
     env(UNZER_ENCRYPTION_KEY): 'def000002f45b81aa090e24a233d11e5b6348131bf27a28fdcae1972841dd98a565d678b144a13b880c88bbea36327126f9962a40b2e07d5258360ec44c30804fb011883'
     sylius_refund.supported_gateways:
-        - offline
         - unzer_payment
 sylius_grid:
     templates:
@@ -52,4 +51,20 @@ sylius_ui:
             blocks:
                 unzer_payment_page_dialog:
                     template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
+        sylius.admin.order.show.payment_content:
+            blocks:
+                complete_transition:
+                    template: "@SyliusUnzerPlugin/Order/Show/Payment/_completeTransition.html.twig"
+        sylius.admin.order.show.summary:
+            blocks:
+                unzer_payment_content:
+                    template: "@SyliusUnzerPlugin/Order/Show/_order.html.twig"
 
+monolog:
+    channels: ['unzer']
+    handlers:
+        paypal:
+            level: debug
+            type: stream
+            path: '%kernel.logs_dir%/unzer.log'
+            channels: [unzer]
