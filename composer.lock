@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dee2ce3b39c4276d74fc44a318131315",
+    "content-hash": "abbdecb2bcb4b479ab4621d735c38e8d",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -13572,16 +13572,16 @@
         },
         {
             "name": "unzer/unzer-core",
-            "version": "dev-master",
+            "version": "dev-paypageV2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:logeecom/unzer-core.git",
-                "reference": "643d17d4dd6af006a502f8ff657f02ac40fea21a"
+                "reference": "181ac870961b60a256d470bf5656811a48a52333"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/logeecom/unzer-core/zipball/643d17d4dd6af006a502f8ff657f02ac40fea21a",
-                "reference": "643d17d4dd6af006a502f8ff657f02ac40fea21a",
+                "url": "https://api.github.com/repos/logeecom/unzer-core/zipball/181ac870961b60a256d470bf5656811a48a52333",
+                "reference": "181ac870961b60a256d470bf5656811a48a52333",
                 "shasum": ""
             },
             "require": {
@@ -13593,7 +13593,6 @@
             "require-dev": {
                 "phpunit/phpunit": "8.5.14"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -13611,7 +13610,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2024-11-19T16:48:11+00:00"
+            "time": "2024-11-25T12:15:53+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
