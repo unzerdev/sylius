@@ -27,10 +27,13 @@
         </div>
         <div class="extra">
             <div class="ui large right floated" {{ sylius_test_html_attribute('unzer-method-logo') }}>
-                <i class="huge icon"><img class="ui fluid image" alt="{{ payment_type.name }}" src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}"></i>
+                <i class="huge icon"><img class="ui fluid image" style="max-width: 66px; max-height: 66px;"
+                                          alt="{{ payment_type.name }}"
+                                          src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}"></i>
             </div>
             {% if (payment_type.surcharge is defined) %}
-                <div class="ui large right floated label fee" {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
+                <div class="ui large right floated label fee"
+                     style="margin-right: 10px;" {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
                     {{ money.convertAndFormat(payment_type.surcharge.value) }}
                 </div>
             {% endif %}
