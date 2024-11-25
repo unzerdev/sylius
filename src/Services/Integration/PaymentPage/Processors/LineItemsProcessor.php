@@ -23,6 +23,12 @@ use UnzerSDK\Resources\EmbeddedResources\BasketItem;
  */
 class LineItemsProcessor implements LineItemsProcessorInterface
 {
+    private const ITEM_DISCOUNT_ADJUSTMENTS_TYPES = [
+        AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT,
+        AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT,
+        AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT,
+    ];
+
     public function __construct(private UrlGeneratorInterface $router)
     {
     }
@@ -38,7 +44,19 @@ class LineItemsProcessor implements LineItemsProcessorInterface
         $currency = Currency::fromIsoCode($order->getCurrencyCode());
 
         foreach ($order->getItems() as $item) {
-            $basket->addBasketItem($this->mapLineItem($item, $currency));
+
+            $basketItem = $this->mapLineItem($item, $currency);
+            $basketItemAmount = Amount::fromFloat($basketItem->getAmountPerUnitGross(), $currency);
+            $basketItemDiscount = Amount::fromFloat($basketItem->getAmountDiscountPerUnitGross(), $currency);
+            $basket->addBasketItem($basketItem);
+
+            if ($item->getTotal() !== ($basketItemAmount->getValue() - $basketItemDiscount->getValue()) * $basketItem->getQuantity()) {
+                $basket->addBasketItem($this->mapRoundingDiscount(
+                    Amount::fromInt($item->getTotal() - $basketItemAmount->getValue() * $basketItem->getQuantity(),
+                        $currency),
+                    $basketItem)
+                );
+            }
         }
 
         foreach ($order->getAdjustments() as $adjustment) {
@@ -123,19 +141,21 @@ class LineItemsProcessor implements LineItemsProcessorInterface
 
     private function mapLineItem(OrderItemInterface $item, Currency $currency): BasketItem
     {
-        $amountWithTax = $this->getUnitPriceWithTax($item);
         $amountWithoutTax = $item->getTotal() - $item->getTaxTotal();
-
+        $taxAmount = (int)round($item->getTaxTotal() / $item->getQuantity());
+        $discounted =
+            $item->getUnitPrice() - $item->getFullDiscountedUnitPrice();
         return (new BasketItem())
             ->setBasketItemReferenceId((string)$item->getId())
             ->setQuantity($item->getQuantity())
             ->setVat(100 * ($item->getTaxTotal() / $amountWithoutTax))
             ->setAmountDiscountPerUnitGross(
-                Amount::fromInt($item->getUnitPrice() - $item->getFullDiscountedUnitPrice(), $currency)
+                Amount::fromInt($discounted, $currency)
                     ->getPriceInCurrencyUnits()
             )
             ->setAmountPerUnitGross(
-                Amount::fromInt($amountWithTax + (int)round($item->getTaxTotal() / $item->getQuantity()), $currency)
+                Amount::fromInt($item->getUnitPrice() + $taxAmount,
+                    $currency)
                     ->getPriceInCurrencyUnits()
             )
             ->setAmountDiscount(
@@ -143,7 +163,7 @@ class LineItemsProcessor implements LineItemsProcessorInterface
                     ->getPriceInCurrencyUnits()
             )
             ->setAmountPerUnit(
-                Amount::fromInt($item->getUnitPrice() + (int)round($item->getTaxTotal() / $item->getQuantity()),
+                Amount::fromInt((int)round($item->getTotal() / $item->getQuantity()),
                     $currency)->getPriceInCurrencyUnits()
             )
             ->setAmountGross(
@@ -157,8 +177,21 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             )
             ->setTitle((string)$item->getProductName())
             ->setSubTitle($item->getProduct()?->getShortDescription())
-            //   ->setImageUrl($this->getProductImage($item))
+            //    ->setImageUrl($this->getProductImage($item))
             ->setType(BasketItemTypes::GOODS);
+    }
+
+    private function mapRoundingDiscount(Amount $amount, BasketItem $item): BasketItem
+    {
+        return (new BasketItem())
+            ->setBasketItemReferenceId('rounding_' . (string)$item->getBasketItemReferenceId())
+            ->setQuantity(1)
+            ->setAmountDiscountPerUnitGross(abs($amount->getPriceInCurrencyUnits()))
+            ->setAmountPerUnit(abs($amount->getPriceInCurrencyUnits()))
+            ->setAmountGross(abs($amount->getPriceInCurrencyUnits()))
+            ->setAmountNet(abs($amount->getPriceInCurrencyUnits()))
+            ->setTitle('Rounding discount')
+            ->setType(BasketItemTypes::VOUCHER);
     }
 
     private function mapAdjustment(AdjustmentInterface $adjustment, Currency $currency): BasketItem
