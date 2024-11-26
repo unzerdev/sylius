@@ -51,24 +51,26 @@
                     checkoutCompleteForm.classList.remove('loading');
                 });
 
+                checkout.success(function(data) {
+                    window.top.console.log(data);
+                    if(!data.redirectUrl) {
+                        window.top.location.href = data.returnUrl;
+                    }
+                });
+
                 checkout.error(function(error) {
-                    checkout._hideIframe();
                     checkoutCompleteForm.classList.remove('loading');
+                    console.log('ERROR');
                     return fetch(paymentErrorUrl, {
                         method: 'post',
                         headers: { 'content-type': 'application/json' },
-                        body: JSON.stringify({ errorMessage: error.error.customerMessage || error.error.message })
+                        body: JSON.stringify({ errorMessage: error.errorMessage })
                     }).then(function(res) {
+                        console.log('FETCH:' . res);
                         return res.status === 400
-                            ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 100))
+                            ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 1000))
                             : res.json();
                     })
-                });
-
-                checkout.success(function(data) {
-                    if(!data.redirectUrl) {
-                        window.location.href = data.returnUrl;
-                    }
                 });
 
                 checkout.open();
