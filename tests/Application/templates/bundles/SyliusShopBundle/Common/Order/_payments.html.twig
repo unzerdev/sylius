@@ -14,8 +14,8 @@
         <div class="content">
             <div class="header" id="sylius-payment-method" {{ sylius_test_html_attribute('payment-method') }}>
 
-                {% if payment.details is defined  and payment.details.unzer is defined and payment.details.unzer.payment_type is defined %}
-                    {{ payment.details.unzer.payment_type |capitalize }}
+                {% if payment.details is defined  and payment.details.unzer is defined and payment.details.unzer.payment_type_name is defined %}
+                    {{ payment.details.unzer.payment_type_name }}
                 {% else %}
                     {{ payment.method }}
                 {% endif %}
