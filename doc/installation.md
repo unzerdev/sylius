@@ -58,7 +58,7 @@ After generating the key, set the value as an environment variable (UNZER_ENCRYP
         <!--    Original file content goes here    -->
     {% endif %}
     ```
-- Override how Unzer payment method is rendered on the checkout complete page `templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig`
+- Override how Unzer payment method is rendered on the checkout complete page  buy overriding original content of`templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig`
     ```shell 
      cp vendor/unzer/sylius-plugin/tests/Application/templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig
     ```  
