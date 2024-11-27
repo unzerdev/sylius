@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="content">
-            <a class="header">
+            <a class="header" style="min-width: 150px">
                 <label data-test-payment-method-label=""
                        for="unzer_payment_method_type_{{ payment_type.type }}"
                        class="required">
@@ -27,7 +27,7 @@
         </div>
         <div class="extra">
             <div class="ui large right floated" {{ sylius_test_html_attribute('unzer-method-logo') }}>
-                <i class="huge icon"><img class="ui fluid image" style="max-width: 66px; max-height: 66px;"
+                <i class="huge icon"><img class="ui fluid image" style="max-width: 55px; max-height: 55px;"
                                           alt="{{ payment_type.name }}"
                                           src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}"></i>
             </div>
