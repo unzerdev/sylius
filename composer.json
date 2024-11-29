@@ -52,7 +52,7 @@
         {
             "type": "vcs",
             "no-api": true,
-            "url": "git@github.com:logeecom/unzer-core.git"
+            "url": "git@github.com:unzerdev/integration-core.git"
         }
     ],
     "conflict": {
