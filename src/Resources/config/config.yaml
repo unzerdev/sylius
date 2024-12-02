@@ -55,6 +55,10 @@ sylius_ui:
             blocks:
                 complete_transition:
                     template: "@SyliusUnzerPlugin/Order/Show/Payment/_completeTransition.html.twig"
+        sylius.admin.order.show.payments_content:
+            blocks:
+                refund_transaction:
+                    template: "@SyliusUnzerPlugin/Order/Show/Payment/_refundTransaction.html.twig"
         sylius.admin.order.show.summary:
             blocks:
                 unzer_payment_content:
