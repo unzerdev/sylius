@@ -18,8 +18,11 @@ use Unzer\Core\BusinessLogic\CheckoutAPI\PaymentMethods\Request\PaymentMethodsRe
 use Unzer\Core\BusinessLogic\Domain\Checkout\Exceptions\InvalidCurrencyCode;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
+use Unzer\Core\BusinessLogic\Domain\Multistore\StoreContext;
+use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Models\PaymentMethodConfig;
+use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Services\PaymentMethodService;
+use Unzer\Core\Infrastructure\ServiceRegister;
 use UnzerSDK\Exceptions\UnzerApiException;
-use Webmozart\Assert\Assert;
 
 /**
  * Class PaymentSelectionProcessor
@@ -73,12 +76,24 @@ final class PaymentSelectionProcessor implements OrderProcessorInterface
     /**
      * @throws UnzerApiException
      * @throws InvalidCurrencyCode
+     * @throws \Exception
      */
     private function setInUnzerDetails(OrderInterface $order, PaymentInterface $payment, string $paymentType): void
     {
         $paymentDetails = $payment->getDetails();
+        /** @var PaymentMethodService $paymentMethodConfigService */
+        $paymentMethodConfigService =
+            ServiceRegister::getService(PaymentMethodService::class);
+
         if ('' !== $paymentType) {
             $paymentDetails['unzer']['payment_type'] = $paymentType;
+            /** @var PaymentMethodConfig|null $result */
+            $result = StoreContext::doWithStore((string)$order->getChannel()?->getId(),
+                [$paymentMethodConfigService, 'getPaymentMethodConfigByType'], [$paymentType]);
+            $locale = $this->requestStack->getCurrentRequest()?->getLocale();
+           if ($result !== null && $locale !== null) {
+               $paymentDetails['unzer']['payment_type_name'] = $result->getNameByLocale($locale);
+           }
         }
 
         $response = CheckoutAPI::get()->paymentMethods((string)$order->getChannel()?->getId())
