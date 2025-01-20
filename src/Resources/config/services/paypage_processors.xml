@@ -13,7 +13,7 @@
                  class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\LineItemsProcessor"
                  autowire="true" autoconfigure="true">
             <argument type="service" id="router"/>
-            <argument type="service" id="sylius.tax_rate_resolver"/>
+            <argument type="service" id="sylius.resolver.tax_rate"/>
         </service>
         <service id="Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider"
                  class="\SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors\MetadataProvider" autowire="true"
