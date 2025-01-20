@@ -34,7 +34,7 @@ sylius_payment:
                 controller: SyliusUnzerPlugin\Controller\PaymentMethodController
 
 sylius_ui:
-    events:            
+    hooks:            
         sylius.shop.layout.stylesheets:
             blocks:
                 unzer_styles:
