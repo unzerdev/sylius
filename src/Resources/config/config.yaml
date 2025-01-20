@@ -33,36 +33,7 @@ sylius_payment:
             classes:
                 controller: SyliusUnzerPlugin\Controller\PaymentMethodController
 
-sylius_twig_hooks:
-    hooks:            
-        sylius.shop.layout.stylesheets:
-            blocks:
-                unzer_styles:
-                    template: "@SyliusUnzerPlugin/Checkout/unzer_styles.html.twig"
-        sylius.shop.layout.javascripts:
-            blocks:
-                unzer_sripts:
-                    template: "@SyliusUnzerPlugin/Checkout/unzer_scripts.html.twig"
-        sylius.shop.checkout.complete.before_navigation:
-            blocks:
-                unzer_payment_page_dialog:
-                    template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
-        unzer.shop.order.show.before_navigation:
-            blocks:
-                unzer_payment_page_dialog:
-                    template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
-        sylius.admin.order.show.payment_content:
-            blocks:
-                complete_transition:
-                    template: "@SyliusUnzerPlugin/Order/Show/Payment/_completeTransition.html.twig"
-        sylius.admin.order.show.payments_content:
-            blocks:
-                refund_transaction:
-                    template: "@SyliusUnzerPlugin/Order/Show/Payment/_refundTransaction.html.twig"
-        sylius.admin.order.show.summary:
-            blocks:
-                unzer_payment_content:
-                    template: "@SyliusUnzerPlugin/Order/Show/_order.html.twig"
+
 
 monolog:
     channels: ['unzer']
