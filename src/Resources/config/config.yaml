@@ -33,7 +33,7 @@ sylius_payment:
             classes:
                 controller: SyliusUnzerPlugin\Controller\PaymentMethodController
 
-sylius_ui:
+sylius_twig_hooks:
     hooks:            
         sylius.shop.layout.stylesheets:
             blocks:
