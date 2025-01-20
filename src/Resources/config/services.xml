@@ -69,7 +69,7 @@
         <service id="SyliusUnzerPlugin\Services\Contracts\UnzerPaymentMethodCreator" class="SyliusUnzerPlugin\Services\PaymentMethodCreator" public="false" autoconfigure="true" autowire="true">
         </service>
         <service id="SyliusUnzerPlugin\Command\CreateKeyCommand">
-            <tag name="console.command" />
+            <tag name="console.command" command="sylius:unzer-key:create"/>
         </service>
 
         <service id="unzer.order_payment_listener" class="SyliusUnzerPlugin\EventListener\PaymentListener" public="true" autoconfigure="true">
