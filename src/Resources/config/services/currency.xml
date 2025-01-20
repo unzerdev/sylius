@@ -5,7 +5,7 @@
     <services>
         <service id="unzer.currency.service" class="SyliusUnzerPlugin\Services\Integration\CurrencyService">
             <argument type="service" id="sylius.repository.channel"/>
-            <argument type="service" id="sylius.converter.currency"/>
+            <argument type="service" id="sylius.currency_converter"/>
         </service>
     </services>
 </container>
