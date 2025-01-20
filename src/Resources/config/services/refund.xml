@@ -57,7 +57,7 @@
 
         <service id="unzer.event_listener.refund_payment_generated_auto_complete_listener" class="SyliusUnzerPlugin\Handler\RefundPaymentGeneratedAutoCompleteListener">
             <argument type="service" id="sylius_refund.repository.refund_payment" />
-            <argument type="service" id="Sylius\RefundPlugin\StateResolver\RefundPaymentCompletedStateApplier"/>
+            <argument type="service" id="sylius_refund.state_resolver.refund_payment_completed_applier"/>
             <argument type="service" id="sylius.repository.payment_method"/>
             <tag name="messenger.message_handler" priority="10" />
         </service>
