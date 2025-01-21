@@ -17,6 +17,16 @@ parameters:
     env(UNZER_ENCRYPTION_KEY): 'def000002f45b81aa090e24a233d11e5b6348131bf27a28fdcae1972841dd98a565d678b144a13b880c88bbea36327126f9962a40b2e07d5258360ec44c30804fb011883'
     sylius_refund.supported_gateways:
 
+sylius_grid:
+    templates:
+        action:
+            enable_unzer: "@SyliusUnzerPlugin/PaymentMethod/Grid/Action/create.html.twig"
+    grids:
+        sylius_admin_payment_method:
+            actions:
+                main:
+                    enable_unzer:
+                        type: enable_unzer
 sylius_payment:
     resources:
         payment_method:
