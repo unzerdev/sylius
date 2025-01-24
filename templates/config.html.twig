@@ -1,5 +1,4 @@
 {% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
-{% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
 
 
 {% block title %}Unzer{% endblock %}
@@ -53,23 +52,5 @@
 
 
 {% block body %}
-    {{ breadcrumbs([
-        { name: 'sylius.ui.administration'|trans, url: path('sylius_admin_dashboard') },
-        { name: 'sylius.ui.payment_methods'|trans, url: path('sylius_admin_payment_method_index') },
-        { name: 'Unzer'|trans, active: true }
-    ]) }}
-    <div class="adl-page" id="adl-page">
-        <main>
-            <header id="adl-main-header">
-                <div class="adl-page-header"></div>
-                <div class="adl-header-holder" id="adl-header-section"></div>
-            </header>
-            <div class="unzer-page-wrapper">
-                <div class="unzer-content-holder">
-                    <main id="unzer-main-page"></main>
-                </div>
-                <footer id="unzer-footer"></footer>
-            </div>
-        </main>
-    </div>
+    {% hook 'sylius_unzer.admin.config' %}
 {% endblock %}

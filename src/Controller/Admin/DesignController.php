@@ -90,8 +90,8 @@ class DesignController extends AbstractController
         $data = $request->request->all();
         $fileLogo = $this->getFileLogo($request);
 
-        $shopNameJson = $request->get('name');
-        $shopTaglineJson = $request->get('tagline');
+        $shopNameJson = $request->getPayload()->get('name');
+        $shopTaglineJson = $request->getPayload()->get('tagline');
 
         $shopName = TranslationCollection::fromArray($this->formatTranslatableField(
             (array)json_decode(is_string($shopNameJson) ? $shopNameJson : '[]', true)

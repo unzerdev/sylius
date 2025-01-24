@@ -50,11 +50,11 @@ final class ConnectionController extends AbstractController
         /** @var string $storeId */
         $storeId = $request->get('storeId', '');
         /** @var string $environment */
-        $environment = $request->get('environment', '');
+        $environment = $request->getPayload()->get('environment', '');
         /** @var string $publicKey */
-        $publicKey = $request->get('publicKey', '');
+        $publicKey = $request->getPayload()->get('publicKey', '');
         /** @var string $privateKey */
-        $privateKey = $request->get('privateKey', '');
+        $privateKey = $request->getPayload()->get('privateKey', '');
         $response = AdminAPI::get()->connection(
             $storeId
         )->connect(

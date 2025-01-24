@@ -27,6 +27,26 @@ sylius_grid:
                 main:
                     enable_unzer:
                         type: enable_unzer
+sylius_twig_hooks:
+    hooks:
+        'sylius_unzer.admin.config':
+            sidebar:
+                template: '@SyliusAdmin/shared/crud/common/sidebar.html.twig'
+                priority: 200
+            navbar:
+                template: '@SyliusAdmin/shared/crud/common/navbar.html.twig'
+                priority: 100
+            content:
+                template: '@SyliusAdmin/shared/crud/common/content.html.twig'
+                priority: 0
+
+        'sylius_unzer.admin.config.content':
+            header:
+                template: '@SyliusAdmin/shared/crud/common/content/header.html.twig'
+                priority: 100
+            body:
+                template: '@SyliusUnzerPlugin/hooks/body.html.twig'
+                priority: 0
 sylius_payment:
     resources:
         payment_method:

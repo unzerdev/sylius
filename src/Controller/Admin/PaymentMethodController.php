@@ -59,7 +59,7 @@ final class PaymentMethodController extends AbstractController
         $storeId = $request->get('storeId', '');
 
         $response = AdminAPI::get()->paymentMethods($storeId)->enablePaymentMethod(
-            new EnablePaymentMethodRequest($type, (bool)$request->get('enabled'))
+            new EnablePaymentMethodRequest($type, (bool)$request->getPayload()->get('enabled'))
         );
 
         return $this->json($response->toArray());
@@ -118,31 +118,31 @@ final class PaymentMethodController extends AbstractController
     ): SavePaymentMethodConfigRequest {
 
         /** @var float|null $minAmount */
-        $minAmount = is_numeric($request->get('minOrderAmount')) ? (float) $request->get('minOrderAmount') : null;
+        $minAmount = is_numeric($request->getPayload()->get('minOrderAmount')) ? (float) $request->getPayload()->get('minOrderAmount') : null;
 
         /** @var float|null $maxAmount */
-        $maxAmount = is_numeric($request->get('maxOrderAmount')) ? (float) $request->get('maxOrderAmount') : null;
+        $maxAmount = is_numeric($request->getPayload()->get('maxOrderAmount')) ? (float) $request->getPayload()->get('maxOrderAmount') : null;
 
         /** @var float|null $surcharge */
-        $surcharge = is_numeric($request->get('surcharge')) ? (float) $request->get('surcharge') : null;
+        $surcharge = is_numeric($request->getPayload()->get('surcharge')) ? (float) $request->getPayload()->get('surcharge') : null;
 
         /** @var string $bookingMethod */
-        $bookingMethod = $request->get('bookingMethod', '');
+        $bookingMethod = $request->getPayload()->get('bookingMethod', '');
 
         /** @var array $name */
-        $name = $request->get('name', []);
+        $name = $request->toArray()['name'] ?? [];
 
         /** @var array $description */
-        $description = $request->get('description', []);
+        $description = $request->toArray()['description'] ?? [];
 
         /** @var string $statusIdToCharge */
-        $statusIdToCharge = $request->get('statusIdToCharge', '');
+        $statusIdToCharge = $request->getPayload()->get('statusIdToCharge', '');
 
         /** @var array $restrictedCountries */
-        $restrictedCountries = $request->get('restrictedCountries', []);
+        $restrictedCountries =  $request->toArray()['restrictedCountries'] ?? [];
 
         /** @var bool $sendBasketData */
-        $sendBasketData = $request->get('sendBasketData', false);
+        $sendBasketData = $request->getPayload()->get('sendBasketData', false);
 
         return new SavePaymentMethodConfigRequest(
             $type,

@@ -50,15 +50,15 @@ class CredentialsController extends AbstractController
         $storeId = $request->get('storeId', '');
 
         /** @var string $environment */
-        $environment = $request->get('environment', '');
+        $environment = $request->getPayload()->get('environment', '');
 
         /** @var string $publicKey */
-        $publicKey = $request->get('publicKey', '');
+        $publicKey = $request->getPayload()->get('publicKey', '');
 
         /** @var string $privateKey */
-        $privateKey = $request->get('privateKey', '');
+        $privateKey = $request->getPayload()->get('privateKey', '');
 
-        $deleteConfig = (bool)$request->get('deleteConfig', '');
+        $deleteConfig = (bool)$request->getPayload()->get('deleteConfig', '');
 
         $response = AdminAPI::get()->connection(
             $storeId
@@ -122,7 +122,7 @@ class CredentialsController extends AbstractController
         $storeId = $request->get('storeId', '');
 
         /** @var string $environment */
-        $environment = $request->get('environment', '');
+        $environment = $request->getPayload()->get('environment', '');
 
         $response = AdminAPI::get()->connection($storeId)->reRegisterWebhooks(new ReregisterWebhookRequest($environment));
 
