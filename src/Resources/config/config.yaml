@@ -47,6 +47,12 @@ sylius_twig_hooks:
             body:
                 template: '@SyliusUnzerPlugin/hooks/body.html.twig'
                 priority: 0
+
+        'sylius_shop.checkout.select_payment.content.form.select_payment.payment.choice.details':
+            unzer:
+                template: '@SyliusUnzerPlugin/hooks/body.html.twig'
+                priority: -100
+
 sylius_payment:
     resources:
         payment_method:
