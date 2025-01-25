@@ -12,6 +12,9 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Event\UnitsRefunded;
+use Sylius\RefundPlugin\Exception\OrderNotAvailableForRefunding;
+use Sylius\RefundPlugin\Exception\RefundUnitsNotBelongToOrder;
+use Sylius\RefundPlugin\Validator\RefundUnitsValidationConstraintMessages;
 use SyliusUnzerPlugin\EventListener\DisableListenerInterface;
 use SyliusUnzerPlugin\EventListener\DisableListenerTrait;
 use SyliusUnzerPlugin\Handler\Request\RefundOrder;
@@ -67,11 +70,17 @@ final class PaymentPartialEventListener implements DisableListenerInterface
             return;
         }
 
+
+        if ($paymentMethod->getId() !== $units->paymentMethodId()) {
+            throw RefundUnitsNotBelongToOrder::withValidationConstraint(
+                "Refund payment method does not match the payment method of the order",
+            );
+        }
+
         $details = $payment->getDetails();
         /** @var ChannelInterface $channel */
         $channel = $order->getChannel();
         $details['metadata']['refund']['items'] = $units->units();
-        $details['metadata']['refund']['shipments'] = $units->shipments();
         $details['metadata']['refund']['refundedTotal'] = $units->amount();
         $details['metadata']['refund']['orderId'] = (string) $order->getId();
         $details['metadata']['refund']['channelId'] = (string) $channel->getId();

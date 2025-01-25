@@ -55,8 +55,8 @@
             <tag name="sylius.order_processor" priority="-1"/>
         </service>
 
-        <service id="SyliusUnzerPlugin\Services\Checkout\Complete\PaymentPageDialogUiContextProvider" class="SyliusUnzerPlugin\Services\Checkout\Complete\PaymentPageDialogUiContextProvider" autowire="true">
-            <tag name="sylius.ui.template_event.context_provider" />
+        <service id="sylius_unzer_plugin.paypage_provider_extension" class="SyliusUnzerPlugin\Services\Checkout\Complete\PaymentPageDialogUiContextExtension" autowire="true">
+            <tag name="twig.extension" />
         </service>
 
 
@@ -73,7 +73,8 @@
         </service>
 
         <service id="unzer.order_payment_listener" class="SyliusUnzerPlugin\EventListener\PaymentListener" public="true" autoconfigure="true">
-            <argument type="service" id="sm.factory"/>
+            <tag name="kernel.event_listener" event="workflow.sylius_payment.completed.complete" method="completePayment" priority="100" />
+            <tag name="kernel.event_listener" event="workflow.sylius_payment.completed.cancel" method="cancelPayment" priority="100" />
         </service>
     </services>
 </container>

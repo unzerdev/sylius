@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace SyliusUnzerPlugin\Services\Checkout\Complete;
 
-use Sylius\Bundle\UiBundle\ContextProvider\ContextProviderInterface;
-use Sylius\Bundle\UiBundle\Registry\TemplateBlock;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Order\Context\CartContextInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
- * Class PaymentPageDialogUiContextProvider
  *
- * @package SyliusUnzerPlugin\Services\Checkout\Complete
  */
-class PaymentPageDialogUiContextProvider implements ContextProviderInterface
+class PaymentPageDialogUiContextExtension extends AbstractExtension
 {
-    public function __construct(private UrlGeneratorInterface $router)
+    public function __construct(private UrlGeneratorInterface $router, private CartContextInterface $cartContext)
     {
     }
 
-    public function provide(array $templateContext, TemplateBlock $templateBlock): array
+    public function unzerProviderData(): array
     {
+        $templateContext = [];
         /** @var OrderInterface $order */
-        $order = $templateContext['order'];
+        $order = $this->cartContext->getCart();
 
         $paymentDetails = [];
         $unzerPaymentType = '';
@@ -45,8 +45,10 @@ class PaymentPageDialogUiContextProvider implements ContextProviderInterface
         return $templateContext;
     }
 
-    public function supports(TemplateBlock $templateBlock): bool
+    public function getFunctions(): array
     {
-        return 'unzer_payment_page_dialog' === $templateBlock->getName();
+        return [
+            new TwigFunction('unzer_provider_data', [$this, 'unzerProviderData']),
+        ];
     }
 }

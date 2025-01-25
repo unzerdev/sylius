@@ -63,7 +63,7 @@ class PaypageCreateController extends AbstractController
         }
 
         /** @var string $paymentMethodType */
-        $paymentMethodType = $request->get('paymentType', '');
+        $paymentMethodType = $request->getPayload()->get('paymentType', '');
         if ('' !== $paymentMethodType) {
             $this->assignPaymentTypeToPayment($payment, $paymentMethodType);
         }

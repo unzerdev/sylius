@@ -16,6 +16,7 @@ winzou_state_machine:
 parameters:
     env(UNZER_ENCRYPTION_KEY): 'def000002f45b81aa090e24a233d11e5b6348131bf27a28fdcae1972841dd98a565d678b144a13b880c88bbea36327126f9962a40b2e07d5258360ec44c30804fb011883'
     sylius_refund.supported_gateways:
+        - unzer_payments
 
 sylius_grid:
     templates:
@@ -29,6 +30,14 @@ sylius_grid:
                         type: enable_unzer
 sylius_twig_hooks:
     hooks:
+        'sylius_shop.base#stylesheets':
+            unzer_stylesheets:
+                template: '@SyliusUnzerPlugin/Checkout/unzer_styles.html.twig'
+                priority: 1
+        'sylius_shop.base#javascripts':
+            unzer_scripts:
+                template: '@SyliusUnzerPlugin/Checkout/unzer_scripts.html.twig'
+                priority: 1
         'sylius_unzer.admin.config':
             sidebar:
                 template: '@SyliusAdmin/shared/crud/common/sidebar.html.twig'
@@ -39,7 +48,10 @@ sylius_twig_hooks:
             content:
                 template: '@SyliusAdmin/shared/crud/common/content.html.twig'
                 priority: 0
-
+        'sylius_shop.checkout.complete.content.form':
+            unzer_payment_page_dialog:
+                template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
+                priority: 1
         'sylius_unzer.admin.config.content':
             header:
                 template: '@SyliusAdmin/shared/crud/common/content/header.html.twig'

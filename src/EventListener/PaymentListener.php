@@ -11,6 +11,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethod;
 use Sylius\Resource\Exception\UpdateHandlingException;
 use SyliusUnzerPlugin\Util\StaticHelper;
+use Symfony\Component\Workflow\Event\CompletedEvent;
 use Unzer\Core\BusinessLogic\AdminAPI\AdminAPI;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\CancellationRequest;
 use Unzer\Core\BusinessLogic\AdminAPI\OrderManagement\Request\ChargeRequest;
@@ -20,20 +21,25 @@ use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
 use Unzer\Core\BusinessLogic\Domain\Connection\Exceptions\ConnectionSettingsNotFoundException;
 use Unzer\Core\BusinessLogic\Domain\TransactionHistory\Exceptions\TransactionHistoryNotFoundException;
 use UnzerSDK\Exceptions\UnzerApiException;
+use Webmozart\Assert\Assert;
 
 class PaymentListener implements DisableListenerInterface
 {
     use DisableListenerTrait;
 
     /**
+     * @param CompletedEvent $event
+     * @return void
      * @throws ConnectionSettingsNotFoundException
+     * @throws InvalidCurrencyCode
      * @throws TransactionHistoryNotFoundException
      * @throws UnzerApiException
-     * @throws InvalidCurrencyCode
      * @throws UpdateHandlingException
      */
-    public function cancelPayment(PaymentInterface $payment): void
+    public function cancelPayment(CompletedEvent $event): void
     {
+        $payment = $event->getSubject();
+        Assert::isInstanceOf($payment, PaymentInterface::class);
         /** @var PaymentMethod $paymentMethod */
         $paymentMethod = $payment->getMethod();
         /** @var GatewayConfigInterface $gateway */
@@ -61,14 +67,19 @@ class PaymentListener implements DisableListenerInterface
     }
 
     /**
+     * @param CompletedEvent $event
+     * @return void
      * @throws ConnectionSettingsNotFoundException
+     * @throws InvalidCurrencyCode
      * @throws TransactionHistoryNotFoundException
      * @throws UnzerApiException
-     * @throws InvalidCurrencyCode
      * @throws UpdateHandlingException
      */
-    public function completePayment(PaymentInterface $payment): void
+    public function completePayment(CompletedEvent $event): void
     {
+
+        $payment = $event->getSubject();
+        Assert::isInstanceOf($payment, PaymentInterface::class);
         /** @var PaymentMethod $paymentMethod */
         $paymentMethod = $payment->getMethod();
         /** @var GatewayConfigInterface $gateway */

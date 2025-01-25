@@ -1,12 +1,14 @@
 <div id="unzer-payment-dialog-placeholder"></div>
+{% set data  = unzer_provider_data() %}
 <script type="text/javascript">
     //# sourceURL=payment_page_dialog.js
     document.addEventListener('DOMContentLoaded', () => {
-        const paymentPageCreateUrl = '{{ unzer_payment_page_url }}';
-        const paymentErrorUrl = '{{ unzer_payment_error }}';
-        let unzerPaymentType = '{{ unzer_payment_page_type }}';
+        const paymentPageCreateUrl = '{{data.unzer_payment_page_url }}';
+        const paymentErrorUrl = '{{ data.unzer_payment_error }}';
+        let unzerPaymentType = '{{ data.unzer_payment_page_type }}';
         let unzerDialogPlaceholder = document.getElementById('unzer-payment-dialog-placeholder');
         let checkoutCompleteForm = unzerDialogPlaceholder.closest('form');
+        console.log('checkoutCompleteForm', checkoutCompleteForm);
         if (!checkoutCompleteForm) {
             return;
         }
@@ -24,6 +26,7 @@
         }
 
         checkoutCompleteForm.addEventListener("submit", function(event) {
+            console.log('checkoutCompleteForm submit');
             let selectedUnzerPaymentType = unzerPaymentType || checkoutCompleteForm.querySelector('input[name=unzer_payment_method_type]:checked')?.value;
             if (!selectedUnzerPaymentType) {
                 return;
