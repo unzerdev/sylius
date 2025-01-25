@@ -37,8 +37,6 @@ class CaptureAction implements ActionInterface
         $payment = $request->getFirstModel();
 
         $details = $payment->getDetails();
-
-        // TODO: Check details make capture request and mark appropriate status
         $details['unzer']['payment']['status'] = PaymentInterface::STATE_COMPLETED;
         $payment->setDetails($details);
     }

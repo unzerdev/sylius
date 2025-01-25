@@ -1,0 +1,10 @@
+{% set form = hookable_metadata.context.form %}
+
+{% if hookable_metadata.context.method.gatewayConfig.factoryName|default('') == 'unzer_payment' %}
+    {% include '@SyliusUnzerPlugin/Checkout/SelectPayment/_choiceUnzer.html.twig' with {'order': hookable_metadata.context.order, 'form': form} %}
+{% else %}
+    <div {{ sylius_test_html_attribute('payment-method-checkbox') }}>
+        {{ form_widget(form, sylius_test_form_attribute('payment-method-select')) }}
+    </div>
+{% endif %}
+
