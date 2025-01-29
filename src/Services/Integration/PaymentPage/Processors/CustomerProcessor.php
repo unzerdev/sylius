@@ -45,10 +45,7 @@ class CustomerProcessor implements CustomerProcessorInterface
         $hostname = $this->channelContext->getChannel()->getHostname() ?? '';
         $domain = str_replace(['http://', 'https://'], '', $hostname);
 
-
-        $email = $order->getCustomer() !== null && $order->getCustomer()->getEmail() !== null
-            ? $order->getCustomer()->getEmail() : null;
-
+        $email = $order->getCustomer()?->getEmail() ?? '';
         $firstname = $order->getCustomer()?->getFirstName()
             ?? $order->getBillingAddress()?->getFirstName()
             ?? $order->getShippingAddress()?->getFirstName()
