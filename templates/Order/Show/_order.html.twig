@@ -1,5 +1,7 @@
-{% import '@SyliusAdmin/Common/Macro/money.html.twig' as money %}
+{% import "@SyliusShop/shared/macro/money.html.twig" as money %}
 
+
+{% set order = hookable_metadata.context.order %}
 {% set transaction = unzer_transaction(order) %}
 
 {% block stylesheets %}

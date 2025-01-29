@@ -1,0 +1,10 @@
+{% set payment = hookable_metadata.context.payment %}
+{% set method = payment.method %}
+
+<div class="me-auto" {{ sylius_test_html_attribute('payment-method', method.code) }}>
+    {% if payment.details is defined  and payment.details.unzer is defined and payment.details.unzer.payment_type_name is defined %}
+        {{ payment.details.unzer.payment_type_name }}
+    {% else %}
+        {{ method.method }}
+    {% endif %}
+</div>

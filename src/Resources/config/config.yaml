@@ -64,6 +64,14 @@ sylius_twig_hooks:
                 template: '@SyliusUnzerPlugin/hooks/checkout/name.html.twig'
             description:
                 template: '@SyliusUnzerPlugin/hooks/checkout/description.html.twig'
+        'sylius_admin.order.show.content.sections.summary':
+            unzer_payment_content:
+                template: "@SyliusUnzerPlugin/Order/Show/_order.html.twig"
+                priority: 100
+        'sylius_shop.shared.order.show.summary.statuses.payments.list':
+            method:
+                template: "@SyliusUnzerPlugin/hooks/order/payments/list/method.html.twig"
+                priority: 200
 
 sylius_payment:
     resources:
