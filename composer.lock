@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fedbaa3f1eb27a463b670cf234f8102b",
+    "content-hash": "733029edbf151c1fcab7e577a947e76d",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -13533,16 +13533,16 @@
         },
         {
             "name": "unzer/unzer-core",
-            "version": "1.0.0",
+            "version": "dev-paypageV2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:unzerdev/integration-core.git",
-                "reference": "4cdd6c7c980ec45ebdbfd43f8fc77f265eb0d02d"
+                "reference": "dc69a315c53db4b5887b6787b1e00f6a75a16b59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/4cdd6c7c980ec45ebdbfd43f8fc77f265eb0d02d",
-                "reference": "4cdd6c7c980ec45ebdbfd43f8fc77f265eb0d02d",
+                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/dc69a315c53db4b5887b6787b1e00f6a75a16b59",
+                "reference": "dc69a315c53db4b5887b6787b1e00f6a75a16b59",
                 "shasum": ""
             },
             "require": {
@@ -13554,6 +13554,7 @@
             "require-dev": {
                 "phpunit/phpunit": "8.5.14"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -13571,7 +13572,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2025-01-29T12:01:20+00:00"
+            "time": "2025-03-04T08:36:57+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
@@ -19098,7 +19099,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "unzer/unzer-core": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
