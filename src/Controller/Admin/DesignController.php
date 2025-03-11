@@ -108,9 +108,9 @@ class DesignController extends AbstractController
         $backgroundColor = $this->parseNullableField($data['backgroundColor'] ?? null);
         $footerColor = $this->parseNullableField($data['footerColor'] ?? null);
         $font = $this->parseNullableField($data['font'] ?? null);
-        $shadows = $this->parseNullableField($data['shadows'] ?? null);
-        $hideUnzerLogo = $this->parseNullableField($data['hideUnzerLogo'] ?? null);
-        $hideBasket = $this->parseNullableField($data['hideBasket'] ?? null);
+        $shadows = $this->parseBoolField($data['shadows'] ?? null);
+        $hideUnzerLogo = $this->parseBoolField($data['hideUnzerLogo'] ?? null);
+        $hideBasket = $this->parseBoolField($data['hideBasket'] ?? null);
         $cornerRadius = $this->parseNullableField($data['cornerRadius'] ?? null);
 
         return new PaymentPageSettingsRequest(
@@ -126,9 +126,9 @@ class DesignController extends AbstractController
             $backgroundColor,
             $footerColor,
             $font,
-            (bool)$shadows,
-            (bool)$hideUnzerLogo,
-            (bool)$hideBasket,
+            $shadows,
+            $hideUnzerLogo,
+            $hideBasket,
             $cornerRadius
         );
     }
@@ -174,4 +174,13 @@ class DesignController extends AbstractController
         return $value === 'null' ? null : $value;
     }
 
+    /**
+     * @param string|null $value
+     *
+     * @return bool|null
+     */
+    private function parseBoolField(?string $value): ?bool
+    {
+        return $value === 'null' ? null : $value === 'true';
+    }
 }
