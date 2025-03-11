@@ -52,7 +52,6 @@
                 });
 
                 checkout.success(function(data) {
-                    window.top.console.log(data);
                     if(!data.redirectUrl) {
                         window.top.location.href = data.returnUrl;
                     }
@@ -60,13 +59,11 @@
 
                 checkout.error(function(error) {
                     checkoutCompleteForm.classList.remove('loading');
-                    console.log('ERROR');
                     return fetch(paymentErrorUrl, {
                         method: 'post',
                         headers: { 'content-type': 'application/json' },
                         body: JSON.stringify({ errorMessage: error.errorMessage })
                     }).then(function(res) {
-                        console.log('FETCH:' . res);
                         return res.status === 400
                             ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 1000))
                             : res.json();
