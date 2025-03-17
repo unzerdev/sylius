@@ -23,12 +23,6 @@ use UnzerSDK\Resources\EmbeddedResources\BasketItem;
  */
 class LineItemsProcessor implements LineItemsProcessorInterface
 {
-    private const ITEM_DISCOUNT_ADJUSTMENTS_TYPES = [
-        AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT,
-        AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT,
-        AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT,
-    ];
-
     public function __construct(private UrlGeneratorInterface $router)
     {
     }
@@ -97,32 +91,27 @@ class LineItemsProcessor implements LineItemsProcessorInterface
     ): BasketItem {
         $amountWithTax = $order->getShippingTotal();
         $amountWithoutTax = 0;
-        foreach ($order->getAdjustments(AdjustmentInterface::SHIPPING_ADJUSTMENT) as $shippingAdjustment) {
-            $amountWithoutTax += $shippingAdjustment->getAmount();
+        $adjustmentTypes = [AdjustmentInterface::SHIPPING_ADJUSTMENT, AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT];
+
+        foreach ($order->getAdjustments() as $adjustment) {
+            if (in_array($adjustment->getType(), $adjustmentTypes, true)) {
+                $amountWithoutTax += $adjustment->getAmount();
+            }
         }
+
         $taxAmount = $amountWithTax - $amountWithoutTax;
 
-        return (new BasketItem())
+        $basket = (new BasketItem())
             ->setBasketItemReferenceId((string)$adjustment->getId())
             ->setQuantity(1)
             ->setAmountPerUnitGross(
                 Amount::fromInt($order->getShippingTotal(), $currency)->getPriceInCurrencyUnits()
             )
-            ->setAmountPerUnit(
-                Amount::fromInt($amountWithTax, $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountGross(
-                Amount::fromInt($amountWithTax, $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountNet(
-                Amount::fromInt($amountWithoutTax, $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountVat(
-                Amount::fromInt($amountWithTax - $amountWithoutTax, $currency)->getPriceInCurrencyUnits()
-            )
             ->setVat(100 * ($taxAmount / $amountWithoutTax))
             ->setTitle((string)$adjustment->getLabel())
             ->setType(BasketItemTypes::SHIPMENT);
+
+        return $basket;
     }
 
     private function shouldProcess(PaymentPageCreateContext $context): bool
@@ -143,38 +132,17 @@ class LineItemsProcessor implements LineItemsProcessorInterface
     {
         $amountWithoutTax = $item->getTotal() - $item->getTaxTotal();
         $taxAmount = (int)round($item->getTaxTotal() / $item->getQuantity());
-        $discounted =
-            $item->getUnitPrice() - $item->getFullDiscountedUnitPrice();
+
         return (new BasketItem())
             ->setBasketItemReferenceId((string)$item->getId())
             ->setQuantity($item->getQuantity())
             ->setVat(100 * ($item->getTaxTotal() / $amountWithoutTax))
-            ->setAmountDiscountPerUnitGross(
-                Amount::fromInt($discounted, $currency)
-                    ->getPriceInCurrencyUnits()
-            )
             ->setAmountPerUnitGross(
                 Amount::fromInt($item->getUnitPrice() + $taxAmount,
                     $currency)
                     ->getPriceInCurrencyUnits()
             )
-            ->setAmountDiscount(
-                Amount::fromInt($item->getUnitPrice() - $item->getFullDiscountedUnitPrice(), $currency)
-                    ->getPriceInCurrencyUnits()
-            )
-            ->setAmountPerUnit(
-                Amount::fromInt((int)round($item->getTotal() / $item->getQuantity()),
-                    $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountGross(
-                Amount::fromInt($item->getTotal(), $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountNet(
-                Amount::fromInt($amountWithoutTax, $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountVat(
-                Amount::fromInt($item->getTaxTotal(), $currency)->getPriceInCurrencyUnits()
-            )
+
             ->setTitle((string)$item->getProductName())
             ->setSubTitle($item->getProduct()?->getShortDescription())
             //    ->setImageUrl($this->getProductImage($item))
@@ -187,9 +155,6 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             ->setBasketItemReferenceId('rounding_' . (string)$item->getBasketItemReferenceId())
             ->setQuantity(1)
             ->setAmountDiscountPerUnitGross(abs($amount->getPriceInCurrencyUnits()))
-            ->setAmountPerUnit(abs($amount->getPriceInCurrencyUnits()))
-            ->setAmountGross(abs($amount->getPriceInCurrencyUnits()))
-            ->setAmountNet(abs($amount->getPriceInCurrencyUnits()))
             ->setTitle('Rounding discount')
             ->setType(BasketItemTypes::VOUCHER);
     }
@@ -206,15 +171,6 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             ->setBasketItemReferenceId((string)$adjustment->getId())
             ->setQuantity(1)
             ->setAmountPerUnitGross(
-                Amount::fromInt(abs($adjustment->getAmount()), $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountPerUnit(
-                Amount::fromInt(abs($adjustment->getAmount()), $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountGross(
-                Amount::fromInt(abs($adjustment->getAmount()), $currency)->getPriceInCurrencyUnits()
-            )
-            ->setAmountNet(
                 Amount::fromInt(abs($adjustment->getAmount()), $currency)->getPriceInCurrencyUnits()
             )
             ->setTitle((string)$adjustment->getLabel())
