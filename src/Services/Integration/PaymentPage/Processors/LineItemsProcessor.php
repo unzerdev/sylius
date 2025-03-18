@@ -93,15 +93,15 @@ class LineItemsProcessor implements LineItemsProcessorInterface
         $amountWithoutTax = 0;
         $adjustmentTypes = [AdjustmentInterface::SHIPPING_ADJUSTMENT, AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT];
 
-        foreach ($order->getAdjustments() as $adjustment) {
-            if (in_array($adjustment->getType(), $adjustmentTypes, true)) {
-                $amountWithoutTax += $adjustment->getAmount();
+        foreach ($order->getAdjustments() as $shippingAdjustment) {
+            if (in_array($shippingAdjustment->getType(), $adjustmentTypes, true)) {
+                $amountWithoutTax += $shippingAdjustment->getAmount();
             }
         }
 
         $taxAmount = $amountWithTax - $amountWithoutTax;
 
-        $basket = (new BasketItem())
+        return (new BasketItem())
             ->setBasketItemReferenceId((string)$adjustment->getId())
             ->setQuantity(1)
             ->setAmountPerUnitGross(
@@ -110,8 +110,6 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             ->setVat(100 * ($taxAmount / $amountWithoutTax))
             ->setTitle((string)$adjustment->getLabel())
             ->setType(BasketItemTypes::SHIPMENT);
-
-        return $basket;
     }
 
     private function shouldProcess(PaymentPageCreateContext $context): bool
@@ -155,7 +153,7 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             ->setBasketItemReferenceId('rounding_' . (string)$item->getBasketItemReferenceId())
             ->setQuantity(1)
             ->setAmountDiscountPerUnitGross(abs($amount->getPriceInCurrencyUnits()))
-            ->setTitle('Rounding discount')
+            ->setTitle('Discount')
             ->setType(BasketItemTypes::VOUCHER);
     }
 
