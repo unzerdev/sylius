@@ -37,6 +37,9 @@ class LineItemsProcessor implements LineItemsProcessorInterface
         $order = $context->getCheckoutSession()->get('order');
         $currency = Currency::fromIsoCode($order->getCurrencyCode());
 
+
+        $totalDiscount = 0;
+
         foreach ($order->getItems() as $item) {
 
             $basketItem = $this->mapLineItem($item, $currency);
@@ -45,13 +48,11 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             $basket->addBasketItem($basketItem);
 
             if ($item->getTotal() !== ($basketItemAmount->getValue() - $basketItemDiscount->getValue()) * $basketItem->getQuantity()) {
-                $basket->addBasketItem($this->mapRoundingDiscount(
-                    Amount::fromInt($item->getTotal() - $basketItemAmount->getValue() * $basketItem->getQuantity(),
-                        $currency),
-                    $basketItem)
-                );
+                $totalDiscount += $item->getTotal() - $basketItemAmount->getValue() * $basketItem->getQuantity();
             }
         }
+
+        $basket->addBasketItem($this->mapRoundingDiscount(Amount::fromInt($totalDiscount, $currency)));
 
         foreach ($order->getAdjustments() as $adjustment) {
             if (
@@ -147,13 +148,13 @@ class LineItemsProcessor implements LineItemsProcessorInterface
             ->setType(BasketItemTypes::GOODS);
     }
 
-    private function mapRoundingDiscount(Amount $amount, BasketItem $item): BasketItem
+    private function mapRoundingDiscount(Amount $amount): BasketItem
     {
         return (new BasketItem())
-            ->setBasketItemReferenceId('rounding_' . (string)$item->getBasketItemReferenceId())
+            ->setBasketItemReferenceId('item_discount')
             ->setQuantity(1)
             ->setAmountDiscountPerUnitGross(abs($amount->getPriceInCurrencyUnits()))
-            ->setTitle('Discount')
+            ->setTitle('Item Discount')
             ->setType(BasketItemTypes::VOUCHER);
     }
 
