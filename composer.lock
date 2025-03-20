@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "733029edbf151c1fcab7e577a947e76d",
+    "content-hash": "b96b3df70178daae0c951c4a9e9e6504",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -13445,16 +13445,16 @@
         },
         {
             "name": "unzer/unzer-core",
-            "version": "dev-paypageV2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:unzerdev/integration-core.git",
-                "reference": "a8f3255fcc89c0ee5b6161fddcf6a62aa2992245"
+                "reference": "ceb2309ec469e9cdfebef1bb36e98fa7cb04efe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/a8f3255fcc89c0ee5b6161fddcf6a62aa2992245",
-                "reference": "a8f3255fcc89c0ee5b6161fddcf6a62aa2992245",
+                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/ceb2309ec469e9cdfebef1bb36e98fa7cb04efe2",
+                "reference": "ceb2309ec469e9cdfebef1bb36e98fa7cb04efe2",
                 "shasum": ""
             },
             "require": {
@@ -13466,7 +13466,6 @@
             "require-dev": {
                 "phpunit/phpunit": "8.5.14"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -13484,7 +13483,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2025-03-19T12:25:55+00:00"
+            "time": "2025-03-20T10:46:21+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
@@ -19017,9 +19016,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "unzer/unzer-core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
