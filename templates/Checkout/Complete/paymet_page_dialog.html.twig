@@ -34,38 +34,45 @@
             checkoutCompleteForm.classList.add('loading');
 
             createPayPage(selectedUnzerPaymentType).then(function (payPageData) {
-                let checkout = new window.checkout(payPageData.id);
+
+                const unzerContainer = document.getElementById("unzer-payment-dialog-placeholder");
+                unzerContainer.innerHTML = `
+            <unzer-payment publicKey="${payPageData.publicKey}">
+                <unzer-pay-page
+                    id="checkout"
+                    payPageId="${payPageData.id}"
+                ></unzer-pay-page>
+            </unzer-payment>
+        `;
+                const checkout = document.getElementById("checkout");
 
                 checkout.abort(function() {
-                    // handle abort event.
                     checkout._hideIframe();
                     checkoutCompleteForm.classList.remove('loading');
-                });
-
-                checkout.error(function(error) {
-                    checkout._hideIframe();
-                    checkoutCompleteForm.classList.remove('loading');
-                    return fetch(paymentErrorUrl, {
-                        method: 'post',
-                        headers: { 'content-type': 'application/json' },
-                        body: JSON.stringify({ errorMessage: error.error.customerMessage || error.error.message })
-                    }).then(function(res) {
-                        return res.status === 400
-                            ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 100))
-                            : res.json();
-                    })
                 });
 
                 checkout.success(function(data) {
                     if(!data.redirectUrl) {
-                        window.location.href = data.returnUrl;
+                        window.top.location.href = data.returnUrl;
                     }
                 });
 
-                checkout.init().then(function() {
-                    checkout.open();
+                checkout.error(function(error) {
                     checkoutCompleteForm.classList.remove('loading');
+                    return fetch(paymentErrorUrl, {
+                        method: 'post',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({ errorMessage: error.errorMessage })
+                    }).then(function(res) {
+                        return res.status === 400
+                            ? (window.location.reload(), setTimeout(() => window.scrollTo(0, 0), 1000))
+                            : res.json();
+                    })
                 });
+
+                checkout.open();
+                checkoutCompleteForm.classList.remove('loading');
+
             });
         }, true);
     });
