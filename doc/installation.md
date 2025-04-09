@@ -10,11 +10,11 @@
   "repositories": [
       {
          "type": "vcs",
-         "url": "git@github.com:logeecom/UnzerSylius"
+         "url": "git@github.com:unzerdev/sylius.git"
       },
       {
          "type": "vcs",
-         "url": "git@github.com:logeecom/unzer-core.git"
+         "url": "git@github.com:unzerdev/integration-core.git"
       }
   ]
    ```
