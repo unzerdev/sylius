@@ -63,22 +63,24 @@ final class PaymentRefundCommandCreator implements PaymentRefundCommandCreatorIn
         }
 
         Assert::notNull($order->getChannel());
-        $refundMethods = $this->refundPaymentMethodProvider->findForChannel($order->getChannel());
+        $refundMethods = $this->refundPaymentMethodProvider->findForOrder($order);
 
         if (0 === count($refundMethods)) {
             throw new OrderNotAvailableForRefunding(
-                sprintf('Not found offline payment method on this channel with code :%s', $order->getChannel()->getCode())
+                sprintf('No payment methods found for order :%s', $order->getId())
             );
         }
 
-        $refundMethod = current($refundMethods);
-
+        $refundMethod = current(array_filter($refundMethods, function ($paymentMethod) {
+            return $paymentMethod->getCode() === 'unzer_payment';
+        }));
         $orderItemUnitRefund = $this->itemRefund->refund($order, $toRefund);
         $shipmentRefund = $this->shipmentRefund->refund($order, $orderItemUnitRefund, $toRefund);
 
         Assert::notNull($order->getNumber());
 
-        return new RefundUnits($order->getNumber(), $orderItemUnitRefund, $shipmentRefund, $refundMethod->getId(), '');
+        return new RefundUnits($order->getNumber(), array_merge($orderItemUnitRefund, $shipmentRefund),
+            $refundMethod->getId(), '');
     }
 
     private function getSumOfAmountExistingRefunds(array $refundedUnits): int

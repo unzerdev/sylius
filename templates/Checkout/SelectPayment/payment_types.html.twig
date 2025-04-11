@@ -4,39 +4,39 @@
        class="unzer-payments hidden" data-test-payment-method-select="" value="">
 
 {% for payment_type in payment_types %}
-    <div class="item">
-        <div class="field">
-            <div class="ui radio checkbox">
-                <input type="radio" id="unzer_payment_method_type_{{ payment_type.type }}"
-                       name="unzer_payment_method_type" required="required" class="unzer-payments"
-                       data-test-payment-method-select="" value="{{ payment_type.type }}"
-                       {% if (selected_payment_type == payment_type.type) %}checked{% endif %}><label></label>
-            </div>
-        </div>
-        <div class="content">
-            <a class="header" style="min-width: 150px">
-                <label data-test-payment-method-label=""
-                       for="unzer_payment_method_type_{{ payment_type.type }}"
-                       class="required">
-                    {{ payment_type.name }}
-                </label>
-            </a>
-            <div class="description">
-                <p>{{ payment_type.description }}</p>
-            </div>
-        </div>
-        <div class="extra">
-            <div class="ui large right floated" {{ sylius_test_html_attribute('unzer-method-logo') }}>
-                <i class="huge icon"><img class="ui fluid image" style="max-width: 55px; max-height: 55px;"
-                                          alt="{{ payment_type.name }}"
-                                          src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}"></i>
-            </div>
-            {% if (payment_type.surcharge is defined) %}
-                <div class="ui large right floated label fee"
-                     style="margin-right: 10px;" {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
-                    {{ money.convertAndFormat(payment_type.surcharge.value) }}
+    <div class="card bg-body-tertiary border-0 mb-3" {{ sylius_test_html_attribute('payment-item') }}>
+        <label class="d-flex gap-3 card-body">
+            {# Name and radio button display #}
+            <div class="flex-grow-1">
+                <div {{ sylius_test_html_attribute('payment-method-checkbox') }}>
+                    <div class="form-check">
+                        <input type="radio" id="unzer_payment_method_type_{{ payment_type.type }}"
+                               name="unzer_payment_method_type" required="required" class="form-check-input"
+                               data-test-payment-method-select="" value="{{ payment_type.type }}"
+                               data-live-name-value="unzer_payment_method_type"
+                               data-live-id-value="unzer_payment_method_type_{{ payment_type.type }}"
+                               {% if (selected_payment_type == payment_type.type) %}checked{% endif %}>
+                        <label class="form-check-label required"
+                               for="unzer_payment_method_type_{{ payment_type.type }}">      {{ payment_type.name }} </label>
+                    </div>
                 </div>
-            {% endif %}
-        </div>
+                {# Description display #}
+                <div class="ps-4"><small class="text-black-50">{{ payment_type.description }}</small></div>
+            </div>
+
+            {# Image display #}
+            <div {{ sylius_test_html_attribute('unzer-method-logo') }}>
+             <img style="max-width: 80px; max-height: 62px;width: 80px; height: 62px;"
+                                          alt="{{ payment_type.name }}"
+                                          src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}">
+            </div>
+
+            {# Surcharge display #}
+                {% if (payment_type.surcharge is defined) %}
+                    <div  style="text-align: center; display: flex; align-items: center; justify-content: center;"  {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
+                        {{ money.convertAndFormat(payment_type.surcharge.value) }}
+                    </div>
+                {% endif %}
+        </label>
     </div>
 {% endfor %}

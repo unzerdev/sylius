@@ -9,7 +9,7 @@
     }) }}
 </div>
 
-{{ render(controller('SyliusUnzerPlugin\\Controller\\CheckoutPaymentController::renderPaymentTypes', {'orderId': order.id})) }}
+{{ render(controller('SyliusUnzerPlugin\\Controller\\CheckoutPaymentController::renderPaymentTypes', {'orderId': order.id, 'form': form})) }}
 
 <script type="text/javascript">
     //# sourceURL=_choicesUnzer.js

@@ -29,7 +29,9 @@ class PaymentListener implements DisableListenerInterface
 
     /**
      * @param CompletedEvent $event
+     *
      * @return void
+     *
      * @throws ConnectionSettingsNotFoundException
      * @throws InvalidCurrencyCode
      * @throws TransactionHistoryNotFoundException
@@ -68,7 +70,9 @@ class PaymentListener implements DisableListenerInterface
 
     /**
      * @param CompletedEvent $event
+     *
      * @return void
+     *
      * @throws ConnectionSettingsNotFoundException
      * @throws InvalidCurrencyCode
      * @throws TransactionHistoryNotFoundException

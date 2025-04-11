@@ -1,22 +1,8 @@
-winzou_state_machine:
-    sylius_payment:
-        callbacks:
-            after:
-                sylius_payment_cancelled:
-                    on: ["cancel"]
-                    do: ["@unzer.order_payment_listener", "cancelPayment"]
-                    args: ["object"]
-                    priority: -200
-                sylius_payment_completed:
-                    on: [ "complete" ]
-                    do: [ "@unzer.order_payment_listener", "completePayment" ]
-                    args: [ "object" ]
-                    priority: -200    
-
 parameters:
     env(UNZER_ENCRYPTION_KEY): 'def000002f45b81aa090e24a233d11e5b6348131bf27a28fdcae1972841dd98a565d678b144a13b880c88bbea36327126f9962a40b2e07d5258360ec44c30804fb011883'
     sylius_refund.supported_gateways:
-        - unzer_payments
+        - offline
+        - unzer_payment
 
 sylius_grid:
     templates:
@@ -59,12 +45,10 @@ sylius_twig_hooks:
             body:
                 template: '@SyliusUnzerPlugin/hooks/body.html.twig'
                 priority: 0
-        'sylius_shop.shared.form.select_payment.payment.choice.details':
-            name:
-                template: '@SyliusUnzerPlugin/hooks/checkout/name.html.twig'
-            description:
-                template: '@SyliusUnzerPlugin/hooks/checkout/description.html.twig'
-        'sylius_admin.order.show.content.sections.summary':
+        'sylius_shop.shared.form.select_payment.payment':
+            choice:
+                template: '@SyliusUnzerPlugin/hooks/checkout/choice.html.twig'
+        'sylius_admin.order.show.content.sections.payments':
             unzer_payment_content:
                 template: "@SyliusUnzerPlugin/Order/Show/_order.html.twig"
                 priority: 100
@@ -79,13 +63,11 @@ sylius_payment:
             classes:
                 controller: SyliusUnzerPlugin\Controller\PaymentMethodController
 
-
-
 monolog:
-    channels: ['unzer']
+    channels: [ 'unzer' ]
     handlers:
-        paypal:
+        unzer:
             level: debug
             type: stream
             path: '%kernel.logs_dir%/unzer.log'
-            channels: [unzer]
+            channels: [ unzer ]

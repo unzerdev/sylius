@@ -1,15 +1,17 @@
-.ui.labeled.buttons.icon.top.floating.button.unzer-button {
+button.btn.unzer-button {
     background-color: rgba(252, 17, 84, 1);
     color: white;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.unzer-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+img.unzer-icon {
     width: 16px;
     height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
 .unzer-logo {
@@ -21,9 +23,10 @@
 .unzer-logo-container {
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
-.unzer-logo-container span {
+button.btn.unzer-button.unzer-logo-container span {
     margin-left: 25px;
 }
 

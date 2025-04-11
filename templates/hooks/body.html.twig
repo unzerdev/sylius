@@ -1,14 +1,26 @@
-<div class="adl-page" id="adl-page">
-    <main>
-        <header id="adl-main-header">
-            <div class="adl-page-header"></div>
-            <div class="adl-header-holder" id="adl-header-section"></div>
-        </header>
-        <div class="unzer-page-wrapper">
-            <div class="unzer-content-holder">
-                <main id="unzer-main-page"></main>
-            </div>
-            <footer id="unzer-footer"></footer>
+{% from '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' import breadcrumbs %}
+
+<div class="container-fluid">
+    {{ breadcrumbs([
+        { name: 'sylius.ui.dashboard'|trans, url: path('sylius_admin_dashboard') },
+        { name: 'sylius.ui.payment_methods'|trans, url: path('sylius_admin_payment_method_index') },
+        { name: 'Unzer'|trans, active: true }
+    ]) }}
+    <div class="adl-page" id="adl-page">
+        <div class="adl-page" id="adl-page">
+            <main>
+                <header id="adl-main-header">
+                    <div class="adl-page-header"></div>
+                    <div class="adl-header-holder" id="adl-header-section"></div>
+                </header>
+                <div class="unzer-page-wrapper">
+                    <div class="unzer-content-holder">
+                        <main id="unzer-main-page"></main>
+                    </div>
+                    <div id="unzer-container"></div>
+                    <footer id="unzer-footer"></footer>
+                </div>
+            </main>
         </div>
-    </main>
+    </div>
 </div>

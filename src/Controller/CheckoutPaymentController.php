@@ -72,6 +72,7 @@ final class CheckoutPaymentController extends AbstractController
 
             if ($response->isSuccessful()) {
                 $templateData['payment_types'] = $response->toArray();
+                $templateData['form'] = $request->attributes->get('form');
             }
         } catch (\Exception $e) {
             Logger::logWarning(

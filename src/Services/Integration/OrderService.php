@@ -131,7 +131,7 @@ class OrderService implements OrderServiceInterface
     /**
      * @param string $orderId
      *
-     * @return Amount|null
+     * @return Amount
      *
      * @throws InvalidCurrencyCode
      */
@@ -156,6 +156,7 @@ class OrderService implements OrderServiceInterface
      * @param bool $isFullCharge
      *
      * @return void
+     *
      * @throws SMException
      */
     public function chargeOrder(string $orderId, Amount $amount, bool $isFullCharge): void
