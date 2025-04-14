@@ -81,7 +81,6 @@ class PaymentListener implements DisableListenerInterface
      */
     public function completePayment(CompletedEvent $event): void
     {
-
         $payment = $event->getSubject();
         Assert::isInstanceOf($payment, PaymentInterface::class);
         /** @var PaymentMethod $paymentMethod */

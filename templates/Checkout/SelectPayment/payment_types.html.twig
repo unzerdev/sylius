@@ -3,6 +3,8 @@
 <input hidden type="radio" id="unzer_payment_method_type_none" name="unzer_payment_method_type" required="required"
        class="unzer-payments hidden" data-test-payment-method-select="" value="">
 
+<input id="unzer-payment-method-type" hidden type="radio" name="unzer_payment_method_type" value=""/>
+{% set base_id = form.vars.name|default(0) %}
 {% for payment_type in payment_types %}
     <div class="card bg-body-tertiary border-0 mb-3" {{ sylius_test_html_attribute('payment-item') }}>
         <label class="d-flex gap-3 card-body">
@@ -11,13 +13,14 @@
                 <div {{ sylius_test_html_attribute('payment-method-checkbox') }}>
                     <div class="form-check">
                         <input type="radio" id="unzer_payment_method_type_{{ payment_type.type }}"
-                               name="unzer_payment_method_type" required="required" class="form-check-input"
+                               required="required" class="form-check-input"
                                data-test-payment-method-select="" value="{{ payment_type.type }}"
+                               data-unzer-payment-method="1"
                                data-live-name-value="unzer_payment_method_type"
                                data-live-id-value="unzer_payment_method_type_{{ payment_type.type }}"
                                {% if (selected_payment_type == payment_type.type) %}checked{% endif %}>
                         <label class="form-check-label required"
-                               for="unzer_payment_method_type_{{ payment_type.type }}">      {{ payment_type.name }} </label>
+                               for="sylius_shop_checkout_select_payment_payments_0_method_{{ base_id + loop.index }}">      {{ payment_type.name }} </label>
                     </div>
                 </div>
                 {# Description display #}
@@ -26,17 +29,18 @@
 
             {# Image display #}
             <div {{ sylius_test_html_attribute('unzer-method-logo') }}>
-             <img style="max-width: 80px; max-height: 62px;width: 80px; height: 62px;"
-                                          alt="{{ payment_type.name }}"
-                                          src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}">
+                <img style="max-width: 80px; max-height: 62px;width: 80px; height: 62px;"
+                     alt="{{ payment_type.name }}"
+                     src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}">
             </div>
 
             {# Surcharge display #}
-                {% if (payment_type.surcharge is defined) %}
-                    <div  style="text-align: center; display: flex; align-items: center; justify-content: center;"  {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
-                        {{ money.convertAndFormat(payment_type.surcharge.value) }}
-                    </div>
-                {% endif %}
+            {% if (payment_type.surcharge is defined) %}
+                <div
+                    style="text-align: center; display: flex; align-items: center; justify-content: center;" {{ sylius_test_html_attribute('unzer-method-surcharge') }}>
+                    {{ money.convertAndFormat(payment_type.surcharge.value) }}
+                </div>
+            {% endif %}
         </label>
     </div>
 {% endfor %}

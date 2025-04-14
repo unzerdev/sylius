@@ -17,15 +17,31 @@
         let unzerMainPaymentInput = document.getElementById('{{ form.vars.id }}');
         let unzerDefaultPaymentMethodType = document.getElementById('unzer_payment_method_type_none');
         let nativePaymentMethods = document.querySelectorAll("[name='{{ form.vars.full_name }}']");
-        let unzerPaymentMethodTypes = document.querySelectorAll("[name=unzer_payment_method_type]");
+        let unzerPaymentMethodTypes = document.querySelectorAll('input[data-unzer-payment-method]');
+        let unzerPaymentMethodType = document.getElementById('unzer-payment-method-type');
 
         for (let i = 0; i < unzerPaymentMethodTypes.length; i++) {
-            unzerPaymentMethodTypes[i].addEventListener('change', function() {
+            unzerPaymentMethodTypes[i].addEventListener('change', function () {
+
+                unzerPaymentMethodTypes.forEach(input => {
+                    if (input !== this) {
+                        input.checked = false;
+                    }
+                });
+
+                // Select the current input
+                this.checked = true;
+                unzerPaymentMethodType.value = this.value;
+                unzerPaymentMethodType.checked = true;
                 unzerMainPaymentInput.checked = true;
             });
         }
         for (let i = 0; i < nativePaymentMethods.length; i++) {
-            nativePaymentMethods[i].addEventListener('change', function() {
+            nativePaymentMethods[i].addEventListener('change', function () {
+                unzerPaymentMethodTypes.forEach(input => {
+                    input.checked = false;
+                    unzerPaymentMethodType.checked = false;
+                });
                 unzerDefaultPaymentMethodType.checked = true;
             });
         }

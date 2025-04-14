@@ -8,7 +8,6 @@
         let unzerPaymentType = '{{ data.unzer_payment_page_type }}';
         let unzerDialogPlaceholder = document.getElementById('unzer-payment-dialog-placeholder');
         let checkoutCompleteForm = unzerDialogPlaceholder.closest('form');
-        console.log('checkoutCompleteForm', checkoutCompleteForm);
         if (!checkoutCompleteForm) {
             return;
         }
@@ -59,7 +58,6 @@
         }
 
         checkoutCompleteForm.addEventListener("submit", function(event) {
-            console.log('checkoutCompleteForm submit');
             let selectedUnzerPaymentType = unzerPaymentType || checkoutCompleteForm.querySelector('input[name=unzer_payment_method_type]:checked')?.value;
             if (!selectedUnzerPaymentType) {
                 return;
