@@ -19,7 +19,7 @@
   ]
    ```
 - Run: 
-      composer require unzer/sylius-plugin
+      composer require unzer/sylius-plugin 2.*
 
 - Run migrations in Sylius root directory:
     ```bash

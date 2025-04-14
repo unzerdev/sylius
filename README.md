@@ -5,12 +5,12 @@
 
 We work on stable, supported and up-to-date versions of packages. We recommend you to do the same.
 
-| Package                    | Version              |
-|----------------------------|----------------------|
-| PHP                        | ^8.0 \|\| ^8.1       |
-| unzerdev/php-sdk           | ^3.9                 |
-| sylius/refund-plugin       | ^1.4                 |
-| sylius/sylius              | ~1.12.* \|\| ~1.13.* |
+| Package                    | Version        |
+|----------------------------|----------------|
+| PHP                        | ^8.0 \|\| ^8.1 |
+| unzerdev/php-sdk           | ^3.11.0        |
+| sylius/refund-plugin       | ^2.0           |
+| sylius/sylius              | ~2.0.*         |
 
 ----
 
