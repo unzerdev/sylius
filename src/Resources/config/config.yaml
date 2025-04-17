@@ -56,6 +56,14 @@ sylius_twig_hooks:
             method:
                 template: "@SyliusUnzerPlugin/hooks/order/payments/list/method.html.twig"
                 priority: 200
+        'sylius_shop.order.show.content.form.select_payment.payment.unzer.shop.order.show.before_navigation':
+            unzer_payment_page_dialog:
+                 template: "@SyliusUnzerPlugin/Checkout/Complete/paymet_page_dialog.html.twig"
+                 priority: 1
+        'sylius_admin.order.show.content.sections.payments.item.actions':
+            complete:                 
+                    template: "@SyliusUnzerPlugin/Order/Show/Payment/_completeTransition.html.twig"
+                    priority: 1
 
 sylius_payment:
     resources:

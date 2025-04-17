@@ -45,5 +45,22 @@
                 unzerDefaultPaymentMethodType.checked = true;
             });
         }
+
+        let isAnyChecked = Array.from(unzerPaymentMethodTypes).some(input => input.checked);
+        if (!isAnyChecked && nativePaymentMethods.length === 1) {
+            unzerPaymentMethodTypes[0].checked = true;
+        }
+
+        let checkedInput = Array.from(unzerPaymentMethodTypes).find(input => input.checked);
+
+        if (checkedInput) {
+            unzerPaymentMethodType.value = checkedInput.value;
+            unzerPaymentMethodType.checked = true;
+            unzerMainPaymentInput.checked = true;
+        }
     });
 </script>
+
+{% if (sylius_order_can_be_paid(order)) %}
+    {% hook 'unzer.shop.order.show.before_navigation' with  {'order': order} %}
+{% endif %}

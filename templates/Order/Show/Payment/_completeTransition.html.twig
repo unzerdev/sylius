@@ -1,9 +1,10 @@
+{% set order = hookable_metadata.context.resource %}
 {% set lastPayment = order.payments|last %}
 
 {% if lastPayment and lastPayment.method.code != 'unzer_payment' %}
-    {% include '@SyliusAdmin/Order/Show/Payment/_completeTransition.html.twig' %}
+    {% include '@SyliusAdmin/order/show/content/sections/payments/item/actions/complete.html.twig' %}
 {% endif %}
 
 {% if lastPayment and lastPayment.method.code == 'unzer_payment' and lastPayment.state != 'new' %}
-    {% include '@SyliusAdmin/Order/Show/Payment/_completeTransition.html.twig' %}
+    {% include '@SyliusAdmin/order/show/content/sections/payments/item/actions/complete.html.twig' %}
 {% endif %}
