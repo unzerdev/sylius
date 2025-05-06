@@ -49,20 +49,6 @@ php bin/console sylius:unzer-key:create
 ```
 After generating the key, set the value as an environment variable (UNZER_ENCRYPTION_KEY) for your environment.
 
-## Checkout setup
-- Override how Unzer payment method is rendered on the checkout buy wrapping original content of `templates/bundles/SyliusShopBundle/Checkout/SelectPayment/_choice.html.twig` file with following condition
-    ```html 
-    {% if method.gatewayConfig.factoryName == 'unzer_payment' %}                                                                
-        {% include '@SyliusUnzerPlugin/Checkout/SelectPayment/_choiceUnzer.html.twig'%}
-    {% else %}
-        <!--    Original file content goes here    -->
-    {% endif %}
-    ```
-- Override how Unzer payment method is rendered on the checkout complete page  buy overriding original content of`templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig`
-    ```shell 
-     cp vendor/unzer/sylius-plugin/tests/Application/templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig templates/bundles/SyliusShopBundle/Common/Order/_payments.html.twig
-    ```  
-
 ## Cache clear
 
 - Run the following command to clear the store cache to ensure translations function correctly:
