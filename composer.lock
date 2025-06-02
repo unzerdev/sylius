@@ -14892,12 +14892,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:unzerdev/integration-core.git",
-                "reference": "3327c7c46411e37b424958c92648e9d1b6eaa30a"
+                "reference": "942b52877f81619dcebe85ffd82789a3be0d40f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/3327c7c46411e37b424958c92648e9d1b6eaa30a",
-                "reference": "3327c7c46411e37b424958c92648e9d1b6eaa30a",
+                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/942b52877f81619dcebe85ffd82789a3be0d40f0",
+                "reference": "942b52877f81619dcebe85ffd82789a3be0d40f0",
                 "shasum": ""
             },
             "require": {
@@ -14926,7 +14926,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2025-05-06T10:17:30+00:00"
+            "time": "2025-06-02T13:12:44+00:00"
         },
         {
             "name": "unzerdev/php-sdk",

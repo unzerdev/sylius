@@ -144,6 +144,9 @@ final class PaymentMethodController extends AbstractController
         /** @var bool $sendBasketData */
         $sendBasketData = $request->getPayload()->get('sendBasketData', false);
 
+        /** @var bool $enableClickToPay */
+        $enableClickToPay = $request->getPayload()->get('enableClickToPay', false);
+
         return new SavePaymentMethodConfigRequest(
             $type,
             $bookingMethod,
@@ -155,7 +158,7 @@ final class PaymentMethodController extends AbstractController
             $surcharge,
             $restrictedCountries,
             $sendBasketData,
+            $enableClickToPay
         );
     }
-
 }
