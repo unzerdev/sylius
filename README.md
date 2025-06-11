@@ -7,7 +7,7 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 
 | Package                    | Version        |
 |----------------------------|----------------|
-| PHP                        | ^8.0 \|\| ^8.1 |
+| PHP                        | ^8.0 \|\| ^8.3 |
 | unzerdev/php-sdk           | ^3.11.0        |
 | sylius/refund-plugin       | ^2.0           |
 | sylius/sylius              | ~2.0.*         |

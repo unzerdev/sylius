@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec8ebcb01047ed3b8b8f7398ab6bbc38",
+    "content-hash": "72a6c7331a3e87a52273ea49a48648be",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -14888,16 +14888,16 @@
         },
         {
             "name": "unzer/unzer-core",
-            "version": "dev-dev",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:unzerdev/integration-core.git",
-                "reference": "2249f18b696f640756a00f6bb892c724a77ef64f"
+                "reference": "cecd54aff48d25618a6b8f4f784bfa9b3a260a5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/2249f18b696f640756a00f6bb892c724a77ef64f",
-                "reference": "2249f18b696f640756a00f6bb892c724a77ef64f",
+                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/cecd54aff48d25618a6b8f4f784bfa9b3a260a5e",
+                "reference": "cecd54aff48d25618a6b8f4f784bfa9b3a260a5e",
                 "shasum": ""
             },
             "require": {
@@ -14926,7 +14926,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2025-06-02T13:47:33+00:00"
+            "time": "2025-06-11T09:22:05+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
@@ -20323,9 +20323,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "unzer/unzer-core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
