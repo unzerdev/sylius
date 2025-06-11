@@ -57,6 +57,7 @@ final class CheckoutPaymentController extends AbstractController
 
         if (
             null !== $payment &&
+            false !== $payment &&
             $payment->getMethod()?->getCode() === 'unzer_payment'
         ) {
             $templateData['selected_payment_type'] = $payment->getDetails()['unzer']['payment_type'] ?? '';

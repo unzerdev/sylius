@@ -88,14 +88,6 @@ class CustomerProcessor implements CustomerProcessorInterface
             return false;
         }
 
-        if($context->getPaymentMethodType() === PaymentMethodTypes::CARDS){
-            return true;
-        }
-
-        if ($order->isCreatedByGuest() || null === $order->getCustomer()) {
-            return false;
-        }
-
         return true;
     }
 

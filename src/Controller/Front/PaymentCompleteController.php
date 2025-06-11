@@ -13,10 +13,12 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class PaymentCompleteController
@@ -34,7 +36,8 @@ class PaymentCompleteController extends AbstractController
         private OrderRepositoryInterface $orderRepository,
         private Payum $payum,
         private FactoryInterface $stateMachineFactory,
-        private ObjectManager $orderManager
+        private ObjectManager $orderManager,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -91,5 +94,9 @@ class PaymentCompleteController extends AbstractController
         $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
         $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
         $this->orderManager->flush();
+        $this->eventDispatcher->dispatch(
+            new GenericEvent($order),
+            'sylius.order.post_complete'
+        );
     }
 }
