@@ -13,9 +13,9 @@
         "defuse/php-encryption": "^2.4",
         "enshrined/svg-sanitize": "^0.21.0",
         "sylius/refund-plugin": "^1.4 || ^2.0",
-        "sylius/sylius": "^1.12.0 || ~2.0.0",
+        "sylius/sylius": "^1.12.0 || ^2.0 || ^2.1",
         "symfony/webpack-encore-bundle": "^1.15 || ^2.0",
-        "unzer/unzer-core": "dev-dev",
+        "unzer/unzer-core": "1.2.0",
         "winzou/state-machine-bundle": "^0.6.2"
     },
     "require-dev": {
