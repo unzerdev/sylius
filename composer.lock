@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edea454f53fe884a81d4265644bd7b9d",
+    "content-hash": "42af8b872fadbbdde2510290634bd7f2",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -13749,26 +13749,26 @@
         },
         {
             "name": "unzer/unzer-core",
-            "version": "1.2.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:unzerdev/integration-core.git",
-                "reference": "3a0e2d57a2bf5499c71079e5ed414e0b37c3867d"
+                "reference": "83c9072879e4157f1af468c7b18e9d2991395eca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/3a0e2d57a2bf5499c71079e5ed414e0b37c3867d",
-                "reference": "3a0e2d57a2bf5499c71079e5ed414e0b37c3867d",
+                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/83c9072879e4157f1af468c7b18e9d2991395eca",
+                "reference": "83c9072879e4157f1af468c7b18e9d2991395eca",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "php": ">=7.4",
-                "unzerdev/php-sdk": "^3.11.0"
+                "unzerdev/php-sdk": "^3.13.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "8.5.14"
+                "phpunit/phpunit": "^9.6"
             },
             "type": "library",
             "autoload": {
@@ -13787,20 +13787,20 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2025-07-28T08:11:41+00:00"
+            "time": "2026-03-09T16:19:03+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
-            "version": "3.13.0",
+            "version": "3.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/unzerdev/php-sdk.git",
-                "reference": "7e78dc190d6640d42e2eb4a94cbabdf1369211f7"
+                "reference": "731eca042046ecf6e3754577b48c2f839caa622e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/php-sdk/zipball/7e78dc190d6640d42e2eb4a94cbabdf1369211f7",
-                "reference": "7e78dc190d6640d42e2eb4a94cbabdf1369211f7",
+                "url": "https://api.github.com/repos/unzerdev/php-sdk/zipball/731eca042046ecf6e3754577b48c2f839caa622e",
+                "reference": "731eca042046ecf6e3754577b48c2f839caa622e",
                 "shasum": ""
             },
             "require": {
@@ -13828,9 +13828,9 @@
             "description": "This is the php sdk to connect to the Unzer rest API.",
             "support": {
                 "email": "support@unzer.com",
-                "source": "https://github.com/unzerdev/php-sdk/tree/3.13.0"
+                "source": "https://github.com/unzerdev/php-sdk/tree/3.15.0"
             },
-            "time": "2025-07-10T14:01:16+00:00"
+            "time": "2026-02-12T12:39:43+00:00"
         },
         {
             "name": "webmozart/assert",
