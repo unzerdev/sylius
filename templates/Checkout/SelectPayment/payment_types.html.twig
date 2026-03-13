@@ -31,7 +31,8 @@
             <div {{ sylius_test_html_attribute('unzer-method-logo') }}>
                 <img style="max-width: 80px; max-height: 62px;width: 80px; height: 62px;"
                      alt="{{ payment_type.name }}"
-                     src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}">
+                     src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ payment_type.type ~ '.svg') }}"
+                     onerror="this.onerror=null;this.src='{{ asset('bundles/syliusunzerplugin/admin-ui/images/default.svg') }}';"/>
             </div>
 
             {# Surcharge display #}
