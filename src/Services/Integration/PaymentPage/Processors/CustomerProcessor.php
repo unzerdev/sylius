@@ -9,8 +9,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\CustomerProcessor as CustomerProcessorInterface;
-use Unzer\Core\BusinessLogic\Domain\PaymentMethod\Enums\PaymentMethodTypes;
-use Unzer\Core\BusinessLogic\Domain\PaymentPage\Models\PaymentPageCreateContext;
+use Unzer\Core\BusinessLogic\Domain\Payments\Common\Models\PaymentContext;
 use UnzerSDK\Constants\Salutations;
 use UnzerSDK\Resources\Customer;
 use UnzerSDK\Resources\EmbeddedResources\Address;
@@ -33,14 +32,14 @@ class CustomerProcessor implements CustomerProcessorInterface
         $this->channelContext = $channelContext;
     }
 
-    public function process(Customer $customer, PaymentPageCreateContext $context): void
+    public function process(Customer $customer, PaymentContext $context): void
     {
         if (!$this->shouldProcess($context)) {
             return;
         }
 
         /** @var OrderInterface $order */
-        $order = $context->getCheckoutSession()->get('order');
+        $order = $context->getSessionData()->get('order');
 
         $hostname = $this->channelContext->getChannel()->getHostname() ?? '';
         $domain = str_replace(['http://', 'https://'], '', $hostname);
@@ -77,13 +76,13 @@ class CustomerProcessor implements CustomerProcessorInterface
             ->setShippingAddress($this->mapAddress($order->getShippingAddress()));
     }
 
-    private function shouldProcess(PaymentPageCreateContext $context): bool
+    private function shouldProcess(PaymentContext $context): bool
     {
-        if (!$context->getCheckoutSession()->has('order')) {
+        if (!$context->getSessionData()->has('order')) {
             return false;
         }
 
-        $order = $context->getCheckoutSession()->get('order');
+        $order = $context->getSessionData()->get('order');
         if (!$order instanceof OrderInterface) {
             return false;
         }

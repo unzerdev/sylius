@@ -6,7 +6,7 @@ namespace SyliusUnzerPlugin\Services\Integration\PaymentPage\Processors;
 
 use Composer\InstalledVersions;
 use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\MetadataProvider as MetadataProviderInterface;
-use Unzer\Core\BusinessLogic\Domain\PaymentPage\Models\PaymentPageCreateContext;
+use Unzer\Core\BusinessLogic\Domain\Payments\Common\Models\PaymentContext;
 use UnzerSDK\Resources\Metadata;
 
 /**
@@ -17,7 +17,7 @@ use UnzerSDK\Resources\Metadata;
 class MetadataProvider implements MetadataProviderInterface
 {
 
-    public function get(PaymentPageCreateContext $context): Metadata
+    public function get(PaymentContext $context): Metadata
     {
         $shopVersion = InstalledVersions::getPrettyVersion('sylius/sylius');
         $pluginVersion = InstalledVersions::getPrettyVersion('unzer/sylius-plugin');

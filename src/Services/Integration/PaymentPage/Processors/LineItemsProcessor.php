@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Amount;
 use Unzer\Core\BusinessLogic\Domain\Checkout\Models\Currency;
 use Unzer\Core\BusinessLogic\Domain\Integration\PaymentPage\Processors\LineItemsProcessor as LineItemsProcessorInterface;
-use Unzer\Core\BusinessLogic\Domain\PaymentPage\Models\PaymentPageCreateContext;
+use Unzer\Core\BusinessLogic\Domain\Payments\PaymentPage\Models\PaymentPageCreateContext;
 use UnzerSDK\Constants\BasketItemTypes;
 use UnzerSDK\Resources\Basket;
 use UnzerSDK\Resources\EmbeddedResources\BasketItem;
@@ -34,9 +34,8 @@ class LineItemsProcessor implements LineItemsProcessorInterface
         }
 
         /** @var OrderInterface $order */
-        $order = $context->getCheckoutSession()->get('order');
+        $order = $context->getSessionData()->get('order');
         $currency = Currency::fromIsoCode($order->getCurrencyCode());
-
 
         $totalDiscount = 0;
 
@@ -115,11 +114,11 @@ class LineItemsProcessor implements LineItemsProcessorInterface
 
     private function shouldProcess(PaymentPageCreateContext $context): bool
     {
-        if (!$context->getCheckoutSession()->has('order')) {
+        if (!$context->getSessionData()->has('order')) {
             return false;
         }
 
-        $order = $context->getCheckoutSession()->get('order');
+        $order = $context->getSessionData()->get('order');
         if (!$order instanceof OrderInterface) {
             return false;
         }
