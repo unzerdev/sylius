@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42af8b872fadbbdde2510290634bd7f2",
+    "content-hash": "3f2119fd810baec6008b0266d3cc3736",
     "packages": [
         {
             "name": "alcohol/iso4217",
@@ -13749,25 +13749,26 @@
         },
         {
             "name": "unzer/unzer-core",
-            "version": "2.1.0",
+            "version": "dev-feature/UPP-394",
             "source": {
                 "type": "git",
                 "url": "git@github.com:unzerdev/integration-core.git",
-                "reference": "83c9072879e4157f1af468c7b18e9d2991395eca"
+                "reference": "67474356efd80fcca7bd7776c68dfeacca0a05cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/83c9072879e4157f1af468c7b18e9d2991395eca",
-                "reference": "83c9072879e4157f1af468c7b18e9d2991395eca",
+                "url": "https://api.github.com/repos/unzerdev/integration-core/zipball/67474356efd80fcca7bd7776c68dfeacca0a05cc",
+                "reference": "67474356efd80fcca7bd7776c68dfeacca0a05cc",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "php": ">=7.4",
-                "unzerdev/php-sdk": "^3.13.1"
+                "unzerdev/php-sdk": "^3.15.0"
             },
             "require-dev": {
+                "doctrine/instantiator": "^1.5",
                 "phpunit/phpunit": "^9.6"
             },
             "type": "library",
@@ -13787,7 +13788,7 @@
                 "proprietary"
             ],
             "description": "Unzer Integration Core Library",
-            "time": "2026-03-09T16:19:03+00:00"
+            "time": "2026-03-25T09:04:09+00:00"
         },
         {
             "name": "unzerdev/php-sdk",
@@ -19348,7 +19349,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "unzer/unzer-core": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
