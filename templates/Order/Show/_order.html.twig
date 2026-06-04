@@ -44,7 +44,7 @@
                     <img class="unzer-transaction-image" alt="{{ transaction.type }}"
                          src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ transaction.items[0].paymentType ~ '.svg') }}"
                          onerror="this.onerror=null;this.src='{{ asset('bundles/syliusunzerplugin/admin-ui/images/default.svg') }}';"/>
-                    <span class="unzer-transaction-label">{{ transaction.type|capitalize }}</span>
+                    <span class="unzer-transaction-label">{{ transaction.typeLabel }}</span>
                 </td>
                 <td class="text-left">{{ money.format((transaction.amounts.authorized.amount * 100)|round, transaction.amounts.authorized.currency) }}</td>
                 <td class="text-left">{{ money.format((transaction.amounts.charged.amount * 100)|round, transaction.amounts.charged.currency) }}</td>
@@ -83,7 +83,7 @@
                             <img class="unzer-transaction-image" alt="{{ transaction.type }}"
                                  src="{{ asset('bundles/syliusunzerplugin/admin-ui/images/' ~ item.paymentType ~ '.svg') }}"
                                  onerror="this.onerror=null;this.src='{{ asset('bundles/syliusunzerplugin/admin-ui/images/default.svg') }}';"/>
-                            <span class="unzer-transaction-label">{{ item.paymentType|capitalize }}</span>
+                            <span class="unzer-transaction-label">{{ item.paymentTypeLabel }}</span>
 
                         </td>
                         <td class="text-left">{{ item.type|capitalize }} </td>
