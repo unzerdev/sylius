@@ -120,6 +120,7 @@ class CustomerProcessor implements CustomerProcessorInterface
             ->setStreet($address->getStreet())
             ->setZip($address->getPostcode())
             ->setCity($address->getCity())
-            ->setCountry($address->getCountryCode());
+            ->setCountry($address->getCountryCode())
+            ->setState($address->getProvinceCode() ?? $address->getProvinceName());
     }
 }
